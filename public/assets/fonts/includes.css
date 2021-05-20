@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+
+/* IBM Plex Thai */
+@font-face{
+    font-family:'IBM Plex Thai'; font-weight:100; font-style:normal;
+    src:url('./IBMPlexSansThai/IBMPlexSansThai-Light.ttf') format('truetype');
+}
+@font-face{
+    font-family:'IBM Plex Thai'; font-weight:200; font-style:normal;
+    src:url('./IBMPlexSansThai/IBMPlexSansThai-Regular.ttf') format('truetype');
+}
+@font-face{
+    font-family:'IBM Plex Thai'; font-weight:300; font-style:normal;
+    src:url('./IBMPlexSansThai/IBMPlexSansThai-Text.ttf') format('truetype');
+}
+@font-face{
+    font-family:'IBM Plex Thai'; font-weight:400; font-style:normal;
+    src:url('./IBMPlexSansThai/IBMPlexSansThai-Medium.ttf') format('truetype');
+}
+@font-face{
+    font-family:'IBM Plex Thai'; font-weight:500; font-style:normal;
+    src:url('./IBMPlexSansThai/IBMPlexSansThai-SemiBold.ttf') format('truetype');
+}
+@font-face{
+    font-family:'IBM Plex Thai'; font-weight:600; font-style:normal;
+    src:url('./IBMPlexSansThai/IBMPlexSansThai-Bold.ttf') format('truetype');
+}
