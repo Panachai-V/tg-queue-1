@@ -4,218 +4,139 @@
 
   <section class="section-full pull-right">
     <div class="container">
-      <form action="/admin/companies" method="GET" @submit="onSubmit">
+      <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="btns mt-0">
+          <a href="/admin/companies" class="btn color-gray h-color-01">
+            <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
+            ย้อนกลับ
+          </a>
+        </div>
+        <div class="header-wrapper">
+          <div class="text-container">
+            <h6 class="h3">View Company</h6>
+          </div>
+        </div>
+      </div>
+      
+      <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+        <p class="fw-400">ภาพรวม</p>
+      </div>
+      <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+        <div class="grids">
+          <div class="grid lg-1-3">
+            <SpecialCard03 
+              label="Job Requests รอการเสนอราคา" :count="3" unit="งาน" 
+              classer="no-hover"
+            />
+          </div>
+          <div class="grid lg-1-3">
+            <SpecialCard03 
+              label="Job Requests ที่กำลังดำเนินการ" :count="2" unit="งาน" 
+              classer="no-hover"
+            />
+          </div>
+          <div class="grid lg-1-3">
+            <SpecialCard03 
+              label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="34" unit="งาน" 
+              classer="no-hover"
+            />
+          </div>
+          <div class="grid lg-1-3">
+            <SpecialCard03 
+              label="ความพึงพอใจเฉลี่ย" :count="4.75" unit="/ 5" 
+              classer="no-hover"
+            />
+          </div>
+          <div class="grid lg-1-3">
+            <SpecialCard03 
+              label="พนักงานในบริษัท" :count="8" unit="คน" 
+              classer="no-hover"
+            />
+          </div>
+        </div>
+      </div>
 
-        <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
-          <div class="btns mt-0">
-            <a href="/admin/companies" class="btn color-gray h-color-01">
-              <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
-              ย้อนกลับ
-            </a>
+      <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+        <p class="fw-400">ข้อมูลทั่วไป</p>
+      </div>
+      <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+        <div class="grids">
+          <div class="grid xl-10 lg-15 md-20 sm-30 xs-50">
+            <FormGroup type="plain" label="คำนำหน้า" :value="dataset.prefix" />
           </div>
-          <div class="header-wrapper">
-            <div class="text-container">
-              <h6 class="h3">Edit Company</h6>
-            </div>
-            <div class="btns hide-mobile">
-              <Button 
-                text="ลบ" href="javascript:" @click="openedPopupDelete = !openedPopupDelete" 
-                classer="btn-color-06 mr-2" :prepend="true" icon="close-white.svg" 
-              />
-              <Button 
-                type="submit" text="แก้ไข" 
-                classer="btn-color-01" :prepend="true" icon="check-white.svg" 
-              />
-            </div>
-            <div class="btns show-mobile">
-              <Button 
-                text="ลบ" href="javascript:" @click="openedPopupDelete = !openedPopupDelete" 
-                classer="btn-color-06 btn-sm mr-1" 
-              />
-              <Button type="submit" text="แก้ไข" classer="btn-color-01 btn-sm" />
-            </div>
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="ชื่อ" :value="dataset.firstname" />
           </div>
-        </div>
-
-        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-          <p class="fw-400">ข้อมูลทั่วไป</p>
-        </div>
-        <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
-          <div class="grids">
-            <div class="grid xl-10 lg-15 md-20 sm-30 xs-50">
-              <FormGroup 
-                type="select" label="คำนำหน้า *" 
-                :value="dataset.prefix" @input="dataset.prefix = $event" 
-                :options="[
-                  { value: 'นาย', text: 'นาย' },
-                  { value: 'นาง', text: 'นาง' },
-                  { value: 'นางสาว', text: 'นางสาว' }
-                ]"
-              />
-            </div>
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="ชื่อ *" placeholder="โปรดระบุ" 
-                :value="dataset.firstname" @input="dataset.firstname = $event" 
-                :errorText="isValidated && !dataset.firstname? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.firstname? 'error': ''" 
-              />
-            </div>
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="นามสกุล *" placeholder="โปรดระบุ" 
-                :value="dataset.lastname" @input="dataset.lastname = $event" 
-                :errorText="isValidated && !dataset.lastname? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.lastname? 'error': ''" 
-              />
-            </div>
-            <div class="sep"></div>
-            
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="เบอร์โทรศัพท์" placeholder="โปรดระบุ" 
-                :value="dataset.phone" @input="dataset.phone = $event" 
-              />
-            </div>
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="file-image" label="รูปโปรไฟล์" 
-              />
-            </div>
-            <div class="sep"></div>
-            
-            <div class="grid lg-60 md-80 sm-100">
-              <FormGroup 
-                type="textarea" label="ที่อยู่ *" placeholder="โปรดระบุ" 
-                :value="dataset.address" @input="dataset.address = $event" 
-                :errorText="isValidated && !dataset.address? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.address? 'error': ''" 
-              />
-            </div>
-            <div class="sep"></div>
-            
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="จังหวัด *" placeholder="โปรดระบุ" 
-                :value="dataset.province" @input="dataset.province = $event" 
-                :errorText="isValidated && !dataset.province? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.province? 'error': ''" 
-              />
-            </div>
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="รหัสไปรษณีย์ *" placeholder="โปรดระบุ" 
-                :value="dataset.zipcode" @input="dataset.zipcode = $event" 
-                :errorText="isValidated && !dataset.zipcode? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.zipcode? 'error': ''" 
-              />
-            </div>
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="นามสกุล" :value="dataset.lastname" />
+          </div>
+          <div class="sep"></div>
+          
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="เบอร์โทรศัพท์" :value="dataset.phone" />
+          </div>
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="รูปโปรไฟล์" />
+          </div>
+          <div class="sep"></div>
+          
+          <div class="grid lg-60 md-80 sm-100">
+            <FormGroup type="plain" label="ที่อยู่" :value="dataset.address" />
+          </div>
+          <div class="sep"></div>
+          
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="จังหวัด" :value="dataset.province" />
+          </div>
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="รหัสไปรษณีย์" :value="dataset.zipcode" />
           </div>
         </div>
+      </div>
         
-        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-          <p class="fw-400">ข้อมูลบริษัท</p>
-        </div>
-        <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
-          <div class="grids">
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="ชื่อบริษัท *" placeholder="โปรดระบุ" 
-                :value="dataset.company" @input="dataset.company = $event" 
-                :errorText="isValidated && !dataset.company? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.company? 'error': ''" 
-              />
-            </div>
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="เบอร์โทรบริษัท" placeholder="โปรดระบุ" 
-                :value="dataset.companyPhone" @input="dataset.companyPhone = $event" 
-              />
-            </div>
-            <div class="sep"></div>
-            
-            <div class="grid lg-60 md-80 sm-100">
-              <FormGroup 
-                type="textarea" label="ที่อยู่บริษัท *" placeholder="โปรดระบุ" 
-                :value="dataset.companyAddress" @input="dataset.companyAddress = $event" 
-                :errorText="isValidated && !dataset.companyAddress? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.companyAddress? 'error': ''" 
-              />
-            </div>
-            <div class="sep"></div>
-            
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="จังหวัด *" placeholder="โปรดระบุ" 
-                :value="dataset.companyProvince" @input="dataset.companyProvince = $event" 
-                :errorText="isValidated && !dataset.companyProvince? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.companyProvince? 'error': ''" 
-              />
-            </div>
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="รหัสไปรษณีย์ *" placeholder="โปรดระบุ" 
-                :value="dataset.companyZipcode" @input="dataset.companyZipcode = $event" 
-                :errorText="isValidated && !dataset.companyZipcode? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.companyZipcode? 'error': ''" 
-              />
-            </div>
+      <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+        <p class="fw-400">ข้อมูลบริษัท</p>
+      </div>
+      <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+        <div class="grids">
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="ชื่อบริษัท" :value="dataset.company" />
+          </div>
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="เบอร์โทรบริษัท" :value="dataset.companyPhone" />
+          </div>
+          <div class="sep"></div>
+          
+          <div class="grid lg-60 md-80 sm-100">
+            <FormGroup type="plain" label="ที่อยู่บริษัท" :value="dataset.companyAddress" />
+          </div>
+          <div class="sep"></div>
+          
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="จังหวัด" :value="dataset.companyProvince" />
+          </div>
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="รหัสไปรษณีย์" :value="dataset.companyZipcode" />
           </div>
         </div>
-        
-        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-          <p class="fw-400">บัญชีผู้ใช้</p>
-        </div>
-        <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
-          <div class="grids">
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="text" label="ชื่อผู้ใช้ *" placeholder="โปรดระบุ" 
-                :value="dataset.username" @input="dataset.username = $event" 
-                :errorText="isValidated && !dataset.username? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.username? 'error': ''" 
-              />
-            </div>
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="email" label="อีเมล *" placeholder="โปรดระบุ" 
-                :value="dataset.email" @input="dataset.email = $event" 
-                :errorText="isValidated && !dataset.email? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.email? 'error': ''" 
-              />
-            </div>
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="select" label="สถานะ" placeholder="โปรดเลือก" 
-                :value="dataset.status" @input="dataset.status = $event" 
-                :options="[
-                  { value: 1, text: 'เปิดใช้งาน' },
-                  { value: 0, text: 'ปิดใช้งาน' }
-                ]"
-              />
-            </div>
-            <div class="sep"></div>
-            
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="password" label="รหัสผ่าน *" placeholder="โปรดระบุ" 
-                :value="dataset.password" @input="dataset.password = $event" 
-                :errorText="isValidated && !dataset.password? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.password? 'error': ''" 
-              />
-            </div>
-            <div class="grid lg-30 md-40 sm-100">
-              <FormGroup 
-                type="password" label="ยืนยันรหัสผ่าน *" placeholder="โปรดระบุ" 
-                :value="dataset.confPassword" @input="dataset.confPassword = $event" 
-                :errorText="isValidated && !dataset.confPassword? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.confPassword? 'error': ''" 
-              />
-            </div>
+      </div>
+      
+      <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+        <p class="fw-400">บัญชีผู้ใช้</p>
+      </div>
+      <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+        <div class="grids">
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="ชื่อผู้ใช้" :value="dataset.username" />
+          </div>
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="อีเมล" :value="dataset.email" />
+          </div>
+          <div class="grid lg-30 md-40 sm-100">
+            <FormGroup type="plain" label="สถานะ" :value="dataset.status? 'เปิดใช้งาน': 'ปิดใช้งาน'" />
           </div>
         </div>
-
-      </form>
+      </div>
       
       <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
         <p class="fw-400">พนักงานขับรถ</p>
@@ -256,57 +177,6 @@
       </div>
     </div>
   </section>
-  
-  <!-- Popup Delete -->
-  <div class="popup-container" :class="{ 'active': openedPopupDelete }">
-    <div class="wrapper">
-      <div class="close-filter" @click="openedPopupDelete = !openedPopupDelete"></div>
-      <form action="/admin/companies" method="GET" class="w-full">
-        <div class="popup-box">
-          <div class="header">
-            <div class="btns mt-0">
-              <a href="javascript:" class="btn btn-close" @click="openedPopupDelete = !openedPopupDelete">
-                <img class="icon-prepend xs" src="/assets/img/icon/close.svg" alt="Image Icon" />
-                ปิดหน้าต่าง
-              </a>
-            </div>
-            <div class="header-wrapper">
-              <div class="text-container">
-                <h6 class="h3">ยืนยันการลบ</h6>
-              </div>
-              <div class="btns hide-mobile">
-                <Button 
-                  type="submit" text="ลบ" classer="btn-color-06 mr-2" 
-                  :prepend="true" icon="close-white.svg" 
-                />
-                <Button 
-                  text="ปิด" href="javascript:" classer="btn-color-08" 
-                  @click="openedPopupDelete = !openedPopupDelete"
-                />
-              </div>
-              <div class="btns show-mobile">
-                <Button 
-                  type="submit" text="ลบ" classer="btn-color-06 btn-sm mr-1" 
-                />
-                <Button 
-                  text="ปิด" href="javascript:" classer="btn-color-08 btn-sm" 
-                  @click="openedPopupDelete = !openedPopupDelete"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="body pt-4 pb-5">
-            <p class="color-gray">หมายเหตุ</p>
-            <p class="mt-2">
-              หมายเลขประจำตัวผู้ป่วยที่คุณค้นหาอาจจะ ไม่ถูกต้อง คุณสามารถ “ปิดหน้าต่าง” 
-              เพื่อระบุหมายเลขประจำตัวผู้ป่วยใหม่อีกครั้ง หรือ ผู้ป่วยที่คุณต้องการหา อาจจะ ไม่มีข้อมูลในระบบ 
-              คุณสามารถเพิ่มข้อมูลผู้ป่วยใหม่ โดยการคลิกที่ปุ่ม “เพิ่มข้อมูล”
-            </p>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
   
   <!-- Driver View -->
   <div class="popup-container" :class="{ 'active': openedDriverView }">
@@ -610,7 +480,7 @@ import DataTable from '../../components/DataTable';
 import SpecialCard03 from '../../components/SpecialCard03';
 
 export default {
-  name: 'AdminCompanyEditPage',
+  name: 'AdminCompanyViewPage',
   components: {
     Topnav,
     Sidenav,
@@ -633,7 +503,6 @@ export default {
         avatar: '/assets/img/misc/profile.jpg'
       },
 
-      openedPopupDelete: false,
       isValidated: false,
       dataset: {
         prefix: 'นาย',
@@ -654,7 +523,7 @@ export default {
         email: 'employee@gmail.com',
         password: '',
         confPassword: '',
-        status: 1,
+        statue: 1,
       },
 
       openedDriverView: false,
@@ -707,27 +576,6 @@ export default {
     onSubmitDriverEdit(e) {
       e.preventDefault();
       this.openedDriverEdit = !this.openedDriverEdit;
-    },
-    onSubmit(e) {
-      var that = this;
-      that.isValidated = true;
-      
-      var isValid = true;
-      [
-        'prefix', 'firstname', 'lastname', 'address', 'province', 'zipcode',
-        'company', 'companyAddress', 'companyProvince', 'companyZipcode',
-        'username', 'email', 'password', 'confPassword'
-      ].forEach(function(k){
-        if(!that.dataset[k]){
-          isValid = false;
-        }
-      });
-
-      if(!isValid){
-        e.preventDefault();
-      }else{
-        that.isValidated = false;
-      }
     }
   }
 }

@@ -334,6 +334,8 @@ fieldset{padding:0; margin:0; border:0;}
     display:block; position:relative; width:100%; max-width:38rem; overflow:hidden;
     margin:0 auto; background:#ffffff; border-radius:1rem;
 }
+.popup-container .popup-box.md{max-width:44rem;}
+.popup-container .popup-box.lg{max-width:50rem;}
 .popup-container .popup-box.xl{max-width:60rem;}
 .popup-container .popup-box .btn-close{color:#6e6e6e;}
 .popup-container .popup-box .btn-close:hover{color:#BC4A4A;}
@@ -349,6 +351,13 @@ fieldset{padding:0; margin:0; border:0;}
 .popup-container .popup-box > .body{
     position:relative; width:100%; padding:.5rem 2rem 2.5rem 2rem;
     max-height:calc(100vh - 11rem); overflow-x:hidden; overflow-y:auto;
+}
+.popup-container .popup-box > .body-wrapper{
+    max-height:calc(100vh - 11rem); overflow-x:hidden; overflow-y:auto;
+}
+.popup-container .popup-box > .body-wrapper .body{
+    position:relative; width:100%; padding:.5rem 2rem 2.5rem 2rem;
+    max-height:unset; overflow:hidden;
 }
 .popup-container .show-mobile{display:none!important;}
 @media screen and (max-width:991.98px){
@@ -484,11 +493,11 @@ fieldset{padding:0; margin:0; border:0;}
     border:1px solid #E1E1E1; border-radius:.5rem; padding:1.25rem 1.25rem 6rem 1.25rem;
     height:100%; transition:background .25s, border-color .25s, color .25s;
 }
-.ss-card-03 .header{
+.ss-card-03 .sheader{
     width:100%; display:flex; align-items:flex-start; justify-content:space-between;
 }
-.ss-card-03 .header .title{width:calc(100% - 1.5rem); min-height:3rem;}
-.ss-card-03 .body{
+.ss-card-03 .sheader .title{width:calc(100% - 1.5rem); min-height:3rem;}
+.ss-card-03 .sbody{
     position:absolute; bottom:1.25rem; left:1.25rem; right:1.25rem;
     display:flex; align-items:flex-end;
 }

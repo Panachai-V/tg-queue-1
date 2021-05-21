@@ -228,6 +228,18 @@ const routes = [
     name: 'AdminCompanyEditPage',
     component: () => import('../views/admin/CompanyEdit.vue')
   },
+  {
+    path: '/admin/company-view',
+    name: 'AdminCompanyViewPage',
+    component: () => import('../views/admin/CompanyView.vue')
+  },
+
+  // Admin - History
+  {
+    path: '/admin/history',
+    name: 'AdminHistoryPage',
+    component: () => import('../views/admin/History.vue')
+  },
 
 ]
 

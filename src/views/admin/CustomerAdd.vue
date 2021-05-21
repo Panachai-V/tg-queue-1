@@ -208,7 +208,6 @@ export default {
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    document.getElementById('color_style').href = '/assets/css/color-company.css';
     document.getElementById('color_style').href = '/assets/css/color-admin.css';
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <div class="ss-card ss-card-03" :class="classer">
-    <div class="header">
+    <div class="sheader">
       <div class="title p">{{label}}</div>
       <div v-if="Object.keys(options).length" class="option">
         <a href="#">
@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!cardSmall" class="body">
+    <div v-if="!cardSmall" class="sbody">
       <h6 class="h2 lh-3xs">{{Number(count).toLocaleString()}}</h6>
       <p class="unit lh-xs">{{unit}}</p>
     </div>

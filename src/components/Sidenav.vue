@@ -42,14 +42,14 @@
               <div class="text">Companies</div>
             </a>
           </div>
-          <!-- <div class="menu" :class="{ 'active': activeIndex==4 }">
-            <a href="/admin/records">
+          <div class="menu" :class="{ 'active': activeIndex==4 }">
+            <a href="/admin/history">
               <div class="icon">
                 <img src="/assets/img/icon/history-admin.svg" alt="Image Icon" />
               </div>
               <div class="text">History</div>
             </a>
-          </div> -->
+          </div>
           
         </div>
       </div>

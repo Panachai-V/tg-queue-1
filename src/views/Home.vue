@@ -76,6 +76,9 @@
       <a href="/admin/companies" target="_blank">Companies</a> <br>
       <a href="/admin/company-add" target="_blank">Company Add</a> <br>
       <a href="/admin/company-edit" target="_blank">Company Edit</a> <br>
+      <a href="/admin/company-view" target="_blank">Company View</a> <br>
+      <br>
+      <a href="/admin/history" target="_blank">History</a> <br>
       <br>
     </div>
   </div>
