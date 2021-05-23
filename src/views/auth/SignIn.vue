@@ -36,9 +36,12 @@
             <div class="btns">
               <Button text="เข้าสู่ระบบ" type="submit" classer="btn-color-01 w-full" />
             </div>
-            <div class="btns">
+            <div class="btns d-flex jc-space-between">
               <a class="h6 fw-400 color-gray h-color-01" href="/auth/forget-password">
                 ลืมรหัสผ่าน ?
+              </a>
+              <a class="h6 fw-400 color-gray h-color-01" href="/auth/register">
+                สมัครสมาชิก
               </a>
             </div>
           </form>

@@ -10,6 +10,18 @@
   </div>
 
   <div class="pl-6 pb-6">
+    <h6 class="h3 fw-600">Freight Forwarder</h6>
+    <div>
+      <a href="/forwarder/dashboard" target="_blank">Dashboard</a> <br>
+      <br>
+      <a href="/forwarder/job-requests" target="_blank">Job Requests</a> <br>
+      <a href="/forwarder/job-request-add" target="_blank">Job Request Add</a> <br>
+      <a href="/forwarder/job-request-view" target="_blank">Job Request View</a> <br>
+      <br>
+    </div>
+  </div>
+
+  <div class="pl-6 pb-6">
     <h6 class="h3 fw-600">Product Owner</h6>
     <div>
       <a href="/customer/dashboard" target="_blank">Dashboard</a> <br>

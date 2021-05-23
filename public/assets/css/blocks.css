@@ -38,6 +38,7 @@
     display:block; width:100%; max-width:32rem; padding:2.5rem; border-radius:.375rem;
     background:#ffffff;
 }
+.auth-02 .auth-container.lg{max-width:40rem;}
 @media screen and (max-width:1199.98px){
     .auth-02 .img-container{width:45%;}
     .auth-02 .content-container{width:55%;}

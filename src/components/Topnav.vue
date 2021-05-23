@@ -12,10 +12,10 @@
         </div>
       </a>
 
-      <!-- Menu - Product Owner -->
-      <div v-if="isProductOwner()" class="menu-container" :class="{ 'hide-mobile': !isBottom }">
+      <!-- Menu - Freight Forwarder -->
+      <div v-if="isFreightForwarder()" class="menu-container" :class="{ 'hide-mobile': !isBottom }">
         <div class="menu" :class="{ 'active': activeIndex == 0 }">
-          <a href="/customer/dashboard">
+          <a href="/forwarder/dashboard">
             <div class="icon">
               <img src="/assets/img/icon/home.svg" alt="Image Icon" />
             </div>
@@ -23,11 +23,19 @@
           </a>
         </div>
         <div class="menu" :class="{ 'active': activeIndex == 1 }">
-          <a href="/customer/job-requests">
+          <a href="/forwarder/job-requests">
             <div class="icon">
               <img src="/assets/img/icon/request.svg" alt="Image Icon" />
             </div>
             <div class="text">Job Requests</div>
+          </a>
+        </div>
+        <div class="menu" :class="{ 'active': activeIndex == 2 }">
+          <a href="/forwarder/drivers">
+            <div class="icon">
+              <img src="/assets/img/icon/users.svg" alt="Image Icon" />
+            </div>
+            <div class="text">Truck Drivers</div>
           </a>
         </div>
       </div>
@@ -79,7 +87,10 @@
         <div class="option">
           <a href="javascript:">
             <div class="info text-right hide-mobile mr-2">
-              <p class="lh-sm">{{user.prefix}}{{user.firstname}} {{user.lastname}}</p>
+              <p class="lh-sm">
+                {{user.detail.prefix}}{{user.detail.firstname}} 
+                {{user.detail.lastname}}
+              </p>
               <p class="sm lh-xs">{{user.email}}</p>
             </div>
             <div 
@@ -95,7 +106,7 @@
             <div class="submenu">
               <a href="javascript:" @click="openedPopupProfile = !openedPopupProfile">
                 <div class="icon">
-                  <img v-if="isProductOwner()" src="/assets/img/icon/edit.svg" alt="Image Icon" />
+                  <img v-if="isFreightForwarder()" src="/assets/img/icon/edit.svg" alt="Image Icon" />
                   <img v-else-if="isCompany()" src="/assets/img/icon/edit-company.svg" alt="Image Icon" />
                   <img v-else-if="isDriver()" src="/assets/img/icon/edit-driver.svg" alt="Image Icon" />
                   <img v-else-if="isAdmin()" src="/assets/img/icon/edit-admin.svg" alt="Image Icon" />
@@ -106,7 +117,7 @@
             <div class="submenu">
               <a href="javascript:" @click="openedPopupPassword = !openedPopupPassword">
                 <div class="icon">
-                  <img v-if="isProductOwner()" src="/assets/img/icon/lock.svg" alt="Image Icon" />
+                  <img v-if="isFreightForwarder()" src="/assets/img/icon/lock.svg" alt="Image Icon" />
                   <img v-else-if="isCompany()" src="/assets/img/icon/lock-company.svg" alt="Image Icon" />
                   <img v-else-if="isDriver()" src="/assets/img/icon/lock-driver.svg" alt="Image Icon" />
                   <img v-else-if="isAdmin()" src="/assets/img/icon/lock-admin.svg" alt="Image Icon" />
@@ -367,15 +378,14 @@ export default {
   },
   props: {
     user: { type: Object, default: null },
-    company: { type: Object, default: null },
     isBottom: { type: Boolean, default: false },
     activeIndex: { type: Number, default: null },
     alert: { type: Number, default: 2 },
   },
   methods: {
 
-    isProductOwner() {
-      if(this.user && this.user.role == 'Product Owner'){
+    isFreightForwarder() {
+      if(this.user && this.user.role == 'Freight Forwarder'){
         return true;
       }else{
         return false;

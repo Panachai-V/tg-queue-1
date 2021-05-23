@@ -24,6 +24,31 @@ const routes = [
   },
 
 
+  // Freight Forwarder
+  {
+    path: '/forwarder/dashboard',
+    name: 'ForwarderDashboardPage',
+    component: () => import('../views/forwarder/Dashboard.vue')
+  },
+  
+  // Freight Forwarder - Job Requests
+  {
+    path: '/forwarder/job-requests/:tab?',
+    name: 'ForwarderJobRequestsPage',
+    component: () => import('../views/forwarder/JobRequests.vue')
+  },
+  {
+    path: '/forwarder/job-request-add',
+    name: 'ForwarderJobRequestAddPage',
+    component: () => import('../views/forwarder/JobRequestAdd.vue')
+  },
+  {
+    path: '/forwarder/job-request-view/:status?',
+    name: 'ForwarderJobRequestViewPage',
+    component: () => import('../views/forwarder/JobRequestView.vue')
+  },
+
+
   // Customer Dashboard
   {
     path: '/customer/dashboard',
