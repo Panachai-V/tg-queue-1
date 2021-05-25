@@ -36,6 +36,17 @@
   </div>
 
   <div class="pl-6 pb-6">
+    <h6 class="h3 fw-600">TG Admin</h6>
+    <div>
+      <a href="/tgadmin/dashboard" target="_blank">Dashboard</a> <br>
+      <br>
+      <a href="/tgadmin/job-requests" target="_blank">Job Requests</a> <br>
+      <a href="/tgadmin/job-request-view" target="_blank">Job Request View</a> <br>
+      <br>
+    </div>
+  </div>
+
+  <div class="pl-6 pb-6">
     <h6 class="h3 fw-600">Admin</h6>
     <div>
       <a href="/admin" target="_blank">Dashboard</a> <br>
@@ -43,20 +54,11 @@
       <a href="/admin/job-requests" target="_blank">Job Requests</a> <br>
       <a href="/admin/job-request-add" target="_blank">Job Request Add</a> <br>
       <a href="/admin/job-request-view" target="_blank">Job Request View</a> <br>
-      <a href="/admin/job-request-edit" target="_blank">Job Request Edit</a> <br>
-      <a href="/admin/job-request-assignment" target="_blank">Job Request Assignment</a> <br>
-      <a href="/admin/job-request-tracking" target="_blank">Job Request Tracking</a> <br>
-      <a href="/admin/job-request-result" target="_blank">Job Request Result</a> <br>
       <br>
-      <a href="/admin/customers" target="_blank">Customers</a> <br>
-      <a href="/admin/customer-add" target="_blank">Customer Add</a> <br>
-      <a href="/admin/customer-view" target="_blank">Customer View</a> <br>
-      <a href="/admin/customer-edit" target="_blank">Customer Edit</a> <br>
-      <br>
-      <a href="/admin/companies" target="_blank">Companies</a> <br>
-      <a href="/admin/company-add" target="_blank">Company Add</a> <br>
-      <a href="/admin/company-edit" target="_blank">Company Edit</a> <br>
-      <a href="/admin/company-view" target="_blank">Company View</a> <br>
+      <a href="/admin/forwarders" target="_blank">Freight Forwarders</a> <br>
+      <a href="/admin/forwarder-add" target="_blank">Freight Forwarder Add</a> <br>
+      <a href="/admin/forwarder-edit" target="_blank">Freight Forwarder Edit</a> <br>
+      <a href="/admin/forwarder-view" target="_blank">Freight Forwarder View</a> <br>
       <br>
       <a href="/admin/history" target="_blank">History</a> <br>
       <br>

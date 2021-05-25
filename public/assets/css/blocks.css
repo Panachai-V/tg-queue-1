@@ -168,7 +168,7 @@
     width:100%; display:flex; align-items:center; justify-content:space-between;
     margin:.75rem 0 0 0;
 }
-.section-full .section-header .header-wrapper .btns{width:auto; margin:0;}
+.section-full .section-header .header-wrapper .btns{width:auto; margin:0; white-space:nowrap;}
 .section-full .section-header .show-mobile{display:none!important;}
 .section-full .section-px{padding-left:2rem!important; padding-right:2rem!important;}
 .section-full .section-py{padding-top:1.5rem!important; padding-bottom:1.5rem!important;}
@@ -307,7 +307,7 @@ table.table-section td:first-child{padding-left:2rem;}
 table.table-section th:last-child,
 table.table-section td:last-child{padding-right:2rem;}
 table.table-section td a{color:#212121;}
-table.table-section td.options{width:7.75rem; min-width:7.75rem;}
+table.table-section td.options{width:7rem; min-width:7rem;}
 table.table-section td.status{width:11.25rem; min-width:11.25rem;}
 table.table-section td.td-input{padding-top:.6975rem; padding-bottom:.6975rem;}
 table.table-section td.td-input-text{padding-top:1.25rem; padding-bottom:1.25rem;}
@@ -404,6 +404,27 @@ table.table-section .avatar{
 table.table-section .avatar > .img-bg{
     position:absolute; top:0; bottom:0; left:0; right:0; background-size:cover;
     background-position:center;
+}
+
+@media screen and (max-width:991.98px){
+    table.table-section th, table.table-section td{padding:.875rem;}
+    table.table-section th:first-child,
+    table.table-section td:first-child{padding-left:1.5rem;}
+    table.table-section th:last-child,
+    table.table-section td:last-child{padding-right:1.5rem;}
+}
+@media screen and (max-width:767.98px){
+    table.table-section th, table.table-section td{padding:.75rem;}
+    table.table-section th:first-child,
+    table.table-section td:first-child{padding-left:1.25rem;}
+    table.table-section th:last-child,
+    table.table-section td:last-child{padding-right:1.25rem;}
+}
+@media screen and (max-width:575.98px){
+    table.table-section th:first-child,
+    table.table-section td:first-child{padding-left:1rem;}
+    table.table-section th:last-child,
+    table.table-section td:last-child{padding-right:1rem;}
 }
 
 

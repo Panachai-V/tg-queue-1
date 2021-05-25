@@ -6,7 +6,7 @@
 
       <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
-          <a :href="'/forwarder/job-requests/'+jobRequest.status" class="btn color-gray h-color-01">
+          <a :href="'/tgadmin/job-requests/'+jobRequest.status" class="btn color-gray h-color-01">
             <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
             ย้อนกลับ
           </a>
@@ -22,13 +22,13 @@
           </div>
           <div class="btns hide-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/forwarder/job-requests/'+jobRequest.status" 
+              text="ย้อนกลับ" :href="'/tgadmin/job-requests/'+jobRequest.status" 
               classer="btn-color-08"
             />
           </div>
           <div class="btns show-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/forwarder/job-requests/'+jobRequest.status" 
+              text="ย้อนกลับ" :href="'/tgadmin/job-requests/'+jobRequest.status" 
               classer="btn-color-08 btn-sm" 
             />
           </div>
@@ -40,39 +40,7 @@
           <p class="fw-400">ความพึงพอใจ</p>
         </div>
         <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
-          <form v-if="!jobRequestCommentValid" action="/" method="GET" @submit.prevent="onSubmitComment">
-            <div class="grids">
-              <div class="grid md-1-3 sm-50 xs-50 mt-4">
-                <FormGroup 
-                  type="select" label="ระดับความพอใจ *" 
-                  placeholder="เลือกระดับความพอใจ" :required="true" 
-                  :options="[
-                    { value: 5, text: '5 - พอใจมาก' },
-                    { value: 4, text: '4 - พอใจ' },
-                    { value: 3, text: '3 - ปาณกลาง' },
-                    { value: 2, text: '2 - ไม่พอใจ' },
-                    { value: 1, text: '1 - ไม่พอใจมาก' }
-                  ]" 
-                  :value="jobRequest.rating" 
-                  @input="jobRequest.rating = $event" 
-                />
-              </div>
-              <div class="grid md-2-3 sm-100 mt-4">
-                <FormGroup 
-                  type="textarea" label="คำแนะนำ" placeholder="คำแนะนำ" :rows="1" 
-                  :value="jobRequest.comment" 
-                  @input="jobRequest.comment = $event" 
-                />
-              </div>
-            </div>
-            <div class="btns w-auto mt-4">
-              <Button 
-                type="submit" text="ส่งข้อความ" 
-                classer="btn-color-01" :append="true" icon="send-white.svg" 
-              />
-            </div>
-          </form>
-          <div v-else class="grids">
+          <div class="grids">
             <div class="grid md-1-3 sm-50 xs-50">
               <FormGroup  type="plain" label="ระดับความพอใจ" :value="jobRequest.rating" />
             </div>
@@ -83,49 +51,47 @@
         </div>
       </div>
 
-      <div v-if="jobRequest.status > 2">
+      <div v-if="jobRequest.status == 2 && !jobRequestConfirmValid">
         <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-          <p class="fw-400">ยืนยันการรับสินค้า</p>
+          <p class="fw-400">จัดคิวการรับสินค้า</p>
         </div>
         <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
-          <form v-if="!jobRequestConfirmValid" action="/" method="GET" @submit.prevent="onSubmitConfirm">
+          <form action="/tgadmin/job-request-view/3" method="GET">
             <div class="grids">
               <div class="grid xl-30 lg-1-3 sm-50">
                 <FormGroup 
-                  type="select" label="ผู้ขับรถ *" placeholder="เลือกผู้ขับรถ" :required="true" 
-                  :value="jobRequest.driver" @input="jobRequest.driver = $event" 
-                  :options="[
-                    { value: 'นาย ชาญชัย กล้าหาญ', text: 'นาย ชาญชัย กล้าหาญ' }
-                  ]"
-                />
-              </div>
-              <div class="grid xl-25 lg-30 sm-50">
-                <FormGroup 
-                  type="text" label="ทะเบียนรถ *" placeholder="ทะเบียนรถ" 
-                  :required="true" :maxlength="7" 
-                  :value="jobRequest.truckNumber" @input="jobRequest.truckNumber = $event" 
+                  type="text" label="หมายเลขช่องจอด *" placeholder="โปรดระบุ" :required="true" 
+                  :value="jobRequest.dockNumber" @input="jobRequest.dockNumber = $event" 
                 />
               </div>
               <div class="grid xl-20 lg-25 sm-50">
                 <FormGroupTime
-                  label="ยืนยันเวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
-                  :value0="jobRequest.confPickupTimeHours" 
-                  @input0="jobRequest.confPickupTimeHours = $event" 
-                  :value1="jobRequest.confPickupTimeMinutes" 
-                  @input1="jobRequest.confPickupTimeMinutes = $event" 
+                  label="เวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
+                  :value0="jobRequest.pickupTimeHours" 
+                  @input0="jobRequest.pickupTimeHours = $event" 
+                  :value1="jobRequest.pickupTimeMinutes" 
+                  @input1="jobRequest.pickupTimeMinutes = $event" 
                 />
               </div>
               <div class="grid sm-100">
                 <div class="btns mt-0">
                   <Button 
-                    type="submit" text="ยืนยันการรับสินค้า" 
+                    type="submit" text="จัดคิวการรับสินค้า" 
                     classer="btn-color-01" :append="true" icon="check-white.svg" 
                   />
                 </div>
               </div>
             </div>
           </form>
-          <div v-else class="grids">
+        </div>
+      </div>
+
+      <div v-if="jobRequest.status > 2">
+        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+          <p class="fw-400">ยืนยันการรับสินค้า</p>
+        </div>
+        <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
+          <div v-if="jobRequestConfirmValid" class="grids">
             <div class="grid xl-30 lg-1-3 sm-50">
               <FormGroup 
                 type="plain" label="ผู้ขับรถ" :value="jobRequest.driver"
@@ -165,7 +131,13 @@
             </div>
           </div>
           <div class="mt-6">
-            <Step01 :activeIndex="stepActiveIndex" />
+            <Step01 
+              :activeIndex="stepActiveIndex" 
+              :icons="[
+                'step-01-company.svg', 'step-02-company.svg', 'step-03-company.svg', 
+                'step-04-company.svg', 'step-05-company.svg'
+              ]"
+            />
           </div>
         </div>
       </div>
@@ -275,7 +247,7 @@ import ChatContainer from '../../components/ChatContainer';
 import FormGroupTime from '../../components/FormGroupTime';
 
 export default {
-  name: 'ForwarderJobRequestViewPage',
+  name: 'TGAdminJobRequestViewPage',
   components: {
     Topnav,
     Step01,
@@ -286,27 +258,21 @@ export default {
     return {
       topnavActiveIndex: 1,
       user: {
-        id: 1,
-        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
-        username: 'General User',
-        email: 'user@gmail.com',
+        id: 3,
+        role: 'TG Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
+        subrole: null,
+        username: 'TG Admin',
+        email: 'tg-admin@gmail.com',
         avatar: '/assets/img/misc/profile.jpg',
         detail: {
           prefix: 'นาย',
           firstname: 'สมศักดิ์',
           lastname: 'จริงใจ',
           phone: '0811123456'
-        },
-        company: {
-          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
-          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
-          province: 'สมุทรปราการ',
-          zipcode: '10540',
-          taxId: '500218893025'
         }
       },
       jobRequest: {
-        status: this.$route.params.status? Number(this.$route.params.status): 1,
+        status: this.$route.params.status? Math.max(2, Number(this.$route.params.status)): 2,
         awbNumber: '131-56591080',
         hwbSerialNumber: 'MLC10131957',
         flightNumber: 'JL0707',
@@ -326,8 +292,8 @@ export default {
         truckNumber: '',
         driver: '',
 
-        rating: '',
-        comment: ''
+        rating: '5',
+        comment: 'จัดส่งรวดเร็วถูกต้องดีมาก'
       },
 
       jobRequestCommentValid: false,
@@ -364,6 +330,7 @@ export default {
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    document.getElementById('color_style').href = '/assets/css/color-company.css';
     if(this.jobRequest.status > 1){
       this.jobRequest.date = new Date();
       this.jobRequest.numberOfPieces = 2400;
@@ -393,14 +360,6 @@ export default {
     },
     formatDate(value, format='YYYYMMDD') {
       return moment(String(value)).format(format);
-    },
-    onSubmitComment() {
-      this.jobRequestCommentValid = true;
-    },
-    onSubmitConfirm() {
-      this.jobRequestConfirmValid = true;
-      this.jobRequest.status = 4;
-      this.stepActiveIndex = 2;
     }
   }
 }

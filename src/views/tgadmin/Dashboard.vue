@@ -5,7 +5,7 @@
     <div class="container">
       <div class="section-header" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
-          <a href="/forwarder/dashboard" class="btn color-gray h-color-01 disabled">
+          <a href="/tgadmin/dashboard" class="btn color-gray h-color-01 disabled">
             <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
             ย้อนกลับ
           </a>
@@ -23,13 +23,13 @@
           <div class="grids grid-mt">
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอการ Matching" :count="3" unit="งาน" 
+                label="Job Requests รอคิวการรับ" :count="6" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอคิวการรับ" :count="2" unit="งาน" 
+                label="Job Requests รอยืนยันคิว" :count="7" unit="งาน" 
                 classer="no-hover"
               />
             </div>
@@ -60,7 +60,7 @@ import Topnav from '../../components/Topnav';
 import SpecialCard03 from '../../components/SpecialCard03';
 
 export default {
-  name: 'ForwarderDashboardPage',
+  name: 'TGAdminDashboardPage',
   components: {
     Topnav,
     SpecialCard03
@@ -69,29 +69,24 @@ export default {
     return {
       topnavActiveIndex: 0,
       user: {
-        id: 1,
-        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
-        username: 'General User',
-        email: 'user@gmail.com',
+        id: 3,
+        role: 'TG Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
+        subrole: null,
+        username: 'TG Admin',
+        email: 'tg-admin@gmail.com',
         avatar: '/assets/img/misc/profile.jpg',
         detail: {
           prefix: 'นาย',
           firstname: 'สมศักดิ์',
           lastname: 'จริงใจ',
           phone: '0811123456'
-        },
-        company: {
-          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
-          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
-          province: 'สมุทรปราการ',
-          zipcode: '10540',
-          taxId: '500218893025'
         }
       }
     }
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    document.getElementById('color_style').href = '/assets/css/color-company.css';
   }
 }
 </script>

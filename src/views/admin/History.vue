@@ -58,18 +58,19 @@ export default {
   },
   data() {
     return {
-      sidenavActiveIndex: 4,
+      sidenavActiveIndex: 3,
       user: {
-        id: 1,
-        role: 'Admin', /* Product Owner, Company, Driver, Admin */
-        company: 'บริษัท พีอาร์เดริเวรี่ จำกัด',
-        username: 'General User',
-        prefix: 'นาย',
-        firstname: 'สมศักดิ์',
-        lastname: 'จริงใจ',
-        email: 'user@gmail.com',
-        phone: '081-1123456',
-        avatar: '/assets/img/misc/profile.jpg'
+        id: 4,
+        role: 'Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: 'Admin',
+        email: 'admin@gmail.com',
+        avatar: '/assets/img/misc/profile.jpg',
+        detail: {
+          prefix: 'นาย',
+          firstname: 'สมศักดิ์',
+          lastname: 'จริงใจ',
+          phone: '0811123456'
+        }
       },
       rows1: []
     }
@@ -82,24 +83,24 @@ export default {
         this.rows1.push({
           avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
           username: { text: 'User000'+i },
-          type: { text: 'Product Owner' },
-          email: { text: 'customer@gmail.com' },
+          type: { text: 'Freight Forwarder Admin' },
+          email: { text: 'forwarder@gmail.com' },
           action: { text: 'SIGN IN' }
         });
       }else if(i%3 == 1){
         this.rows1.push({
           avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
           username: { text: 'User000'+i },
-          type: { text: 'Company' },
-          email: { text: 'company@gmail.com' },
+          type: { text: 'Driver' },
+          email: { text: 'driver@gmail.com' },
           action: { text: 'SIGN OUT' }
         });
       }else{
         this.rows1.push({
           avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
           username: { text: 'User000'+i },
-          type: { text: 'Driver' },
-          email: { text: 'driver@gmail.com' },
+          type: { text: 'TG Admin' },
+          email: { text: 'tg-admin@gmail.com' },
           action: { text: 'RESET PASSWORD' }
         });
       }

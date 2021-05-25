@@ -30,82 +30,54 @@
         </div>
 
         <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-          <p class="fw-400">ข้อมูลทั่วไป</p>
+          <p class="fw-400">ข้อมูลสินค้า</p>
         </div>
         <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
           <div class="grids">
             <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
-                type="text" label="ชื่องาน *" placeholder="โปรดระบุ" 
-                :value="dataset.name" @input="dataset.name = $event" 
-                :errorText="isValidated && !dataset.name? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.name? 'error': ''" 
+                type="text" label="เลขที่ Airway Bill *" placeholder="โปรดระบุ" 
+                :required="true" :maxlength="12" 
+                :value="jobRequest.awbNumber" @input="jobRequest.awbNumber = $event" 
               />
             </div>
             <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
-                type="datepicker" label="วันที่รับสินค้า *" placeholder="โปรดระบุ" 
-                wrapperClass="append" :append="true" icon="calendar.svg" 
-                :value="dataset.pickupDate" @input="dataset.pickupDate = $event" 
-                :errorText="isValidated && !dataset.pickupDate? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.pickupDate? 'error': ''"
+                type="text" label="เลขที่ House Airway Bill *" placeholder="โปรดระบุ" 
+                :required="true" :maxlength="12" 
+                :value="jobRequest.hwbSerialNumber" @input="jobRequest.hwbSerialNumber = $event" 
               />
             </div>
             <div class="sep"></div>
-            <div class="grid xl-2-3 lg-80 sm-100">
+            <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
-                type="textarea" label="รายละเอียด *" placeholder="โปรดระบุ" 
-                :value="dataset.desc" @input="dataset.desc = $event" 
-                :errorText="isValidated && !dataset.desc? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.desc? 'error': ''" 
+                type="text" label="รหัสเที่ยวบิน *" placeholder="โปรดระบุ" 
+                :required="true" :maxlength="6" 
+                :value="jobRequest.flightNumber" @input="jobRequest.flightNumber = $event" 
               />
             </div>
-          </div>
-        </div>
-        
-        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-          <p class="fw-400">สถานที่รับส่งสินค้า</p>
-        </div>
-        <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
-          <div class="grids">
-            <div class="grid lg-1-3 md-40 sm-80">
+            <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
-                type="select" label="จังหวัดที่รับสินค้า *" 
-                :value="dataset.fromProvince" @input="dataset.fromProvince = $event" 
-                :errorText="isValidated && !dataset.fromProvince? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.fromProvince? 'error': ''" 
-                :options="[
-                  { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
-                  { value: 'ลพบุรี', text: 'ลพบุรี' }
-                ]"
+                type="text" label="เลขที่งาน *" placeholder="โปรดระบุ" 
+                :required="true" :maxlength="14" 
+                :value="jobRequest.jobNumber" @input="jobRequest.jobNumber = $event" 
               />
             </div>
-            <div class="grid lg-2-3 md-60 sm-100">
+            <div class="sep"></div>
+            <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
-                type="textarea" label="ที่อยู่รับสินค้า *" placeholder="โปรดระบุ" 
-                :value="dataset.fromAddress" @input="dataset.fromAddress = $event" 
-                :errorText="isValidated && !dataset.fromAddress? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.fromAddress? 'error': ''" 
+                type="text" label="เลขที่ใบขนสินค้า *" placeholder="โปรดระบุ" 
+                :required="true" :maxlength="14" 
+                :value="jobRequest.customsEntryNumber" @input="jobRequest.customsEntryNumber = $event" 
               />
             </div>
-            <div class="grid lg-1-3 md-40 sm-80">
+            <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
-                type="select" label="จังหวัดที่ส่งสินค้า *" 
-                :value="dataset.toProvince" @input="dataset.toProvince = $event" 
-                :errorText="isValidated && !dataset.toProvince? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.toProvince? 'error': ''" 
-                :options="[
-                  { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
-                  { value: 'ลพบุรี', text: 'ลพบุรี' }
-                ]"
-              />
-            </div>
-            <div class="grid lg-2-3 md-60 sm-100">
-              <FormGroup 
-                type="textarea" label="ที่อยู่ส่งสินค้า *" placeholder="โปรดระบุ" 
-                :value="dataset.toAddress" @input="dataset.toAddress = $event" 
-                :errorText="isValidated && !dataset.toAddress? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.toAddress? 'error': ''" 
+                type="datepicker" label="วันที่ได้รับเลขที่ใบสินค้า *" placeholder="YYYYMMDD" 
+                :required="true" :minlength="8" :maxlength="8" 
+                :value="jobRequest.customsEntryNumberDate" @input="jobRequest.customsEntryNumberDate = $event" 
+                wrapperClass="append" :append="true" icon="calendar.svg" 
+                dateFormat="YYYYMMDD"
               />
             </div>
           </div>
@@ -130,56 +102,62 @@ export default {
     return {
       sidenavActiveIndex: 1,
       user: {
-        id: 1,
-        role: 'Admin', /* Product Owner, Company, Driver, Admin */
-        company: 'บริษัท พีอาร์เดริเวรี่ จำกัด',
-        username: 'General User',
-        prefix: 'นาย',
-        firstname: 'สมศักดิ์',
-        lastname: 'จริงใจ',
-        email: 'user@gmail.com',
-        phone: '081-1123456',
-        avatar: '/assets/img/misc/profile.jpg'
+        id: 4,
+        role: 'Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: 'Admin',
+        email: 'admin@gmail.com',
+        avatar: '/assets/img/misc/profile.jpg',
+        detail: {
+          prefix: 'นาย',
+          firstname: 'สมศักดิ์',
+          lastname: 'จริงใจ',
+          phone: '0811123456'
+        }
       },
+      jobRequest: {
+        status: 0,
+        awbNumber: '',
+        hwbSerialNumber: '',
+        flightNumber: '',
+        jobNumber: '',
+        customsEntryNumber: '',
+        customsEntryNumberDate: '',
 
-      isValidated: false,
-      dataset: {
-        name: '',
-        desc: '',
-        pickupDate: new Date(),
-        fromProvince: '',
-        fromAddress: '',
-        toProvince: '',
-        toAddress: '',
-        confPickupDate: null,
-        confPickupTime: null,
-        qrCode: null,
+        date: '',
+        numberOfPieces: '',
+        dockNumber: '',
+        pickupTimeHours: '',
+        pickupTimeMinutes: '',
+        qrCode: '',
+
+        confPickupTimeHours: '',
+        confPickupTimeMinutes: '',
+        truckNumber: '',
+        driver: '',
+
+        rating: '',
+        comment: ''
       }
     }
   },
-  created() {
+  mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    document.getElementById('color_style').href = '/assets/css/color-admin.css';
   },
   methods: {
     onSubmit(e) {
       var that = this;
-      that.isValidated = true;
-      
       var isValid = true;
       [
-        'name', 'pickupDate', 'desc', 
-        'fromProvince', 'fromAddress', 'toProvince', 'toAddress'
+        'awbNumber', 'hwbSerialNumber', 'flightNumber', 
+        'customsEntryNumber', 'customsEntryNumberDate', 'jobNumber'
       ].forEach(function(k){
-        if(!that.dataset[k]){
+        if(!that.jobRequest[k]){
           isValid = false;
         }
       });
 
       if(!isValid){
         e.preventDefault();
-      }else{
-        that.isValidated = false;
       }
     }
   }

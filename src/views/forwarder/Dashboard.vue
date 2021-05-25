@@ -35,6 +35,13 @@
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
+                label="Job Requests รอยืนยันคิว" :count="2" unit="งาน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="sep"></div>
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
                 label="Job Requests ที่กำลังดำเนินการ" :count="4" unit="งาน" 
                 classer="no-hover"
               />

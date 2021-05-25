@@ -4,249 +4,432 @@
 
   <section class="section-full pull-right">
     <div class="container">
+
       <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
-          <a href="/admin/job-requests" class="btn color-gray h-color-01">
+          <a :href="'/admin/job-requests/'+jobRequest.status" class="btn color-gray h-color-01">
             <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
             ย้อนกลับ
           </a>
         </div>
         <div class="header-wrapper">
-          <div class="text-container">
-            <h6 class="h3">View Job Request</h6>
+          <div class="text-container pr-2">
+            <span class="h3 mr-3">View Job Request</span> 
+            <span v-if="jobRequest.status==1" class="ss-tag ss-tag-danger">รอการ Matching</span>
+            <span v-else-if="jobRequest.status==2" class="ss-tag ss-tag-info">รอคิวการรับ</span>
+            <span v-else-if="jobRequest.status==3" class="ss-tag ss-tag-danger">รอยืนยันคิว</span>
+            <span v-else-if="jobRequest.status==4" class="ss-tag ss-tag-warning">กำลังดำเนินการ</span>
+            <span v-else-if="jobRequest.status==5" class="ss-tag ss-tag-success">ดำเนินการเสร็จสิ้น</span>
+          </div>
+          <div class="btns hide-mobile">
+            <Button 
+              text="ย้อนกลับ" :href="'/admin/job-requests/'+jobRequest.status" 
+              classer="btn-color-08"
+            />
+          </div>
+          <div class="btns show-mobile">
+            <Button 
+              text="ย้อนกลับ" :href="'/admin/job-requests/'+jobRequest.status" 
+              classer="btn-color-08 btn-sm" 
+            />
           </div>
         </div>
       </div>
       
-      <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-        <p class="fw-400">ค่าขนส่งเสนอโดยบริษัท</p>
+      <div v-if="jobRequest.status > 4">
+        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+          <p class="fw-400">ความพึงพอใจ</p>
+        </div>
+        <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
+          <form v-if="!jobRequestCommentValid" action="/" method="GET" @submit.prevent="onSubmitComment">
+            <div class="grids">
+              <div class="grid md-1-3 sm-50 xs-50 mt-4">
+                <FormGroup 
+                  type="select" label="ระดับความพอใจ *" 
+                  placeholder="เลือกระดับความพอใจ" :required="true" 
+                  :options="[
+                    { value: 5, text: '5 - พอใจมาก' },
+                    { value: 4, text: '4 - พอใจ' },
+                    { value: 3, text: '3 - ปาณกลาง' },
+                    { value: 2, text: '2 - ไม่พอใจ' },
+                    { value: 1, text: '1 - ไม่พอใจมาก' }
+                  ]" 
+                  :value="jobRequest.rating" 
+                  @input="jobRequest.rating = $event" 
+                />
+              </div>
+              <div class="grid md-2-3 sm-100 mt-4">
+                <FormGroup 
+                  type="textarea" label="คำแนะนำ" placeholder="คำแนะนำ" :rows="1" 
+                  :value="jobRequest.comment" 
+                  @input="jobRequest.comment = $event" 
+                />
+              </div>
+            </div>
+            <div class="btns w-auto mt-4">
+              <Button 
+                type="submit" text="ส่งข้อความ" 
+                classer="btn-color-01" :append="true" icon="send-white.svg" 
+              />
+            </div>
+          </form>
+          <div v-else class="grids">
+            <div class="grid md-1-3 sm-50 xs-50">
+              <FormGroup  type="plain" label="ระดับความพอใจ" :value="jobRequest.rating" />
+            </div>
+            <div class="grid md-2-3 sm-100">
+              <FormGroup  type="plain" label="คำแนะนำ" :value="jobRequest.comment" />
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="pb-2" data-aos="fade-up" data-aos-delay="150">
-        <DataTable 
-          :rows="rows" 
-          :columns="[
-            { key: 'companyName', text: 'ชื่อบริษัท' },
-            { key: 'contactName', text: 'ชื่อผู้เสนอราคา' },
-            { key: 'price', text: 'ราคา' },
-            { key: 'createdDate', text: 'วันที่เสนอราคา' },
-            { key: 'options', classer: 'options' }
-          ]" 
-          :search="[ 'companyName', 'contactName', 'price', 'createdDate' ]" 
-          :orders="[
-            { key: 'price-asc', text: 'ราคาที่เสนอ (ต่ำสุด)' },
-            { key: 'price-desc', text: 'ราคาที่เสนอ (สูงสุด)' },
-            { key: 'createdDate-desc', text: 'วันที่สร้าง (ใหม่สุด)' },
-            { key: 'createdDate-asc', text: 'วันที่สร้าง (เก่าสุด)' }
-          ]" 
-          @click-view="(id)=>openDeliveryInfo(id)"
-        />
+
+      <div v-if="jobRequest.status == 2 && !jobRequestConfirmValid">
+        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+          <p class="fw-400">จัดคิวการรับสินค้า</p>
+        </div>
+        <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
+          <form action="/admin/job-request-view/3" method="GET">
+            <div class="grids">
+              <div class="grid xl-30 lg-1-3 sm-50">
+                <FormGroup 
+                  type="text" label="หมายเลขช่องจอด *" placeholder="โปรดระบุ" :required="true" 
+                  :value="jobRequest.dockNumber" @input="jobRequest.dockNumber = $event" 
+                />
+              </div>
+              <div class="grid xl-20 lg-25 sm-50">
+                <FormGroupTime
+                  label="เวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
+                  :value0="jobRequest.pickupTimeHours" 
+                  @input0="jobRequest.pickupTimeHours = $event" 
+                  :value1="jobRequest.pickupTimeMinutes" 
+                  @input1="jobRequest.pickupTimeMinutes = $event" 
+                />
+              </div>
+              <div class="grid sm-100">
+                <div class="btns mt-0">
+                  <Button 
+                    type="submit" text="จัดคิวการรับสินค้า" 
+                    classer="btn-color-01" :append="true" icon="check-white.svg" 
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div v-if="jobRequest.status > 2">
+        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+          <p class="fw-400">ยืนยันการรับสินค้า</p>
+        </div>
+        <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
+          <form v-if="!jobRequestConfirmValid" action="/" method="GET" @submit.prevent="onSubmitConfirm">
+            <div class="grids">
+              <div class="grid xl-30 lg-1-3 sm-50">
+                <FormGroup 
+                  type="select" label="ผู้ขับรถ *" placeholder="เลือกผู้ขับรถ" :required="true" 
+                  :value="jobRequest.driver" @input="jobRequest.driver = $event" 
+                  :options="[
+                    { value: 'นาย ชาญชัย กล้าหาญ', text: 'นาย ชาญชัย กล้าหาญ' }
+                  ]"
+                />
+              </div>
+              <div class="grid xl-25 lg-30 sm-50">
+                <FormGroup 
+                  type="text" label="ทะเบียนรถ *" placeholder="ทะเบียนรถ" 
+                  :required="true" :maxlength="7" 
+                  :value="jobRequest.truckNumber" @input="jobRequest.truckNumber = $event" 
+                />
+              </div>
+              <div class="grid xl-20 lg-25 sm-50">
+                <FormGroupTime
+                  label="ยืนยันเวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
+                  :value0="jobRequest.confPickupTimeHours" 
+                  @input0="jobRequest.confPickupTimeHours = $event" 
+                  :value1="jobRequest.confPickupTimeMinutes" 
+                  @input1="jobRequest.confPickupTimeMinutes = $event" 
+                />
+              </div>
+              <div class="grid sm-100">
+                <div class="btns mt-0">
+                  <Button 
+                    type="submit" text="ยืนยันการรับสินค้า" 
+                    classer="btn-color-01" :append="true" icon="check-white.svg" 
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+          <div v-else class="grids">
+            <div class="grid xl-30 lg-1-3 sm-50">
+              <FormGroup 
+                type="plain" label="ผู้ขับรถ" :value="jobRequest.driver"
+              />
+            </div>
+            <div class="grid xl-25 lg-30 sm-50">
+              <FormGroup 
+                type="plain" label="ทะเบียนรถ" :value="jobRequest.truckNumber"
+              />
+            </div>
+            <div class="grid xl-20 lg-25 sm-50">
+              <FormGroup
+                type="plain" label="ยืนยันเวลารับสินค้า" 
+                :value="jobRequest.confPickupTimeHours && jobRequest.confPickupTimeMinutes
+                  ? jobRequest.confPickupTimeHours+'.'+jobRequest.confPickupTimeMinutes+' น.': ''"
+              />
+            </div>
+            <div v-if="jobRequest.status < 5" class="grid sm-100">
+              <div class="btns d-flex mt-0">
+                <Button 
+                  v-if="stepActiveIndex > 2" text="ย้อนกลับ" href="javascript:" 
+                  classer="btn-color-11" @click="stepActiveIndex -= 1"
+                />
+                <Button 
+                  :text="
+                    stepActiveIndex == 2 ?
+                      'ชำระเงินแล้ว' :
+                      stepActiveIndex == 3 ?
+                        'รับสินค้าแล้ว' :
+                          stepActiveIndex == 4 ?
+                            'กำลังจัดส่งสินค้า' :
+                            'จัดส่งสินค้าแล้ว'
+                  " href="javascript:" 
+                  classer="btn-color-01 ml-auto" @click="stepActiveIndex += 1"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <Step01 :activeIndex="stepActiveIndex" />
+          </div>
+        </div>
+      </div>
+      
+      <div v-if="jobRequest.status > 1">
+        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+          <p class="fw-400">คิวการรับสินค้า</p>
+        </div>
+        <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+          <div class="grids">
+            <div class="grid md-2-3 sm-100 mt-0">
+              <div class="grids">
+                <div class="grid sm-50 xs-50">
+                  <FormGroup
+                    type="plain" label="วันที่เที่ยวบิน" :value="formatDate(jobRequest.date, 'DD MMM YYYY')"
+                  />
+                </div>
+                <div class="grid sm-50 xs-50">
+                  <FormGroup
+                    type="plain" label="จำนวนสินค้า" :value="formatNumber(jobRequest.numberOfPieces, 0)"
+                  />
+                </div>
+                <div class="grid sm-50 xs-50">
+                  <FormGroup
+                    type="plain" label="หมายเลขช่องจอด" :value="jobRequest.dockNumber"
+                  />
+                </div>
+                <div class="grid sm-50 xs-50">
+                  <FormGroup
+                    type="plain" label="เวลารับสินค้า" 
+                    :value="jobRequest.pickupTimeHours && jobRequest.pickupTimeMinutes
+                      ? jobRequest.pickupTimeHours+'.'+jobRequest.pickupTimeMinutes+' น.': ''"
+                  />
+                </div>
+              </div>
+            </div>
+            <div v-if="jobRequest.qrCode" class="grid md-1-3 sm-50 xs-50">
+              <img class="img-qr" :src="jobRequest.qrCode" alt="QR Code" />
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div v-if="jobRequest.status > 2">
+        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+          <p class="fw-400">ข้อมูลการสนทนา</p>
+        </div>
+        <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+          <div class="mt-6">
+            <ChatContainer :chat="chat" :withInput="jobRequest.status <= 4" />
+          </div>
+        </div>
       </div>
 
       <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-        <p class="fw-400">ข้อมูลทั่วไป</p>
+        <p class="fw-400">ข้อมูลสินค้า</p>
       </div>
       <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
         <div class="grids">
           <div class="grid xl-1-3 lg-40 md-50 sm-80">
-            <FormGroup type="plain" label="ชื่องาน" :value="dataset.name" />
+            <FormGroup 
+              type="plain" label="เลขที่ Airway Bill" :value="jobRequest.awbNumber" 
+            />
           </div>
           <div class="grid xl-1-3 lg-40 md-50 sm-80">
-            <FormGroup type="plain" label="วันที่รับสินค้า" :value="formatDate(dataset.pickupDate)" />
+            <FormGroup 
+              type="plain" label="เลขที่ House Airway Bil" :value="jobRequest.hwbSerialNumber" 
+            />
           </div>
           <div class="sep"></div>
-          <div class="grid xl-2-3 lg-80 sm-100">
-            <FormGroup type="plain" label="รายละเอียด" :value="dataset.desc" />
+          <div class="grid xl-1-3 lg-40 md-50 sm-80">
+            <FormGroup 
+              type="plain" label="รหัสเที่ยวบิน" :value="jobRequest.flightNumber" 
+            />
+          </div>
+          <div class="grid xl-1-3 lg-40 md-50 sm-80">
+            <FormGroup 
+              type="plain" label="เลขที่งาน" :value="jobRequest.jobNumber" 
+            />
+          </div>
+          <div class="sep"></div>
+          <div class="grid xl-1-3 lg-40 md-50 sm-80">
+            <FormGroup 
+              type="plain" label="เลขที่ใบขนสินค้า" :value="jobRequest.customsEntryNumber" 
+            />
+          </div>
+          <div class="grid xl-1-3 lg-40 md-50 sm-80">
+            <FormGroup 
+              type="plain" label="วันที่ได้รับเลขที่ใบสินค้า" 
+              :value="formatDate(jobRequest.customsEntryNumberDate)" 
+            />
           </div>
         </div>
       </div>
-      
-      <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-        <p class="fw-400">สถานที่รับส่งสินค้า</p>
-      </div>
-      <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
-        <div class="grids">
-          <div class="grid lg-1-3 md-40 sm-80">
-            <FormGroup type="plain" label="จังหวัดที่รับสินค้า" :value="dataset.fromProvince" />
-          </div>
-          <div class="grid lg-2-3 md-60 sm-100">
-            <FormGroup type="plain" label="ที่อยู่รับสินค้า" :value="dataset.fromAddress" />
-          </div>
-          <div class="grid lg-1-3 md-40 sm-80">
-            <FormGroup type="plain" label="จังหวัดที่ส่งสินค้า" :value="dataset.toProvince" />
-          </div>
-          <div class="grid lg-2-3 md-60 sm-100">
-            <FormGroup type="plain" label="ที่อยู่ส่งสินค้า" :value="dataset.toAddress" />
-          </div>
-        </div>
-      </div>
+
     </div>
   </section>
-
-  <!-- Popup View -->
-  <div class="popup-container" :class="{ 'active': openedPopup }">
-    <div class="wrapper">
-      <div class="close-filter" @click="openedPopup = !openedPopup"></div>
-      <form action="/admin/job-request-assignment" method="GET" class="w-full">
-        <div class="popup-box">
-          <div class="header">
-            <div class="btns mt-0">
-              <a href="javascript:" class="btn btn-close" @click="openedPopup = !openedPopup">
-                <img class="icon-prepend xs" src="/assets/img/icon/close.svg" alt="Image Icon" />
-                ปิดหน้าต่าง
-              </a>
-            </div>
-            <div class="header-wrapper">
-              <div class="text-container pr-2">
-                <h6 class="h3">ข้อเสนอโดยบริษัท</h6>
-              </div>
-              <div class="btns hide-mobile">
-                <Button 
-                  type="submit" text="เลือก" 
-                  classer="btn-color-01" :prepend="true" icon="check-white.svg" 
-                />
-                <Button 
-                  text="ปิด" @click="openedPopup = !openedPopup" 
-                  classer="btn-color-09 ml-2"
-                />
-              </div>
-              <div class="btns show-mobile">
-                <Button 
-                  type="submit" text="เลือก" classer="btn-color-01 btn-sm" 
-                />
-                <Button 
-                  text="ปิด" @click="openedPopup = !openedPopup" 
-                  classer="btn-color-09 btn-sm ml-1"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="body">
-            <div class="grids">
-              <div class="grid sm-50">
-                <FormGroup
-                  type="plain" label="ชื่อบริษัท" :value="dataOffer.companyName"
-                />
-              </div>
-              <div class="grid sm-50">
-                <FormGroup
-                  type="plain" label="ชื่อผู้เสนอราคา" :value="dataOffer.contactName"
-                />
-              </div>
-              <div class="grid sm-50">
-                <FormGroup
-                  type="plain" label="ราคา" :value="formatPrice(dataOffer.price)+' บาท'"
-                />
-              </div>
-              <div class="grid sm-50">
-                <FormGroup
-                  type="plain" label="วันที่เสนอราคา" :value="dataOffer.createdDate"
-                />
-              </div>
-              <div class="grid sm-50">
-                <SpecialCard03 
-                  label="งานที่สำเร็จแล้ว" :count="48" unit="งาน" 
-                  classer="sm no-hover"
-                />
-              </div>
-              <div class="grid sm-50">
-                <SpecialCard03 
-                  label="ความพึงพอใจโดยรวม" :count="4.68" unit="/ 5" 
-                  classer="sm no-hover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
 </template>
 
 <script>
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Sidenav from '../../components/Sidenav';
-import DataTable from '../../components/DataTable';
-import SpecialCard03 from '../../components/SpecialCard03';
+import Step01 from '../../components/Step01';
+import ChatContainer from '../../components/ChatContainer';
+import FormGroupTime from '../../components/FormGroupTime';
 
 export default {
   name: 'AdminJobRequestViewPage',
   components: {
     Topnav,
     Sidenav,
-    DataTable,
-    SpecialCard03
+    Step01,
+    ChatContainer,
+    FormGroupTime
   },
   data() {
     return {
       sidenavActiveIndex: 1,
       user: {
-        id: 1,
-        role: 'Admin', /* Product Owner, Company, Driver, Admin */
-        company: 'บริษัท พีอาร์เดริเวรี่ จำกัด',
-        username: 'General User',
-        prefix: 'นาย',
-        firstname: 'สมศักดิ์',
-        lastname: 'จริงใจ',
-        email: 'user@gmail.com',
-        phone: '081-1123456',
-        avatar: '/assets/img/misc/profile.jpg'
+        id: 4,
+        role: 'Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: 'Admin',
+        email: 'admin@gmail.com',
+        avatar: '/assets/img/misc/profile.jpg',
+        detail: {
+          prefix: 'นาย',
+          firstname: 'สมศักดิ์',
+          lastname: 'จริงใจ',
+          phone: '0811123456'
+        }
+      },
+      jobRequest: {
+        status: this.$route.params.status? Number(this.$route.params.status): 1,
+        awbNumber: '131-56591080',
+        hwbSerialNumber: 'MLC10131957',
+        flightNumber: 'JL0707',
+        jobNumber: 'A0020640302798',
+        customsEntryNumber: 'A0020640302798',
+        customsEntryNumberDate: new Date(),
+
+        date: '',
+        numberOfPieces: '',
+        dockNumber: '',
+        pickupTimeHours: '',
+        pickupTimeMinutes: '',
+        qrCode: '',
+
+        confPickupTimeHours: '',
+        confPickupTimeMinutes: '',
+        truckNumber: '',
+        driver: '',
+
+        rating: '',
+        comment: ''
       },
 
-      openedPopup: false,
-      isValidated: false,
-      dataset: {
-        name: 'ขนส่งบรรจุภัณฑ์ทางการแพทย์',
-        desc: 'ขนส่งจาก TG Cargo มาที่บริษัทสาขาหลักตามที่อยู่',
-        pickupDate: new Date(),
-        fromProvince: 'กรุงเทพมหานคร',
-        fromAddress: 'Racha Thewa, Bang Phli District, Samut Prakan 10540',
-        toProvince: 'กรุงเทพมหานคร',
-        toAddress: 'Racha Thewa, Bang Phli District, Samut Prakan 10540',
-        confPickupDate: null,
-        confPickupTime: null,
-        qrCode: null,
-      },
+      jobRequestCommentValid: false,
+      jobRequestConfirmValid: false,
 
-      dataOffer: {
-        companyName: 'บริษัท พีอาร์เดริเวรี่ จำกัด',
-        contactName: 'นาย สมพล ใจกว้าง',
-        price: 3000,
-        createdDate: '20/05/2564 10:34 น.',
-        driverName: null,
-        truckDetail: null
-      },
-
-      rows: []
+      stepActiveIndex: 1,
+      chat: [
+        {
+          self: false,
+          message: 'ใน e-PP เวอร์ชั่นใหม่ ทางกนอ: ได้ยกเลิกเรื่องการมอบอำนาจ เพื่อขอสิทธิ์ใช้งานเพิ่มเติมทั้งหมด คงไว้แต่ User หลักของผู้ประกอบการ ซึ่งในระบบใหม่จะเรียกว่า Master User ซึ่งหากผู้ประกอบการรายใด ต้องการสร้าง User เพิ่มในระบบ สามารถบริหารจัดการ User/Password และสิทธิ์การเข้าใช้งานโปรแกรมได้ด้วยตัวเองโดยไม่จำกัด User ใช้งาน',
+          avatar: null,
+          createdAt: new Date()
+        },
+        {
+          self: true,
+          message: 'ใน e-PP เวอร์ชั่นใหม่ ทางกนอ: ได้ยกเลิกเรื่องการมอบอำนาจ เพื่อขอสิทธิ์ใช้งานเพิ่มเติมทั้งหมด คงไว้แต่ User หลักของผู้ประกอบการ ซึ่งในระบบใหม่จะเรียกว่า Master User ซึ่งหากผู้ประกอบการรายใด ต้องการสร้าง User เพิ่มในระบบ สามารถบริหารจัดการ User/Password และสิทธิ์การเข้าใช้งานโปรแกรมได้ด้วยตัวเองโดยไม่จำกัด User ใช้งาน',
+          avatar: '/assets/img/misc/profile.jpg',
+          createdAt: new Date()
+        },
+        {
+          self: false,
+          message: 'ใน e-PP เวอร์ชั่นใหม่ ทางกนอ: ได้ยกเลิกเรื่องการมอบอำนาจ เพื่อขอสิทธิ์ใช้งานเพิ่มเติมทั้งหมด คงไว้แต่ User หลักของผู้ประกอบการ ซึ่งในระบบใหม่จะเรียกว่า Master User ซึ่งหากผู้ประกอบการรายใด ต้องการสร้าง User เพิ่มในระบบ สามารถบริหารจัดการ User/Password และสิทธิ์การเข้าใช้งานโปรแกรมได้ด้วยตัวเองโดยไม่จำกัด User ใช้งาน',
+          avatar: null,
+          createdAt: new Date()
+        },
+        {
+          self: true,
+          message: 'ใน e-PP เวอร์ชั่นใหม่ ทางกนอ: ได้ยกเลิกเรื่องการมอบอำนาจ เพื่อขอสิทธิ์ใช้งานเพิ่มเติมทั้งหมด คงไว้แต่ User หลักของผู้ประกอบการ ซึ่งในระบบใหม่จะเรียกว่า Master User ซึ่งหากผู้ประกอบการรายใด ต้องการสร้าง User เพิ่มในระบบ สามารถบริหารจัดการ User/Password และสิทธิ์การเข้าใช้งานโปรแกรมได้ด้วยตัวเองโดยไม่จำกัด User ใช้งาน',
+          avatar: '/assets/img/misc/profile.jpg',
+          createdAt: new Date()
+        }
+      ]
     }
   },
-  created() {
+  mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    document.getElementById('color_style').href = '/assets/css/color-admin.css';
-    for(var i=0; i<3; i++){
-      this.rows.push({
-        companyName: { text: 'บริษัท พีอาร์เดริเวรี่ จำกัด' },
-        contactName: { text: 'นาย สมพล ใจกว้าง' },
-        price: { text: '3,000.00 บาท' },
-        createdDate: { text: '20/05/2564 10:34 น.' },
-        status: { type: 'tag', text: 'รอการตอบรับ' },
-        options: {
-          type: 'options',
-          view: { type: 'emit', id: i+1 },
-        }
-      });
+    if(this.jobRequest.status > 1){
+      this.jobRequest.date = new Date();
+      this.jobRequest.numberOfPieces = 2400;
+    }
+    if(this.jobRequest.status > 2){
+      this.jobRequest.dockNumber = 'G14';
+      this.jobRequest.pickupTimeHours = '09';
+      this.jobRequest.pickupTimeMinutes = '45';
+      this.jobRequest.qrCode = '/assets/img/misc/qr-code.jpg';
+      this.jobRequest.confPickupTimeHours = this.jobRequest.pickupTimeHours;
+      this.jobRequest.confPickupTimeMinutes = this.jobRequest.pickupTimeMinutes;
+    }
+    if(this.jobRequest.status > 3){
+      this.jobRequest.driver = 'นาย ชาญชัย กล้าหาญ';
+      this.jobRequest.truckNumber = '5กศ5859';
+      this.stepActiveIndex = 2;
+      this.jobRequestConfirmValid = true;
+    }
+    if(this.jobRequest.status > 4){
+      this.stepActiveIndex = 6;
     }
   },
   methods: {
-    formatPrice(value) {
-      let val = (value/1).toFixed(2);
+    formatNumber(value, digits=2) {
+      let val = (value/1).toFixed(digits);
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
-    formatDate(value) {
-      return moment(String(value)).format('DD/MM/YYYY');
+    formatDate(value, format='YYYYMMDD') {
+      return moment(String(value)).format(format);
     },
-    openDeliveryInfo(id) {
-      this.openedPopup = !this.openedPopup;
+    onSubmitComment() {
+      this.jobRequestCommentValid = true;
+    },
+    onSubmitConfirm() {
+      this.jobRequestConfirmValid = true;
+      this.jobRequest.status = 4;
+      this.stepActiveIndex = 2;
     }
   }
 }

@@ -1,13 +1,12 @@
 <template>
-  <Topnav :user="user" />
-  <Sidenav :user="user" :activeIndex="sidenavActiveIndex" />
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" />
 
-  <section class="section-full pull-right">
+  <section class="section-full">
     <div class="container">
       <div class="tab-container">
         <div class="section-header pb-0" data-aos="fade-up" data-aos-delay="0">
           <div class="btns mt-0">
-            <a href="/admin/dashboard" class="btn color-gray h-color-01">
+            <a href="/tgadmin/dashboard" class="btn color-gray h-color-01">
               <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
               ย้อนกลับ
             </a>
@@ -16,59 +15,16 @@
             <div class="text-container">
               <h6 class="h3">Job Requests</h6>
             </div>
-            <div class="btns hide-mobile">
-              <Button 
-                text="สร้าง" href="/admin/job-request-add" 
-                classer="btn-color-01" :prepend="true" icon="plus-white.svg" 
-              />
-            </div>
-            <div class="btns show-mobile">
-              <Button 
-                text="สร้าง" href="/admin/job-request-add" 
-                classer="btn-color-01 btn-sm" 
-              />
-            </div>
           </div>
           <Tabs01 
             :activeIndex="tabActiveIndex" 
             @clicked="tabActiveIndex = $event" 
-            :tabs="[ 
-              'รอการ Matching', 'รอคิวการรับ', 'รอยืนยันคิว',
-              'กำลังดำเนินการ', 'ดำเนินการเสร็จสิ้น'
-            ]" 
+            :tabs="[ 'รอคิวการรับ', 'รอยืนยันคิว', 'กำลังดำเนินการ', 'ดำเนินการเสร็จสิ้น' ]" 
           />
         </div>
         <div class="tab-contents" data-aos="fade-up" data-aos-delay="150">
-
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
-            <DataTable 
-              :rows="rows1" 
-              :columns="[
-                { key: 'awbNumber', text: 'Airway Bill' },
-                { key: 'hwbSerialNumber', text: 'House Airway Bill' },
-                { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
-                { key: 'jobNumber', text: 'เลขที่งาน' },
-                { key: 'customsEntryNumber', text: 'เลขที่ใบขนสินค้า' },
-                { key: 'customsEntryNumberDate', text: 'วันที่ได้รับเลขที่ใบสินค้า' },
-                { key: 'status', text: 'สถานะ', classer: 'status' },
-                { key: 'options', classer: 'options' }
-              ]" 
-              :search="[ 
-                'awbNumber', 'hwbSerialNumber', 'flightNumber', 'jobNumber',
-                'customsEntryNumber', 'customsEntryNumberDate'
-              ]" 
-              :orders="[
-                { key: 'awbNumber-desc', text: 'Airway Bill (ใหม่สุด)' },
-                { key: 'awbNumber-asc', text: 'Airway Bill (เก่าสุด)' },
-                { key: 'hwbSerialNumber-desc', text: 'House Airway Bill (ใหม่สุด)' },
-                { key: 'hwbSerialNumber-asc', text: 'House Airway Bill (เก่าสุด)' },
-                { key: 'customsEntryNumberDate-desc', text: 'วันที่ได้รับเลขที่ใบสินค้า (ใหม่สุด)' },
-                { key: 'customsEntryNumberDate-asc', text: 'วันที่ได้รับเลขที่ใบสินค้า (เก่าสุด)' }
-              ]" 
-            />
-          </div>
           
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
+          <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable 
               :rows="rows2" 
               :columns="[
@@ -97,7 +53,7 @@
             />
           </div>
           
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 2 }">
+          <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
             <DataTable 
               :rows="rows3" 
               :columns="[
@@ -126,7 +82,7 @@
             />
           </div>
           
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 3 }">
+          <div class="tab-content" :class="{ 'active': tabActiveIndex == 2 }">
             <DataTable 
               :rows="rows4" 
               :columns="[
@@ -155,7 +111,7 @@
             />
           </div>
           
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 4 }">
+          <div class="tab-content" :class="{ 'active': tabActiveIndex == 3 }">
             <DataTable 
               :rows="rows5" 
               :columns="[
@@ -188,31 +144,32 @@
       </div>
     </div>
   </section>
+
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" :isBottom="true" />
 </template>
 
 <script>
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
-import Sidenav from '../../components/Sidenav';
 import Tabs01 from '../../components/Tabs01';
 import DataTable from '../../components/DataTable';
 
 export default {
-  name: 'AdminJobRequestsPage',
+  name: 'TGAdminJobRequestsPage',
   components: {
     Topnav,
-    Sidenav,
     Tabs01,
     DataTable
   },
   data() {
     return {
-      sidenavActiveIndex: 1,
+      topnavActiveIndex: 1,
       user: {
-        id: 4,
-        role: 'Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
-        username: 'Admin',
-        email: 'admin@gmail.com',
+        id: 3,
+        role: 'TG Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
+        subrole: null,
+        username: 'TG Admin',
+        email: 'tg-admin@gmail.com',
         avatar: '/assets/img/misc/profile.jpg',
         detail: {
           prefix: 'นาย',
@@ -222,8 +179,7 @@ export default {
         }
       },
 
-      tabActiveIndex: this.$route.params.tab? Number(this.$route.params.tab)-1: 0,
-      rows1: [],
+      tabActiveIndex: this.$route.params.tab? Math.max(0, Number(this.$route.params.tab)-2): 0,
       rows2: [],
       rows3: [],
       rows4: [],
@@ -232,28 +188,12 @@ export default {
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    document.getElementById('color_style').href = '/assets/css/color-company.css';
     for(var i=0; i<4; i++){
-      this.rows1.push({
-        awbNumber: { 
-          type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view'
-        },
-        hwbSerialNumber: { text: 'MLC10131957' },
-        flightNumber: { text: 'JL0707' },
-        jobNumber: { text: 'A0020640302798' },
-        customsEntryNumber: { text: 'A0020640302798' },
-        customsEntryNumberDate: { text: this.formatDate(new Date()) },
-        status: { type: 'tag', value: 1, text: 'รอการ Matching', classer: 'ss-tag-danger' },
-        options: {
-          type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view' }
-        }
-      });
-      
       this.rows2.push({
         awbNumber: { 
           type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view/2'
+          href: '/tgadmin/job-request-view/2'
         },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
@@ -264,14 +204,14 @@ export default {
         status: { type: 'tag', value: 2, text: 'รอคิวการรับ', classer: 'ss-tag-info' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view/2' }
+          view: { type: 'link', href: '/tgadmin/job-request-view/2' }
         }
       });
       
       this.rows3.push({
         awbNumber: { 
           type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view/3'
+          href: '/tgadmin/job-request-view/3'
         },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
@@ -282,14 +222,14 @@ export default {
         status: { type: 'tag', value: 3, text: 'รอยืนยันคิว', classer: 'ss-tag-danger' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view/3' }
+          view: { type: 'link', href: '/tgadmin/job-request-view/3' }
         }
       });
       
       this.rows4.push({
         awbNumber: { 
           type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view/4'
+          href: '/tgadmin/job-request-view/4'
         },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
@@ -302,14 +242,14 @@ export default {
           { type: 'tag', value: 3, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view/4' }
+          view: { type: 'link', href: '/tgadmin/job-request-view/4' }
         }
       });
       
       this.rows5.push({
         awbNumber: { 
           type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view/5'
+          href: '/tgadmin/job-request-view/5'
         },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
@@ -325,7 +265,7 @@ export default {
           { type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view/5' }
+          view: { type: 'link', href: '/tgadmin/job-request-view/5' }
         }
       });
     }

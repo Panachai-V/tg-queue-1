@@ -27,22 +27,14 @@
             </a>
           </div>
           <div class="menu" :class="{ 'active': activeIndex==2 }">
-            <a href="/admin/customers">
+            <a href="/admin/forwarders">
               <div class="icon">
                 <img src="/assets/img/icon/users-admin.svg" alt="Image Icon" />
               </div>
-              <div class="text">Product Owners</div>
+              <div class="text">Freight Forwarders</div>
             </a>
           </div>
           <div class="menu" :class="{ 'active': activeIndex==3 }">
-            <a href="/admin/companies">
-              <div class="icon">
-                <img src="/assets/img/icon/user-settings-admin.svg" alt="Image Icon" />
-              </div>
-              <div class="text">Companies</div>
-            </a>
-          </div>
-          <div class="menu" :class="{ 'active': activeIndex==4 }">
             <a href="/admin/history">
               <div class="icon">
                 <img src="/assets/img/icon/history-admin.svg" alt="Image Icon" />

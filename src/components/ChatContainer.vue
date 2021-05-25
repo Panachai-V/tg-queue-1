@@ -19,7 +19,9 @@
         <div class="text-container">
           <div class="text-wrapper p sm fw-300" v-html="ch.message"></div>
           <p class="mt-1 p sm fw-400 op-70">
-            <span class="text-sm" v-html="ch.createdAt"></span>
+            <span class="text-sm">
+              {{formatDate(ch.createdAt, 'DD/MM/YYYY HH:MM:SS')}}
+            </span>
           </p>
         </div>
       </div>
@@ -48,6 +50,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import FormGroup from './FormGroup';
 import Button from './Button';
 
@@ -72,6 +75,9 @@ export default {
     this.scrollToEnd();
   },
   methods: {
+    formatDate(value, format='YYYYMMDD') {
+      return moment(String(value)).format(format);
+    },
     scrollToEnd: function() {    	
       this.$refs.chatScroll.scrollTop = this.$refs.chatScroll.scrollHeight;
     },

@@ -40,10 +40,10 @@
         </div>
       </div>
       
-      <!-- Menu - Company -->
-      <div v-else-if="isCompany()" class="menu-container" :class="{ 'hide-mobile': !isBottom }">
+      <!-- Menu - TG Admin -->
+      <div v-else-if="isTGAdmin()" class="menu-container" :class="{ 'hide-mobile': !isBottom }">
         <div class="menu" :class="{ 'active': activeIndex == 0 }">
-          <a href="/company/dashboard">
+          <a href="/tgadmin/dashboard">
             <div class="icon">
               <img src="/assets/img/icon/home-company.svg" alt="Image Icon" />
             </div>
@@ -51,27 +51,11 @@
           </a>
         </div>
         <div class="menu" :class="{ 'active': activeIndex == 1 }">
-          <a href="/company/job-requests">
+          <a href="/tgadmin/job-requests">
             <div class="icon">
               <img src="/assets/img/icon/request-company.svg" alt="Image Icon" />
             </div>
             <div class="text">Job Requests</div>
-          </a>
-        </div>
-        <div class="menu" :class="{ 'active': activeIndex == 2 }">
-          <a href="/company/my-jobs">
-            <div class="icon">
-              <img src="/assets/img/icon/box-company.svg" alt="Image Icon" />
-            </div>
-            <div class="text">My Jobs</div>
-          </a>
-        </div>
-        <div class="menu" :class="{ 'active': activeIndex == 3 }">
-          <a href="/company/drivers">
-            <div class="icon">
-              <img src="/assets/img/icon/users-company.svg" alt="Image Icon" />
-            </div>
-            <div class="text">Truck Drivers</div>
           </a>
         </div>
       </div>
@@ -107,7 +91,7 @@
               <a href="javascript:" @click="isActivePopupProfile = !isActivePopupProfile">
                 <div class="icon">
                   <img v-if="isFreightForwarder()" src="/assets/img/icon/edit.svg" alt="Image Icon" />
-                  <img v-else-if="isCompany()" src="/assets/img/icon/edit-company.svg" alt="Image Icon" />
+                  <img v-else-if="isTGAdmin()" src="/assets/img/icon/edit-company.svg" alt="Image Icon" />
                   <img v-else-if="isDriver()" src="/assets/img/icon/edit-driver.svg" alt="Image Icon" />
                   <img v-else-if="isAdmin()" src="/assets/img/icon/edit-admin.svg" alt="Image Icon" />
                 </div>
@@ -118,7 +102,7 @@
               <a href="javascript:" @click="isActivePopupPassword = !isActivePopupPassword">
                 <div class="icon">
                   <img v-if="isFreightForwarder()" src="/assets/img/icon/lock.svg" alt="Image Icon" />
-                  <img v-else-if="isCompany()" src="/assets/img/icon/lock-company.svg" alt="Image Icon" />
+                  <img v-else-if="isTGAdmin()" src="/assets/img/icon/lock-company.svg" alt="Image Icon" />
                   <img v-else-if="isDriver()" src="/assets/img/icon/lock-driver.svg" alt="Image Icon" />
                   <img v-else-if="isAdmin()" src="/assets/img/icon/lock-admin.svg" alt="Image Icon" />
                 </div>
@@ -384,15 +368,15 @@ export default {
         return false;
       }
     },
-    isCompany() {
-      if(this.user && this.user.role == 'Company'){
+    isDriver() {
+      if(this.user && this.user.role == 'Driver'){
         return true;
       }else{
         return false;
       }
     },
-    isDriver() {
-      if(this.user && this.user.role == 'Driver'){
+    isTGAdmin() {
+      if(this.user && this.user.role == 'TG Admin'){
         return true;
       }else{
         return false;
