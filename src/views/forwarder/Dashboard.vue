@@ -73,7 +73,7 @@ export default {
         role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
         username: 'General User',
         email: 'user@gmail.com',
-        avatar: '/assets/img/misc/profile-01.svg',
+        avatar: '/assets/img/misc/profile.jpg',
         detail: {
           prefix: 'นาย',
           firstname: 'สมศักดิ์',

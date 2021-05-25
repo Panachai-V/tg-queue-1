@@ -28,43 +28,57 @@
             <DataTable 
               :rows="rows1" 
               :columns="[
-                { key: 'name', text: 'ชื่องาน' },
-                { key: 'startDate', text: 'วันที่รับสินค้า' },
-                { key: 'fromLocation', text: 'ที่รับสินค้า' },
-                { key: 'toLocation', text: 'ที่ส่งสินค้า' },
-                { key: 'createdDate', text: 'วันที่สร้าง' },
+                { key: 'awbNumber', text: 'Airway Bill' },
+                { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
+                { key: 'numberOfPieces', text: 'จำนวนสินค้า' },
+                { key: 'date', text: 'วันที่เที่ยวบิน' },
+                { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
+                { key: 'pickupTime', text: 'เวลารับสินค้า' },
+                { key: 'truckNumber', text: 'ทะเบียนรถ' },
                 { key: 'status', text: 'สถานะ', classer: 'status' },
                 { key: 'options', classer: 'options' }
               ]" 
-              :search="[ 'name', 'startDate', 'fromLocation', 'toLocation' ]" 
+              :search="[ 
+                'awbNumber', 'hwbSerialNumber', 'flightNumber', 'date',
+                'dockNumber', 'pickupTime'
+              ]" 
               :orders="[
-                { key: 'startDate-desc', text: 'วันที่รับสินค้า (ใหม่สุด)' },
-                { key: 'startDate-asc', text: 'วันที่รับสินค้า (เก่าสุด)' },
-                { key: 'createdDate-desc', text: 'วันที่สร้าง (ใหม่สุด)' },
-                { key: 'createdDate-asc', text: 'วันที่สร้าง (เก่าสุด)' }
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
+                { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
+                { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
+                { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
             />
           </div>
           
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
             <DataTable 
-              :rows="rows3" 
+              :rows="rows2" 
               :columns="[
-                { key: 'name', text: 'ชื่องาน' },
-                { key: 'startDate', text: 'วันที่รับสินค้า' },
-                { key: 'fromLocation', text: 'ที่รับสินค้า' },
-                { key: 'toLocation', text: 'ที่ส่งสินค้า' },
-                { key: 'createdDate', text: 'วันที่สร้าง' },
+                { key: 'awbNumber', text: 'Airway Bill' },
+                { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
+                { key: 'numberOfPieces', text: 'จำนวนสินค้า' },
+                { key: 'date', text: 'วันที่เที่ยวบิน' },
+                { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
+                { key: 'pickupTime', text: 'เวลารับสินค้า' },
+                { key: 'truckNumber', text: 'ทะเบียนรถ' },
                 { key: 'status', text: 'สถานะ', classer: 'status' },
                 { key: 'options', classer: 'options' }
               ]" 
-              :search="[ 'name', 'startDate', 'fromLocation', 'toLocation' ]" 
+              :search="[ 
+                'awbNumber', 'hwbSerialNumber', 'flightNumber', 'date',
+                'dockNumber', 'pickupTime'
+              ]" 
               :orders="[
-                { key: 'startDate-desc', text: 'วันที่รับสินค้า (ใหม่สุด)' },
-                { key: 'startDate-asc', text: 'วันที่รับสินค้า (เก่าสุด)' },
-                { key: 'createdDate-desc', text: 'วันที่สร้าง (ใหม่สุด)' },
-                { key: 'createdDate-asc', text: 'วันที่สร้าง (เก่าสุด)' }
-              ]"
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
+                { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
+                { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
+                { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
+              ]" 
             />
           </div>
           
@@ -75,6 +89,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Tabs01 from '../../components/Tabs01';
 import DataTable from '../../components/DataTable';
@@ -90,20 +105,29 @@ export default {
     return {
       topnavActiveIndex: 0,
       user: {
-        id: 1,
-        role: 'Driver', /* Product Owner, Company, Driver, Admin */
-        company: 'บริษัท พีอาร์เดริเวรี่ จำกัด',
-        username: 'General User',
-        prefix: 'นาย',
-        firstname: 'สมศักดิ์',
-        lastname: 'จริงใจ',
-        email: 'user@gmail.com',
-        phone: '081-1123456',
-        avatar: '/assets/img/misc/profile.jpg'
+        id: 2,
+        role: 'Driver', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: 'Driver User',
+        email: 'driver@gmail.com',
+        avatar: '/assets/img/misc/profile.jpg',
+        detail: {
+          prefix: 'นาย',
+          firstname: 'สมศักดิ์',
+          lastname: 'จริงใจ',
+          phone: '0811123456'
+        },
+        company: {
+          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
+          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
+          province: 'สมุทรปราการ',
+          zipcode: '10540',
+          taxId: '500218893025'
+        }
       },
-      tabActiveIndex: this.$route.params.tab? Number(this.$route.params.tab): 0,
+
+      tabActiveIndex: this.$route.params.tab? Number(this.$route.params.tab)-4: 0,
       rows1: [],
-      rows3: []
+      rows2: []
     }
   },
   created() {
@@ -111,57 +135,54 @@ export default {
     document.getElementById('color_style').href = '/assets/css/color-driver.css';
     for(var i=0; i<4; i++){
       this.rows1.push({
-        name: { 
-          text: 'ขนส่งบรรจุภัณฑ์ทางการแพทย์',
-          type: 'link', href: '/driver/my-job-tracking' 
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/driver/my-job-view/4'
         },
-        startDate: { text: '20/05/2564 10:34 น.' },
-        fromLocation: { text: 'กรุงเทพมหานคร' },
-        toLocation: { text: 'ชลบุรี' },
-        createdDate: { text: '20/05/2564 10:34 น.' },
-        status: { type: 'tag', value: 1, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
+        flightNumber: { text: 'JL0707' },
+        numberOfPieces: { text: this.formatNumber(2400, 0) },
+        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+        dockNumber: { text: 'G14' },
+        pickupTime: { text: '09.45 น.' },
+        truckNumber: { text: '5กศ5859' },
+        status: { type: 'tag', value: 3, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/driver/my-job-tracking' }
+          view: { type: 'link', href: '/driver/my-job-view/4' }
         }
       });
       
-      if(i<2){
-        this.rows3.push({
-          name: { 
-            text: 'ขนส่งบรรจุภัณฑ์ทางการแพทย์', 
-            type: 'link', href: '/driver/my-job-result'
-          },
-          startDate: { text: '20/05/2564 10:34 น.' },
-          fromLocation: { text: 'กรุงเทพมหานคร' },
-          toLocation: { text: 'ชลบุรี' },
-          createdDate: { text: '20/05/2564 10:34 น.' },
-          status: { 
-            type: 'tag', text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success',
+      this.rows2.push({
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/driver/my-job-view/5'
+        },
+        flightNumber: { text: 'JL0707' },
+        numberOfPieces: { text: this.formatNumber(2400, 0) },
+        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+        dockNumber: { text: 'G14' },
+        pickupTime: { text: '09.45 น.' },
+        truckNumber: { text: '5กศ5859' },
+        status: i < 2 ? 
+          { 
+            type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success',
             append: true, icon: '/assets/img/icon/comment-black.svg'
-          },
-          options: {
-            type: 'options',
-            view: { type: 'link', href: '/driver/my-job-result' }
-          }
-        });
-      }else{
-        this.rows3.push({
-          name: { 
-            text: 'ขนส่งบรรจุภัณฑ์ทางการแพทย์', 
-            type: 'link', href: '/driver/my-job-result'
-          },
-          startDate: { text: '20/05/2564 10:34 น.' },
-          fromLocation: { text: 'กรุงเทพมหานคร' },
-          toLocation: { text: 'ชลบุรี' },
-          createdDate: { text: '20/05/2564 10:34 น.' },
-          status: { type: 'tag', text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success' },
-          options: {
-            type: 'options',
-            view: { type: 'link', href: '/driver/my-job-result' }
-          }
-        });
-      }
+          } :
+          { type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success' },
+        options: {
+          type: 'options',
+          view: { type: 'link', href: '/driver/my-job-view/5' }
+        }
+      });
+    }
+  },
+  methods: {
+    formatNumber(value, digits=2) {
+      let val = (value/1).toFixed(digits);
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+    formatDate(value, format='YYYYMMDD') {
+      return moment(String(value)).format(format);
     }
   }
 }

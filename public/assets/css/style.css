@@ -768,6 +768,7 @@ fieldset{padding:0; margin:0; border:0;}
 .mb-5{margin-bottom:1.25rem!important;}
 .mb-6{margin-bottom:1.5rem!important;}
 
+.ml-auto{margin-left:auto!important;}
 .ml-0{margin-left:0!important;}
 .ml-1{margin-left:.25rem!important;}
 .ml-2{margin-left:.5rem!important;}
@@ -776,6 +777,7 @@ fieldset{padding:0; margin:0; border:0;}
 .ml-5{margin-left:1.25rem!important;}
 .ml-6{margin-left:1.5rem!important;}
 
+.mr-auto{margin-right:auto!important;}
 .mr-0{margin-right:0!important;}
 .mr-1{margin-right:.25rem!important;}
 .mr-2{margin-right:.5rem!important;}

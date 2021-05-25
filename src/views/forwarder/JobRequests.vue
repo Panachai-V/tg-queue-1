@@ -31,7 +31,10 @@
           <Tabs01 
             :activeIndex="tabActiveIndex" 
             @clicked="tabActiveIndex = $event" 
-            :tabs="[ 'รอการ Matching', 'รอคิวการรับ', 'กำลังดำเนินการ', 'ดำเนินการเสร็จสิ้น' ]" 
+            :tabs="[ 
+              'รอการ Matching', 'รอคิวการรับ', 'รอยืนยันคิว',
+              'กำลังดำเนินการ', 'ดำเนินการเสร็จสิ้น'
+            ]" 
           />
         </div>
         <div class="tab-contents" data-aos="fade-up" data-aos-delay="150">
@@ -69,12 +72,12 @@
               :rows="rows2" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
-                { key: 'hwbSerialNumber', text: 'House Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
                 { key: 'numberOfPieces', text: 'จำนวนสินค้า' },
                 { key: 'date', text: 'วันที่เที่ยวบิน' },
                 { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
                 { key: 'pickupTime', text: 'เวลารับสินค้า' },
+                { key: 'truckNumber', text: 'ทะเบียนรถ' },
                 { key: 'status', text: 'สถานะ', classer: 'status' },
                 { key: 'options', classer: 'options' }
               ]" 
@@ -98,12 +101,12 @@
               :rows="rows3" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
-                { key: 'hwbSerialNumber', text: 'House Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
                 { key: 'numberOfPieces', text: 'จำนวนสินค้า' },
                 { key: 'date', text: 'วันที่เที่ยวบิน' },
                 { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
                 { key: 'pickupTime', text: 'เวลารับสินค้า' },
+                { key: 'truckNumber', text: 'ทะเบียนรถ' },
                 { key: 'status', text: 'สถานะ', classer: 'status' },
                 { key: 'options', classer: 'options' }
               ]" 
@@ -127,12 +130,41 @@
               :rows="rows4" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
-                { key: 'hwbSerialNumber', text: 'House Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
                 { key: 'numberOfPieces', text: 'จำนวนสินค้า' },
                 { key: 'date', text: 'วันที่เที่ยวบิน' },
                 { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
                 { key: 'pickupTime', text: 'เวลารับสินค้า' },
+                { key: 'truckNumber', text: 'ทะเบียนรถ' },
+                { key: 'status', text: 'สถานะ', classer: 'status' },
+                { key: 'options', classer: 'options' }
+              ]" 
+              :search="[ 
+                'awbNumber', 'hwbSerialNumber', 'flightNumber', 'date',
+                'dockNumber', 'pickupTime'
+              ]" 
+              :orders="[
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
+                { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
+                { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
+                { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
+              ]" 
+            />
+          </div>
+          
+          <div class="tab-content" :class="{ 'active': tabActiveIndex == 4 }">
+            <DataTable 
+              :rows="rows5" 
+              :columns="[
+                { key: 'awbNumber', text: 'Airway Bill' },
+                { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
+                { key: 'numberOfPieces', text: 'จำนวนสินค้า' },
+                { key: 'date', text: 'วันที่เที่ยวบิน' },
+                { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
+                { key: 'pickupTime', text: 'เวลารับสินค้า' },
+                { key: 'truckNumber', text: 'ทะเบียนรถ' },
                 { key: 'status', text: 'สถานะ', classer: 'status' },
                 { key: 'options', classer: 'options' }
               ]" 
@@ -180,7 +212,7 @@ export default {
         role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
         username: 'General User',
         email: 'user@gmail.com',
-        avatar: '/assets/img/misc/profile-01.svg',
+        avatar: '/assets/img/misc/profile.jpg',
         detail: {
           prefix: 'นาย',
           firstname: 'สมศักดิ์',
@@ -200,14 +232,18 @@ export default {
       rows1: [],
       rows2: [],
       rows3: [],
-      rows4: []
+      rows4: [],
+      rows5: []
     }
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     for(var i=0; i<4; i++){
       this.rows1.push({
-        awbNumber: { text: '131-56591080' },
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view'
+        },
         hwbSerialNumber: { text: 'MLC10131957' },
         flightNumber: { text: 'JL0707' },
         jobNumber: { text: 'A0020640302798' },
@@ -221,13 +257,16 @@ export default {
       });
       
       this.rows2.push({
-        awbNumber: { text: '131-56591080' },
-        hwbSerialNumber: { text: 'MLC10131957' },
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view/2'
+        },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
         date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
         dockNumber: { text: '-' },
         pickupTime: { text: '-' },
+        truckNumber: { text: '-' },
         status: { type: 'tag', value: 2, text: 'รอคิวการรับ', classer: 'ss-tag-info' },
         options: {
           type: 'options',
@@ -236,14 +275,17 @@ export default {
       });
       
       this.rows3.push({
-        awbNumber: { text: '131-56591080' },
-        hwbSerialNumber: { text: 'MLC10131957' },
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view/3'
+        },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
         date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
         dockNumber: { text: 'G14' },
         pickupTime: { text: '09.45 น.' },
-        status: { type: 'tag', value: 3, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
+        truckNumber: { text: '-' },
+        status: { type: 'tag', value: 3, text: 'รอยืนยันคิว', classer: 'ss-tag-danger' },
         options: {
           type: 'options',
           view: { type: 'link', href: '/forwarder/job-request-view/3' }
@@ -251,13 +293,36 @@ export default {
       });
       
       this.rows4.push({
-        awbNumber: { text: '131-56591080' },
-        hwbSerialNumber: { text: 'MLC10131957' },
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view/4'
+        },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
         date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
         dockNumber: { text: 'G14' },
         pickupTime: { text: '09.45 น.' },
+        truckNumber: { text: '5กศ5859' },
+        status: i < 2 ?
+          { type: 'tag', value: 3, text: 'รอการชำระเงิน', classer: 'ss-tag-danger' } :
+          { type: 'tag', value: 3, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
+        options: {
+          type: 'options',
+          view: { type: 'link', href: '/forwarder/job-request-view/4' }
+        }
+      });
+      
+      this.rows5.push({
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view/5'
+        },
+        flightNumber: { text: 'JL0707' },
+        numberOfPieces: { text: this.formatNumber(2400, 0) },
+        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+        dockNumber: { text: 'G14' },
+        pickupTime: { text: '09.45 น.' },
+        truckNumber: { text: '5กศ5859' },
         status: i < 2 ? 
           { 
             type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success',
@@ -266,7 +331,7 @@ export default {
           { type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/forwarder/job-request-view/4' }
+          view: { type: 'link', href: '/forwarder/job-request-view/5' }
         }
       });
     }

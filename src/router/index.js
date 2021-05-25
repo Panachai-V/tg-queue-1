@@ -47,109 +47,27 @@ const routes = [
     name: 'ForwarderJobRequestViewPage',
     component: () => import('../views/forwarder/JobRequestView.vue')
   },
-
-
-  // Customer Dashboard
+  
+  // Freight Forwarder - Drivers
   {
-    path: '/customer/dashboard',
-    name: 'CustomerDashboardPage',
-    component: () => import('../views/customer/Dashboard.vue')
-  },
-
-  // Customer - Job Requests
-  {
-    path: '/customer/job-requests/:tab?',
-    name: 'CustomerJobRequestsPage',
-    component: () => import('../views/customer/JobRequests.vue')
+    path: '/forwarder/drivers',
+    name: 'ForwarderDriversPage',
+    component: () => import('../views/forwarder/Drivers.vue')
   },
   {
-    path: '/customer/job-request-add',
-    name: 'CustomerJobRequestAddPage',
-    component: () => import('../views/customer/JobRequestAdd.vue')
+    path: '/forwarder/driver-add',
+    name: 'ForwarderDriverAddPage',
+    component: () => import('../views/forwarder/DriverAdd.vue')
   },
   {
-    path: '/customer/job-request-edit',
-    name: 'CustomerJobRequestEditPage',
-    component: () => import('../views/customer/JobRequestEdit.vue')
+    path: '/forwarder/driver-edit',
+    name: 'ForwarderDriverEditPage',
+    component: () => import('../views/forwarder/DriverEdit.vue')
   },
   {
-    path: '/customer/job-request-view',
-    name: 'CustomerJobRequestViewPage',
-    component: () => import('../views/customer/JobRequestView.vue')
-  },
-  {
-    path: '/customer/job-request-tracking',
-    name: 'CustomerJobRequestTrackingPage',
-    component: () => import('../views/customer/JobRequestTracking.vue')
-  },
-  {
-    path: '/customer/job-request-result',
-    name: 'CustomerJobRequestResultPage',
-    component: () => import('../views/customer/JobRequestResult.vue')
-  },
-
-
-  // Company Dashboard
-  {
-    path: '/company/dashboard',
-    name: 'CompanyDashboardPage',
-    component: () => import('../views/company/Dashboard.vue')
-  },
-
-  // Company - Job Requests
-  {
-    path: '/company/job-requests/:tab?',
-    name: 'CompanyJobRequestsPage',
-    component: () => import('../views/company/JobRequests.vue')
-  },
-  {
-    path: '/company/job-request-view',
-    name: 'CompanyJobRequestViewPage',
-    component: () => import('../views/company/JobRequestView.vue')
-  },
-
-  // Company - My Jobs
-  {
-    path: '/company/my-jobs/:tab?',
-    name: 'CompanyMyJobsPage',
-    component: () => import('../views/company/MyJobs.vue')
-  },
-  {
-    path: '/company/my-job-assignment',
-    name: 'CompanyMyJobAssignmentPage',
-    component: () => import('../views/company/MyJobAssignment.vue')
-  },
-  {
-    path: '/company/my-job-tracking',
-    name: 'CompanyMyJobTrackingPage',
-    component: () => import('../views/company/MyJobTracking.vue')
-  },
-  {
-    path: '/company/my-job-result',
-    name: 'CompanyMyJobResultPage',
-    component: () => import('../views/company/MyJobResult.vue')
-  },
-
-  // Company - Drivers
-  {
-    path: '/company/drivers',
-    name: 'CompanyDriversPage',
-    component: () => import('../views/company/Drivers.vue')
-  },
-  {
-    path: '/company/driver-add',
-    name: 'CompanyDriverAddPage',
-    component: () => import('../views/company/DriverAdd.vue')
-  },
-  {
-    path: '/company/driver-view',
-    name: 'CompanyDriverViewPage',
-    component: () => import('../views/company/DriverView.vue')
-  },
-  {
-    path: '/company/driver-edit',
-    name: 'CompanyDriverEditPage',
-    component: () => import('../views/company/DriverEdit.vue')
+    path: '/forwarder/driver-view',
+    name: 'ForwarderDriverViewPage',
+    component: () => import('../views/forwarder/DriverView.vue')
   },
 
 
@@ -160,14 +78,9 @@ const routes = [
     component: () => import('../views/driver/MyJobs.vue')
   },
   {
-    path: '/driver/my-job-tracking',
-    name: 'DriverMyJobTrackingPage',
-    component: () => import('../views/driver/MyJobTracking.vue')
-  },
-  {
-    path: '/driver/my-job-result',
-    name: 'DriverMyJobResultPage',
-    component: () => import('../views/driver/MyJobResult.vue')
+    path: '/driver/my-job-view/:status?',
+    name: 'DriverMyJobViewPage',
+    component: () => import('../views/driver/MyJobView.vue')
   },
 
 

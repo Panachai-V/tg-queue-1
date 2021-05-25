@@ -23,7 +23,7 @@
                     type="text" label="ชื่อบรืษัท *" :required="true" 
                     :maxlength="56" placeholder="โปรดระบุ" 
                     :value="datasetCompany.name" 
-                    @input="datasetCompany.name = event" 
+                    @input="datasetCompany.name = $event" 
                   />
                 </div>
                 <div class="grid sm-100">
@@ -31,16 +31,17 @@
                     type="textarea" label="ที่อยู่บริษัท *" :required="true" 
                     :rows="3" :maxlength="128" placeholder="โปรดระบุ" 
                     :value="datasetCompany.address" 
-                    @input="datasetCompany.address = event" 
+                    @input="datasetCompany.address = $event" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup 
                     type="select" label="จังหวัด *" :required="true" placeholder="โปรดเลือก" 
                     :value="datasetCompany.province" 
-                    @input="datasetCompany.province = event" 
+                    @input="datasetCompany.province = $event" 
                     :options="[
-                      { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' }
+                      { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
+                      { value: 'สมุทรปราการ', text: 'สมุทรปราการ' }
                     ]"
                   />
                 </div>
@@ -49,7 +50,7 @@
                     type="text" label="รหัสไปรษณีย์ *" :required="true" 
                     placeholder="โปรดระบุ" :minlength="5" :maxlength="5" 
                     :value="datasetCompany.zipcode" 
-                    @input="datasetCompany.zipcode = event" 
+                    @input="datasetCompany.zipcode = $event" 
                   />
                 </div>
                 <div class="grid sm-100">
@@ -57,7 +58,7 @@
                     type="text" label="เลขประจำตัวผู้เสียภาษี *" :required="true" 
                     placeholder="โปรดระบุ" :minlength="13" :maxlength="13" 
                     :value="datasetCompany.taxId" 
-                    @input="datasetCompany.taxId = event" 
+                    @input="datasetCompany.taxId = $event" 
                   />
                 </div>
                 <div class="grid sm-100">
@@ -85,7 +86,7 @@
                   <FormGroup 
                     type="select" label="คำนำหน้า *" :required="true" placeholder="โปรดเลือก" 
                     :value="dataset.prefix" 
-                    @input="dataset.prefix = event" 
+                    @input="dataset.prefix = $event" 
                     :options="[
                       { value: 'นาย', text: 'นาย' },
                       { value: 'นาง', text: 'นาง' },
@@ -99,7 +100,7 @@
                     type="text" label="ชื่อ *" :required="true" 
                     :maxlength="64" placeholder="โปรดระบุ" 
                     :value="dataset.firstname" 
-                    @input="dataset.firstname = event" 
+                    @input="dataset.firstname = $event" 
                   />
                 </div>
                 <div class="grid lg-35 md-50 sm-50">
@@ -107,7 +108,7 @@
                     type="text" label="นามสกุล *" :required="true" 
                     :maxlength="64" placeholder="โปรดระบุ" 
                     :value="dataset.lastname" 
-                    @input="dataset.lastname = event" 
+                    @input="dataset.lastname = $event" 
                   />
                 </div>
                 <div class="sep"></div>
@@ -116,14 +117,14 @@
                     type="text" label="เบอร์โทร *" :required="true" 
                     :maxlength="10" placeholder="โปรดระบุ" 
                     :value="dataset.phone" 
-                    @input="dataset.phone = event" 
+                    @input="dataset.phone = $event" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup 
                     type="select" label="ตำแหน่ง *" :required="true" placeholder="โปรดเลือก" 
                     :value="dataset.roleId" 
-                    @input="dataset.roleId = event" 
+                    @input="dataset.roleId = $event" 
                     :options="[
                       { value: 1, text: 'Freight Forwarder' },
                       { value: 2, text: 'Driver' }
@@ -158,28 +159,28 @@
                   <FormGroup 
                     type="text" label="ชื่อผู้ใช้ *" :required="true" placeholder="โปรดระบุ" 
                     :value="dataset.username" 
-                    @input="dataset.username = event" 
+                    @input="dataset.username = $event" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup 
                     type="email" label="อีเมล *" :required="true" placeholder="โปรดระบุ" 
                     :value="dataset.email" 
-                    @input="dataset.email = event" 
+                    @input="dataset.email = $event" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup 
                     type="password" label="รหัสผ่าน *" :required="true" placeholder="โปรดระบุ" 
                     :value="dataset.password" 
-                    @input="dataset.password = event" 
+                    @input="dataset.password = $event" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup 
                     type="password" label="ยืนยันรหัสผ่าน *" :required="true" placeholder="โปรดระบุ" 
                     :value="dataset.confPassword" 
-                    @input="dataset.confPassword = event" 
+                    @input="dataset.confPassword = $event" 
                   />
                 </div>
               </div>

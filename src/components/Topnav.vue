@@ -104,7 +104,7 @@
           </a>
           <div class="dropdown">
             <div class="submenu">
-              <a href="javascript:" @click="openedPopupProfile = !openedPopupProfile">
+              <a href="javascript:" @click="isActivePopupProfile = !isActivePopupProfile">
                 <div class="icon">
                   <img v-if="isFreightForwarder()" src="/assets/img/icon/edit.svg" alt="Image Icon" />
                   <img v-else-if="isCompany()" src="/assets/img/icon/edit-company.svg" alt="Image Icon" />
@@ -115,7 +115,7 @@
               </a>
             </div>
             <div class="submenu">
-              <a href="javascript:" @click="openedPopupPassword = !openedPopupPassword">
+              <a href="javascript:" @click="isActivePopupPassword = !isActivePopupPassword">
                 <div class="icon">
                   <img v-if="isFreightForwarder()" src="/assets/img/icon/lock.svg" alt="Image Icon" />
                   <img v-else-if="isCompany()" src="/assets/img/icon/lock-company.svg" alt="Image Icon" />
@@ -125,10 +125,10 @@
                 เปลี่ยนรหัสผ่าน
               </a>
             </div>
-            <div v-if="isCompany()" class="submenu">
-              <a href="javascript:" @click="openedPopupCompany = !openedPopupCompany">
+            <div v-if="isFreightForwarder()" class="submenu">
+              <a href="javascript:" @click="isActivePopupCompany = !isActivePopupCompany">
                 <div class="icon">
-                  <img src="/assets/img/icon/shop-company.svg" alt="Image Icon" />
+                  <img src="/assets/img/icon/shop.svg" alt="Image Icon" />
                 </div>
                 แก้ไขข้อมูลบริษัท
               </a>
@@ -150,14 +150,14 @@
   <div class="topnav-spacer"></div>
 
   <!-- Popup Profile -->
-  <div v-if="!isBottom" class="popup-container" :class="{ 'active': openedPopupProfile }">
+  <div v-if="!isBottom" class="popup-container" :class="{ 'active': isActivePopupProfile }">
     <div class="wrapper">
-      <div class="close-filter" @click="openedPopupProfile = !openedPopupProfile"></div>
-      <form action="/" method="GET" class="w-full"  @submit="onSubmitProfile">
+      <div class="close-filter" @click="isActivePopupProfile = !isActivePopupProfile"></div>
+      <form action="/" method="GET" class="w-full"  @submit.prevent="onSubmitProfile">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
-              <a href="javascript:" class="btn btn-close" @click="openedPopupProfile = !openedPopupProfile">
+              <a href="javascript:" class="btn btn-close" @click="isActivePopupProfile = !isActivePopupProfile">
                 <img class="icon-prepend xs" src="/assets/img/icon/close.svg" alt="Image Icon" />
                 ปิดหน้าต่าง
               </a>
@@ -166,8 +166,16 @@
               <div class="text-container">
                 <h6 class="h3">แก้ไขข้อมูลส่วนตัว</h6>
               </div>
-              <div class="btns">
-                <Button type="submit" text="บันทึก" classer="btn-color-01" :prepend="true" icon="check-white.svg" />
+              <div class="btns hide-mobile">
+                <Button 
+                  type="submit" text="บันทึก" classer="btn-color-01" 
+                  :prepend="true" icon="check-white.svg" 
+                />
+              </div>
+              <div class="btns show-mobile">
+                <Button 
+                  type="submit" text="บันทึก" classer="btn-color-01 btn-sm" 
+                />
               </div>
             </div>
           </div>
@@ -175,41 +183,38 @@
             <div class="grids">
               <div class="grid md-20 sm-30">
                 <FormGroup
-                  label="คำนำหน้า" type="select" name="prefix" 
-                  :value="user.prefix" :required="true"
+                  label="คำนำหน้า" type="select" :required="true" 
+                  :value="selfUser.detail.prefix" 
+                  @input="selfUser.detail.prefix = $event" 
                   :options="[ 
                     { value: 'นาย', text: 'นาย' }, 
                     { value: 'นาง', text: 'นาง' }, 
-                    { value: 'น.ส.', text: 'น.ส.' }, 
-                    { value: 'นพ.', text: 'นพ.' }
+                    { value: 'นางสาว', text: 'นางสาว' }
                   ]"
                 />
               </div>
               <div class="grid md-40 sm-35">
                 <FormGroup
-                  label="ชื่อ" type="text" name="firstname" 
-                  :value="user.firstname" :required="true"
+                  label="ชื่อ" type="text" :required="true" 
+                  :value="selfUser.detail.firstname" 
+                  @input="selfUser.detail.firstname = $event" 
                 />
               </div>
               <div class="grid md-40 sm-35">
                 <FormGroup
-                  label="นามสกุล" type="text" name="lastname" 
-                  :value="user.lastname" :required="true"
+                  label="นามสกุล" type="text" :required="true" 
+                  :value="selfUser.detail.lastname" 
+                  @input="selfUser.detail.lastname = $event" 
                 />
               </div>
               <div class="grid sm-50">
                 <FormGroup
-                  label="อีเมล" type="email" name="email" 
-                  :value="user.email"
+                  label="เบอร์โทรศัพท์ *" type="text" :required="true" 
+                  :value="selfUser.detail.phone" 
+                  @input="selfUser.detail.phone = $event" 
                 />
               </div>
               <div class="grid sm-50">
-                <FormGroup
-                  label="หมายเลขโทรศัพท์" type="text" name="phone" 
-                  :value="user.phone"
-                />
-              </div>
-              <div class="grid sm-80">
                 <FormGroup
                   label="รูปโปรไฟล์" type="file-image" name="avatar" 
                   :value="user.avatar"
@@ -223,14 +228,14 @@
   </div>
   
   <!-- Popup Password -->
-  <div v-if="!isBottom" class="popup-container" :class="{ 'active': openedPopupPassword }">
+  <div v-if="!isBottom" class="popup-container" :class="{ 'active': isActivePopupPassword }">
     <div class="wrapper">
-      <div class="close-filter" @click="openedPopupPassword = !openedPopupPassword"></div>
-      <form action="/" method="GET" class="w-full"  @submit="onSubmitPassword">
+      <div class="close-filter" @click="isActivePopupPassword = !isActivePopupPassword"></div>
+      <form action="/" method="GET" class="w-full"  @submit.prevent="onSubmitPassword">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
-              <a href="javascript:" class="btn btn-close" @click="openedPopupPassword = !openedPopupPassword">
+              <a href="javascript:" class="btn btn-close" @click="isActivePopupPassword = !isActivePopupPassword">
                 <img class="icon-prepend xs" src="/assets/img/icon/close.svg" alt="Image Icon" />
                 ปิดหน้าต่าง
               </a>
@@ -248,26 +253,20 @@
             <div class="grids">
               <div class="grid sm-100">
                 <FormGroup
-                  label="รหัสผ่านเดิม" type="password" name="password" 
-                  :value="reenterPassword" @input="reenterPassword = $event" 
-                  :classer="isValidPassword && passwordErrorText? 'error': ''" 
-                  :errorText="isValidPassword && passwordErrorText? passwordErrorText: ''"
+                  label="รหัสผ่านเดิม *" type="password" :required="true" 
+                  :value="selfUser.password" @input="selfUser.password = $event" 
                 />
               </div>
               <div class="grid sm-100">
                 <FormGroup 
-                  label="รหัสผ่านใหม่" type="password" name="new_password" 
-                  :value="newPassword" @input="newPassword = $event" 
-                  :classer="isValidPassword && newPasswordErrorText? 'error': ''" 
-                  :errorText="isValidPassword && newPasswordErrorText? newPasswordErrorText: ''"
+                  label="รหัสผ่านใหม่ *" type="password" :required="true" 
+                  :value="selfUser.newPassword" @input="selfUser.newPassword = $event" 
                 />
               </div>
               <div class="grid sm-100">
                 <FormGroup 
-                  label="ยืนยันรหัสผ่าน" type="password" name="conf_password" 
-                  :value="confPassword" @input="confPassword = $event" 
-                  :classer="isValidPassword && confPasswordErrorText? 'error': ''" 
-                  :errorText="isValidPassword && confPasswordErrorText? confPasswordErrorText: ''"
+                  label="ยืนยันรหัสผ่าน *" type="password" :required="true" 
+                  :value="selfUser.confPassword" @input="selfUser.confPassword = $event" 
                 />
               </div>
             </div>
@@ -280,15 +279,15 @@
     </div>
   </div>
 
-  <!-- Popup Company -->
-  <div v-if="!isBottom && isCompany()" class="popup-container" :class="{ 'active': openedPopupCompany }">
+  <!-- Popup Freight Forwarder -->
+  <div v-if="!isBottom && isFreightForwarder()" class="popup-container" :class="{ 'active': isActivePopupCompany }">
     <div class="wrapper">
-      <div class="close-filter" @click="openedPopupCompany = !openedPopupCompany"></div>
-      <form action="/" method="GET" class="w-full"  @submit="onSubmitProfile">
+      <div class="close-filter" @click="isActivePopupCompany = !isActivePopupCompany"></div>
+      <form action="/" method="GET" class="w-full"  @submit.prevent="onSubmitCompany">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
-              <a href="javascript:" class="btn btn-close" @click="openedPopupCompany = !openedPopupCompany">
+              <a href="javascript:" class="btn btn-close" @click="isActivePopupCompany = !isActivePopupCompany">
                 <img class="icon-prepend xs" src="/assets/img/icon/close.svg" alt="Image Icon" />
                 ปิดหน้าต่าง
               </a>
@@ -304,40 +303,43 @@
           </div>
           <div class="body">
             <div class="grids">
-              <div class="grid sm-80">
+              <div class="grid sm-100">
                 <FormGroup
-                  label="ชื่อบริษัท" type="text" name="company_name" 
-                  :value="company? company.name: ''" :required="true"
-                />
-              </div>
-              <div class="grid sm-50">
-                <FormGroup
-                  label="อีเมล" type="email" name="company_email" 
-                  :value="company? company.email: ''"
-                />
-              </div>
-              <div class="grid sm-50">
-                <FormGroup
-                  label="หมายเลขโทรศัพท์" type="text" name="company_phone" 
-                  :value="company? company.phone: ''"
+                  label="ชื่อบริษัท *" type="text" placeholder="โปรดระบุ" :required="true" 
+                  :value="selfUser.company.name" @input="selfUser.company.name = $event" 
                 />
               </div>
               <div class="grid sm-100">
                 <FormGroup
-                  label="ที่อยู่" type="textarea" name="company_address" :rows="3" 
-                  :value="company? company.address: ''"
+                  label="ที่อยู่ *" type="textarea" placeholder="โปรดระบุ" :required="true" :rows="3" 
+                  :value="selfUser.company.address" @input="selfUser.company.address = $event" 
                 />
               </div>
               <div class="grid sm-50">
-                <FormGroup
-                  label="จังหวัด" type="text" name="company_province" 
-                  :value="company? company.province: ''"
+                <FormGroup 
+                  type="select" label="จังหวัด *" :required="true" placeholder="โปรดเลือก" 
+                  :value="selfUser.company.province" 
+                  @input="selfUser.company.province = $event" 
+                  :options="[
+                    { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
+                    { value: 'สมุทรปราการ', text: 'สมุทรปราการ' }
+                  ]"
                 />
               </div>
               <div class="grid sm-50">
-                <FormGroup
-                  label="รหัสไปรษณีย์" type="text" name="company_zipcode" 
-                  :value="company? company.zipcode: ''"
+                <FormGroup 
+                  type="text" label="รหัสไปรษณีย์ *" :required="true" 
+                  placeholder="โปรดระบุ" :minlength="5" :maxlength="5" 
+                  :value="selfUser.company.zipcode" 
+                  @input="selfUser.company.zipcode = $event" 
+                />
+              </div>
+              <div class="grid sm-100">
+                <FormGroup 
+                  type="text" label="เลขประจำตัวผู้เสียภาษี *" :required="true" 
+                  placeholder="โปรดระบุ" :minlength="13" :maxlength="13" 
+                  :value="selfUser.company.taxId" 
+                  :readonly="true" :disabled="true" 
                 />
               </div>
             </div>
@@ -359,28 +361,19 @@ export default {
     FormGroup,
     Button
   ],
-  data() {
-    return {
-      openedPopupProfile: false,
-
-      openedPopupPassword: false,
-      isValidPassword : false,
-      password: '1234',
-      reenterPassword: '',
-      newPassword: '',
-      confPassword: '',
-      passwordErrorText: '',
-      newPasswordErrorText: '',
-      confPasswordErrorText: '',
-
-      openedPopupCompany: false,
-    }
-  },
   props: {
     user: { type: Object, default: null },
     isBottom: { type: Boolean, default: false },
     activeIndex: { type: Number, default: null },
     alert: { type: Number, default: 2 },
+  },
+  data() {
+    return {
+      selfUser: {...this.user},
+      isActivePopupProfile: false,
+      isActivePopupPassword: false,
+      isActivePopupCompany: false
+    }
   },
   methods: {
 
@@ -413,45 +406,14 @@ export default {
       }
     },
 
-    onSubmitProfile(e) {
-      this.openedPopupProfile = false;
-      e.preventDefault();
+    onSubmitProfile() {
+      this.isActivePopupProfile = false;
     },
-
-    onSubmitPassword(e) {
-      // this.isValidPassword = true;
-      // this.passwordErrorText = '';
-      // this.newPasswordErrorText = '';
-      // this.confPasswordErrorText = '';
-
-      // var isValid = true;
-      
-      // if(this.password != this.reenterPassword){
-      //   isValid = false; this.passwordErrorText = 'ระบุรหัสผ่านเดิมผิด';
-      // }
-      // if(this.newPassword != this.confPassword){
-      //   isValid = false; this.confPasswordErrorText = 'ยืนยันรหัสผ่านไม่ตรงกับรหัสผ่านใหม่';
-      // }
-
-      // if(!this.reenterPassword){
-      //   isValid = false; this.passwordErrorText = 'กรุณาระบุ';
-      // }
-      // if(!this.newPassword){
-      //   isValid = false; this.newPasswordErrorText = 'กรุณาระบุ';
-      // }
-      // if(!this.confPassword){
-      //   isValid = false; this.confPasswordErrorText = 'กรุณาระบุ';
-      // }
-
-      // if(isValid){
-      //   this.openedPopupPassword = false;
-      //   this.isValidPassword = false;
-      //   this.reenterPassword = '';
-      //   this.newPassword = '';
-      //   this.confPassword = '';
-      // }
-
-      e.preventDefault();
+    onSubmitPassword() {
+      this.isActivePopupPassword = false;
+    },
+    onSubmitCompany() {
+      this.isActivePopupCompany = false;
     }
 
   }

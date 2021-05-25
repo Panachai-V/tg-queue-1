@@ -25,7 +25,7 @@
           </div>
           <div class="text-container">
             <h6 class="p sm">Step 2</h6>
-            <p>ดำเนินการรับสินค้า</p>
+            <p>ชำระเงิน</p>
           </div>
         </div>
 
