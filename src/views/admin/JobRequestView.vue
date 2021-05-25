@@ -126,7 +126,7 @@
         <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
           <form v-if="!jobRequestConfirmValid" action="/" method="GET" @submit.prevent="onSubmitConfirm">
             <div class="grids">
-              <div class="grid xl-30 lg-1-3 sm-50">
+              <div class="grid xl-30 lg-1-3 sm-60">
                 <FormGroup 
                   type="select" label="ผู้ขับรถ *" placeholder="เลือกผู้ขับรถ" :required="true" 
                   :value="jobRequest.driver" @input="jobRequest.driver = $event" 
@@ -135,14 +135,13 @@
                   ]"
                 />
               </div>
-              <div class="grid xl-25 lg-30 sm-50">
-                <FormGroup 
-                  type="text" label="ทะเบียนรถ *" placeholder="ทะเบียนรถ" 
-                  :required="true" :maxlength="7" 
-                  :value="jobRequest.truckNumber" @input="jobRequest.truckNumber = $event" 
+              <div class="grid xl-30 lg-1-3 sm-60">
+                <FormGroupTrucks
+                  :required="true" :value="jobRequest.trucks" 
+                  @input="jobRequest.trucks = $event" 
                 />
               </div>
-              <div class="grid xl-20 lg-25 sm-50">
+              <div class="grid xl-20 lg-25 sm-60">
                 <FormGroupTime
                   label="ยืนยันเวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
                   :value0="jobRequest.confPickupTimeHours" 
@@ -168,8 +167,8 @@
               />
             </div>
             <div class="grid xl-25 lg-30 sm-50">
-              <FormGroup 
-                type="plain" label="ทะเบียนรถ" :value="jobRequest.truckNumber"
+              <FormGroupTrucks
+                type="plain" :value="jobRequest.trucks" 
               />
             </div>
             <div class="grid xl-20 lg-25 sm-50">
@@ -308,6 +307,7 @@ import Sidenav from '../../components/Sidenav';
 import Step01 from '../../components/Step01';
 import ChatContainer from '../../components/ChatContainer';
 import FormGroupTime from '../../components/FormGroupTime';
+import FormGroupTrucks from '../../components/FormGroupTrucks';
 
 export default {
   name: 'AdminJobRequestViewPage',
@@ -316,7 +316,8 @@ export default {
     Sidenav,
     Step01,
     ChatContainer,
-    FormGroupTime
+    FormGroupTime,
+    FormGroupTrucks
   },
   data() {
     return {
@@ -352,7 +353,9 @@ export default {
 
         confPickupTimeHours: '',
         confPickupTimeMinutes: '',
-        truckNumber: '',
+        trucks: [
+          { number: '', numberOfPieces: '' }
+        ],
         driver: '',
 
         rating: '',
@@ -407,7 +410,9 @@ export default {
     }
     if(this.jobRequest.status > 3){
       this.jobRequest.driver = 'นาย ชาญชัย กล้าหาญ';
-      this.jobRequest.truckNumber = '5กศ5859';
+      this.jobRequest.trucks = [
+        { number: '5กศ5859', numberOfPieces: 2400 }
+      ];
       this.stepActiveIndex = 2;
       this.jobRequestConfirmValid = true;
     }

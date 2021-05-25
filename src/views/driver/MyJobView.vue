@@ -63,8 +63,8 @@
               />
             </div>
             <div class="grid xl-25 lg-30 sm-50">
-              <FormGroup 
-                type="plain" label="ทะเบียนรถ" :value="jobRequest.truckNumber"
+              <FormGroupTrucks
+                type="plain" :value="jobRequest.trucks" 
               />
             </div>
             <div class="grid xl-20 lg-25 sm-50">
@@ -210,6 +210,7 @@ import Topnav from '../../components/Topnav';
 import Step01 from '../../components/Step01';
 import ChatContainer from '../../components/ChatContainer';
 import FormGroupTime from '../../components/FormGroupTime';
+import FormGroupTrucks from '../../components/FormGroupTrucks';
 
 export default {
   name: 'DriverMyJobViewPage',
@@ -217,7 +218,8 @@ export default {
     Topnav,
     Step01,
     ChatContainer,
-    FormGroupTime
+    FormGroupTime,
+    FormGroupTrucks
   },
   data() {
     return {
@@ -260,7 +262,9 @@ export default {
 
         confPickupTimeHours: '',
         confPickupTimeMinutes: '',
-        truckNumber: '',
+        trucks: [
+          { number: '', numberOfPieces: '' }
+        ],
         driver: '',
 
         rating: '5',
@@ -316,7 +320,9 @@ export default {
     }
     if(this.jobRequest.status > 3){
       this.jobRequest.driver = 'นาย ชาญชัย กล้าหาญ';
-      this.jobRequest.truckNumber = '5กศ5859';
+      this.jobRequest.trucks = [
+        { number: '5กศ5859', numberOfPieces: 2400 }
+      ];
       this.stepActiveIndex = 3;
       this.jobRequestConfirmValid = true;
     }

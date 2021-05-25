@@ -100,10 +100,9 @@
                 />
               </div>
               <div class="grid xl-25 lg-30 sm-50">
-                <FormGroup 
-                  type="text" label="ทะเบียนรถ *" placeholder="ทะเบียนรถ" 
-                  :required="true" :maxlength="7" 
-                  :value="jobRequest.truckNumber" @input="jobRequest.truckNumber = $event" 
+                <FormGroupTrucks
+                  :required="true" :value="jobRequest.trucks" 
+                  @input="jobRequest.trucks = $event" 
                 />
               </div>
               <div class="grid xl-20 lg-25 sm-50">
@@ -132,8 +131,8 @@
               />
             </div>
             <div class="grid xl-25 lg-30 sm-50">
-              <FormGroup 
-                type="plain" label="ทะเบียนรถ" :value="jobRequest.truckNumber"
+              <FormGroupTrucks
+                type="plain" :value="jobRequest.trucks" 
               />
             </div>
             <div class="grid xl-20 lg-25 sm-50">
@@ -273,6 +272,7 @@ import Topnav from '../../components/Topnav';
 import Step01 from '../../components/Step01';
 import ChatContainer from '../../components/ChatContainer';
 import FormGroupTime from '../../components/FormGroupTime';
+import FormGroupTrucks from '../../components/FormGroupTrucks';
 
 export default {
   name: 'ForwarderJobRequestViewPage',
@@ -280,7 +280,8 @@ export default {
     Topnav,
     Step01,
     ChatContainer,
-    FormGroupTime
+    FormGroupTime,
+    FormGroupTrucks
   },
   data() {
     return {
@@ -323,7 +324,9 @@ export default {
 
         confPickupTimeHours: '',
         confPickupTimeMinutes: '',
-        truckNumber: '',
+        trucks: [
+          { number: '', numberOfPieces: '' }
+        ],
         driver: '',
 
         rating: '',
@@ -378,7 +381,9 @@ export default {
     }
     if(this.jobRequest.status > 3){
       this.jobRequest.driver = 'นาย ชาญชัย กล้าหาญ';
-      this.jobRequest.truckNumber = '5กศ5859';
+      this.jobRequest.trucks = [
+        { number: '5กศ5859', numberOfPieces: 2400 }
+      ];
       this.stepActiveIndex = 2;
       this.jobRequestConfirmValid = true;
     }

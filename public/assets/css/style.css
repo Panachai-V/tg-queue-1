@@ -194,6 +194,17 @@ select:disabled, textarea:disabled{
 .form-group .fit-wrapper > span{margin:0 .5rem;}
 .form-group .fit-wrapper > span:last-child{margin-right:0;}
 
+/* Input Trucks */
+.form-group.trucks > .truck{
+  width:100%; display:flex; align-items:flex-end; margin:.375rem 0 0 0;
+}
+.form-group.trucks > .truck:first-child{margin:0;}
+.form-group.trucks > .truck .truck-number{width:calc(100% - 7.5rem); padding:0 .375rem 0 0;}
+.form-group.trucks > .truck .amount{width:5.5rem;}
+.form-group.trucks > .truck .options{width:2rem; text-align:right; padding:0 0 .1875rem 0;}
+.form-group.trucks > .truck .options a:hover{opacity:.7;}
+.form-group.trucks > .truck .options img{height:1.5rem; width:auto;}
+
 /* Input File */
 .form-group .file-container{position:relative; min-height:7.75rem;}
 .form-group .file-container input[type=file]{
