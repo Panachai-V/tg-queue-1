@@ -13,7 +13,7 @@
           </div>
           <div class="text-container">
             <h6 class="p sm">Step 1</h6>
-            <p>รอตารางเวลา</p>
+            <p>ยืนยันคิวการรับ</p>
           </div>
         </div>
           
@@ -25,7 +25,7 @@
           </div>
           <div class="text-container">
             <h6 class="p sm">Step 2</h6>
-            <p>ดำเนินการรับสินค้า</p>
+            <p>ชำระเงิน</p>
           </div>
         </div>
 

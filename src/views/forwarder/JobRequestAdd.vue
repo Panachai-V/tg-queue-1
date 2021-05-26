@@ -1,14 +1,13 @@
 <template>
-  <Topnav :user="user" />
-  <Sidenav :user="user" :activeIndex="sidenavActiveIndex" />
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" />
 
-  <section class="section-full pull-right">
+  <section class="section-full">
     <div class="container">
-      <form action="/admin/job-requests" method="GET" @submit="onSubmit">
+      <form action="/forwarder/job-requests" method="GET" @submit="onSubmit">
 
         <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
           <div class="btns mt-0">
-            <a href="/admin/job-requests" class="btn color-gray h-color-01">
+            <a href="/forwarder/job-requests" class="btn color-gray h-color-01">
               <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
               ย้อนกลับ
             </a>
@@ -86,32 +85,39 @@
       </form>
     </div>
   </section>
+
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" :isBottom="true" />
 </template>
 
 <script>
 import Topnav from '../../components/Topnav';
-import Sidenav from '../../components/Sidenav';
 
 export default {
-  name: 'AdminJobRequestAddPage',
+  name: 'ForwarderJobRequestAddPage',
   components: {
-    Topnav,
-    Sidenav
+    Topnav
   },
   data() {
     return {
-      sidenavActiveIndex: 1,
+      topnavActiveIndex: 1,
       user: {
-        id: 4,
-        role: 'Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
-        username: 'Admin',
-        email: 'admin@gmail.com',
+        id: 1,
+        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: 'General User',
+        email: 'user@gmail.com',
         avatar: '/assets/img/misc/profile.jpg',
         detail: {
           prefix: 'นาย',
           firstname: 'สมศักดิ์',
           lastname: 'จริงใจ',
           phone: '0811123456'
+        },
+        company: {
+          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
+          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
+          province: 'สมุทรปราการ',
+          zipcode: '10540',
+          taxId: '500218893025'
         }
       },
       jobRequest: {

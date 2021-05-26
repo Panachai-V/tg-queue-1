@@ -1,38 +1,43 @@
 <template>
-  <Topnav :user="user" />
-  <Sidenav :user="user" :activeIndex="sidenavActiveIndex" />
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" />
 
-  <section class="section-full pull-right">
+  <section class="section-full">
     <div class="container">
-      <form action="/admin/customers" method="GET" @submit="onSubmit">
+      <form action="/forwarder/drivers" method="GET" @submit="onSubmit">
 
         <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
           <div class="btns mt-0">
-            <a href="/admin/customers" class="btn color-gray h-color-01">
+            <a href="/forwarder/drivers" class="btn color-gray h-color-01">
               <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
               ย้อนกลับ
             </a>
           </div>
           <div class="header-wrapper">
             <div class="text-container">
-              <h6 class="h3">Edit Product Owner</h6>
+              <h6 class="h3">Edit Truck Driver</h6>
             </div>
             <div class="btns hide-mobile">
-              <Button 
-                text="ลบ" href="javascript:" @click="openedPopupDelete = !openedPopupDelete" 
-                classer="btn-color-06 mr-2" :prepend="true" icon="close-white.svg" 
-              />
               <Button 
                 type="submit" text="แก้ไข" 
                 classer="btn-color-01" :prepend="true" icon="check-white.svg" 
               />
+              <Button 
+                text="ลบ" href="javascript:" @click="isActivePopupDelete = !isActivePopupDelete" 
+                classer="btn-color-06 ml-2" :prepend="true" icon="close-white.svg" 
+              />
+              <Button 
+                text="ย้อนกลับ" href="/forwarder/drivers" classer="btn-color-08 ml-2"
+              />
             </div>
             <div class="btns show-mobile">
-              <Button 
-                text="ลบ" href="javascript:" @click="openedPopupDelete = !openedPopupDelete" 
-                classer="btn-color-06 btn-sm mr-1" 
-              />
               <Button type="submit" text="แก้ไข" classer="btn-color-01 btn-sm" />
+              <Button 
+                text="ลบ" href="javascript:" @click="isActivePopupDelete = !isActivePopupDelete" 
+                classer="btn-color-06 btn-sm ml-1" 
+              />
+              <Button 
+                text="ย้อนกลับ" href="/forwarder/drivers" classer="btn-color-08 btn-sm ml-1"
+              />
             </div>
           </div>
         </div>
@@ -44,8 +49,8 @@
           <div class="grids">
             <div class="grid xl-10 lg-15 md-20 sm-30 xs-50">
               <FormGroup 
-                type="select" label="คำนำหน้า *" 
-                :value="dataset.prefix" @input="dataset.prefix = $event" 
+                type="select" label="คำนำหน้า *" :required="true" 
+                :value="dataset.detail.prefix" @input="dataset.detail.prefix = $event" 
                 :options="[
                   { value: 'นาย', text: 'นาย' },
                   { value: 'นาง', text: 'นาง' },
@@ -56,25 +61,24 @@
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="text" label="ชื่อ *" placeholder="โปรดระบุ" 
-                :value="dataset.firstname" @input="dataset.firstname = $event" 
-                :errorText="isValidated && !dataset.firstname? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.firstname? 'error': ''" 
+                :maxlength="64" :required="true" 
+                :value="dataset.detail.firstname" @input="dataset.detail.firstname = $event" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="text" label="นามสกุล *" placeholder="โปรดระบุ" 
-                :value="dataset.lastname" @input="dataset.lastname = $event" 
-                :errorText="isValidated && !dataset.lastname? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.lastname? 'error': ''" 
+                :maxlength="64" :required="true" 
+                :value="dataset.detail.lastname" @input="dataset.detail.lastname = $event" 
               />
             </div>
             <div class="sep"></div>
             
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
-                type="text" label="เบอร์โทรศัพท์" placeholder="โปรดระบุ" 
-                :value="dataset.phone" @input="dataset.phone = $event" 
+                type="text" label="เบอร์โทรศัพท์ *" placeholder="โปรดระบุ" 
+                :maxlength="10" :required="true" 
+                :value="dataset.detail.phone" @input="dataset.detail.phone = $event" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
@@ -87,27 +91,29 @@
             <div class="grid lg-60 md-80 sm-100">
               <FormGroup 
                 type="textarea" label="ที่อยู่ *" placeholder="โปรดระบุ" 
-                :value="dataset.address" @input="dataset.address = $event" 
-                :errorText="isValidated && !dataset.address? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.address? 'error': ''" 
+                :rows="3" :maxlength="128" :required="true" 
+                :value="dataset.detail.address" @input="dataset.detail.address = $event" 
               />
             </div>
             <div class="sep"></div>
             
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
-                type="text" label="จังหวัด *" placeholder="โปรดระบุ" 
-                :value="dataset.province" @input="dataset.province = $event" 
-                :errorText="isValidated && !dataset.province? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.province? 'error': ''" 
+                type="select" label="จังหวัด *" :required="true" placeholder="โปรดเลือก" 
+                :value="dataset.detail.province" 
+                @input="dataset.detail.province = $event" 
+                :options="[
+                  { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
+                  { value: 'สมุทรปราการ', text: 'สมุทรปราการ' }
+                ]"
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
-                type="text" label="รหัสไปรษณีย์ *" placeholder="โปรดระบุ" 
-                :value="dataset.zipcode" @input="dataset.zipcode = $event" 
-                :errorText="isValidated && !dataset.zipcode? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.zipcode? 'error': ''" 
+                type="text" label="รหัสไปรษณีย์ *" :required="true" 
+                placeholder="โปรดระบุ" :minlength="5" :maxlength="5" 
+                :value="dataset.detail.zipcode" 
+                @input="dataset.detail.zipcode = $event" 
               />
             </div>
           </div>
@@ -120,23 +126,19 @@
           <div class="grids">
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
-                type="text" label="ชื่อผู้ใช้ *" placeholder="โปรดระบุ" 
+                type="text" label="ชื่อผู้ใช้ *" placeholder="โปรดระบุ" :required="true" 
                 :value="dataset.username" @input="dataset.username = $event" 
-                :errorText="isValidated && !dataset.username? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.username? 'error': ''" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
-                type="email" label="อีเมล *" placeholder="โปรดระบุ" 
+                type="email" label="อีเมล *" placeholder="โปรดระบุ" :required="true" 
                 :value="dataset.email" @input="dataset.email = $event" 
-                :errorText="isValidated && !dataset.email? 'กรุณาระบุ': ''" 
-                :classer="isValidated && !dataset.email? 'error': ''" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
-                type="select" label="สถานะ" placeholder="โปรดเลือก" 
+                type="select" label="สถานะ *" placeholder="โปรดเลือก" 
                 :value="dataset.status" @input="dataset.status = $event" 
                 :options="[
                   { value: 1, text: 'เปิดใช้งาน' },
@@ -148,13 +150,13 @@
             
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
-                type="password" label="รหัสผ่าน" placeholder="โปรดระบุ" 
+                type="password" label="รหัสผ่าน *" placeholder="โปรดระบุ" 
                 :value="dataset.password" @input="dataset.password = $event" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
-                type="password" label="ยืนยันรหัสผ่าน" placeholder="โปรดระบุ" 
+                type="password" label="ยืนยันรหัสผ่าน *" placeholder="โปรดระบุ" 
                 :value="dataset.confPassword" @input="dataset.confPassword = $event" 
               />
             </div>
@@ -166,14 +168,14 @@
   </section>
   
   <!-- Popup Delete -->
-  <div class="popup-container" :class="{ 'active': openedPopupDelete }">
+  <div class="popup-container" :class="{ 'active': isActivePopupDelete }">
     <div class="wrapper">
-      <div class="close-filter" @click="openedPopupDelete = !openedPopupDelete"></div>
-      <form action="/admin/customers" method="GET" class="w-full">
+      <div class="close-filter" @click="isActivePopupDelete = !isActivePopupDelete"></div>
+      <form action="/forwarder/drivers" method="GET" class="w-full">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
-              <a href="javascript:" class="btn btn-close" @click="openedPopupDelete = !openedPopupDelete">
+              <a href="javascript:" class="btn btn-close" @click="isActivePopupDelete = !isActivePopupDelete">
                 <img class="icon-prepend xs" src="/assets/img/icon/close.svg" alt="Image Icon" />
                 ปิดหน้าต่าง
               </a>
@@ -189,7 +191,7 @@
                 />
                 <Button 
                   text="ปิด" href="javascript:" classer="btn-color-08" 
-                  @click="openedPopupDelete = !openedPopupDelete"
+                  @click="isActivePopupDelete = !isActivePopupDelete"
                 />
               </div>
               <div class="btns show-mobile">
@@ -198,7 +200,7 @@
                 />
                 <Button 
                   text="ปิด" href="javascript:" classer="btn-color-08 btn-sm" 
-                  @click="openedPopupDelete = !openedPopupDelete"
+                  @click="isActivePopupDelete = !isActivePopupDelete"
                 />
               </div>
             </div>
@@ -206,87 +208,74 @@
           <div class="body pt-4 pb-5">
             <p class="color-gray">หมายเหตุ</p>
             <p class="mt-2">
-              หมายเลขประจำตัวผู้ป่วยที่คุณค้นหาอาจจะ ไม่ถูกต้อง คุณสามารถ “ปิดหน้าต่าง” 
-              เพื่อระบุหมายเลขประจำตัวผู้ป่วยใหม่อีกครั้ง หรือ ผู้ป่วยที่คุณต้องการหา อาจจะ ไม่มีข้อมูลในระบบ 
-              คุณสามารถเพิ่มข้อมูลผู้ป่วยใหม่ โดยการคลิกที่ปุ่ม “เพิ่มข้อมูล”
+              ยืนยันการลบ โดยข้อมูลจะถูกลบออกจากระบบทันที และไม่สามารถกู้คืนมาได้
             </p>
           </div>
         </div>
       </form>
     </div>
   </div>
+
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" :isBottom="true" />
 </template>
 
 <script>
 import Topnav from '../../components/Topnav';
-import Sidenav from '../../components/Sidenav';
 
 export default {
-  name: 'AdminCustomerEditPage',
+  name: 'ForwarderDriverEditPage',
   components: {
-    Topnav,
-    Sidenav
+    Topnav
   },
   data() {
     return {
-      sidenavActiveIndex: 2,
+      topnavActiveIndex: 2,
       user: {
         id: 1,
-        role: 'Admin', /* Product Owner, Company, Driver, Admin */
-        company: 'บริษัท พีอาร์เดริเวรี่ จำกัด',
+        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
         username: 'General User',
-        prefix: 'นาย',
-        firstname: 'สมศักดิ์',
-        lastname: 'จริงใจ',
         email: 'user@gmail.com',
-        phone: '081-1123456',
-        avatar: '/assets/img/misc/profile.jpg'
+        avatar: '/assets/img/misc/profile.jpg',
+        detail: {
+          prefix: 'นาย',
+          firstname: 'สมศักดิ์',
+          lastname: 'จริงใจ',
+          phone: '0811123456'
+        },
+        company: {
+          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
+          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
+          province: 'สมุทรปราการ',
+          zipcode: '10540',
+          taxId: '500218893025'
+        }
       },
 
-      openedPopupDelete: false,
-      isValidated: false,
       dataset: {
-        prefix: 'นาย',
-        firstname: 'จริงใจ',
-        lastname: 'ใจมั่นคง',
-        phone: '091-234 5678',
-        address: 'Racha Thewa, Bang Phli District',
-        province: 'Samut Prakan',
-        zipcode: '10540',
-        
-        username: 'User0001',
-        email: 'employee@gmail.com',
+        id: null,
+        role: 'Driver',
+        username: 'Driver0001',
+        email: 'driver@gmail.com',
+        avatar: '/assets/img/misc/profile.jpg',
+        detail: {
+          prefix: 'นาย',
+          firstname: 'จริงใจ',
+          lastname: 'ใจมั่นคง',
+          phone: '0912345678',
+          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
+          province: 'สมุทรปราการ',
+          zipcode: '10540'
+        },
         password: '',
         confPassword: '',
         status: 1,
-      }
+      },
+
+      isActivePopupDelete: false
     }
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    document.getElementById('color_style').href = '/assets/css/color-admin.css';
-  },
-  methods: {
-    onSubmit(e) {
-      var that = this;
-      that.isValidated = true;
-      
-      var isValid = true;
-      [
-        'prefix', 'firstname', 'lastname', 'address', 'province', 'zipcode',
-        'username', 'email'
-      ].forEach(function(k){
-        if(!that.dataset[k]){
-          isValid = false;
-        }
-      });
-
-      if(!isValid){
-        e.preventDefault();
-      }else{
-        that.isValidated = false;
-      }
-    }
   }
 }
 </script>

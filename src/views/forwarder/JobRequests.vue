@@ -1,13 +1,12 @@
 <template>
-  <Topnav :user="user" />
-  <Sidenav :user="user" :activeIndex="sidenavActiveIndex" />
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" />
 
-  <section class="section-full pull-right">
+  <section class="section-full">
     <div class="container">
       <div class="tab-container">
         <div class="section-header pb-0" data-aos="fade-up" data-aos-delay="0">
           <div class="btns mt-0">
-            <a href="/admin/dashboard" class="btn color-gray h-color-01">
+            <a href="/forwarder/dashboard" class="btn color-gray h-color-01">
               <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
               ย้อนกลับ
             </a>
@@ -18,13 +17,13 @@
             </div>
             <div class="btns hide-mobile">
               <Button 
-                text="สร้าง" href="/admin/job-request-add" 
+                text="สร้าง" href="/forwarder/job-request-add" 
                 classer="btn-color-01" :prepend="true" icon="plus-white.svg" 
               />
             </div>
             <div class="btns show-mobile">
               <Button 
-                text="สร้าง" href="/admin/job-request-add" 
+                text="สร้าง" href="/forwarder/job-request-add" 
                 classer="btn-color-01 btn-sm" 
               />
             </div>
@@ -188,37 +187,44 @@
       </div>
     </div>
   </section>
+
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" :isBottom="true" />
 </template>
 
 <script>
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
-import Sidenav from '../../components/Sidenav';
 import Tabs01 from '../../components/Tabs01';
 import DataTable from '../../components/DataTable';
 
 export default {
-  name: 'AdminJobRequestsPage',
+  name: 'ForwarderJobRequestsPage',
   components: {
     Topnav,
-    Sidenav,
     Tabs01,
     DataTable
   },
   data() {
     return {
-      sidenavActiveIndex: 1,
+      topnavActiveIndex: 1,
       user: {
-        id: 4,
-        role: 'Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
-        username: 'Admin',
-        email: 'admin@gmail.com',
+        id: 1,
+        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: 'General User',
+        email: 'user@gmail.com',
         avatar: '/assets/img/misc/profile.jpg',
         detail: {
           prefix: 'นาย',
           firstname: 'สมศักดิ์',
           lastname: 'จริงใจ',
           phone: '0811123456'
+        },
+        company: {
+          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
+          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
+          province: 'สมุทรปราการ',
+          zipcode: '10540',
+          taxId: '500218893025'
         }
       },
 
@@ -236,7 +242,7 @@ export default {
       this.rows1.push({
         awbNumber: { 
           type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view'
+          href: '/forwarder/job-request-view'
         },
         hwbSerialNumber: { text: 'MLC10131957' },
         flightNumber: { text: 'JL0707' },
@@ -246,14 +252,14 @@ export default {
         status: { type: 'tag', value: 1, text: 'รอการ Matching', classer: 'ss-tag-danger' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view' }
+          view: { type: 'link', href: '/forwarder/job-request-view' }
         }
       });
       
       this.rows2.push({
         awbNumber: { 
           type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view/2'
+          href: '/forwarder/job-request-view/2'
         },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
@@ -264,14 +270,14 @@ export default {
         status: { type: 'tag', value: 2, text: 'รอคิวการรับ', classer: 'ss-tag-info' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view/2' }
+          view: { type: 'link', href: '/forwarder/job-request-view/2' }
         }
       });
       
       this.rows3.push({
         awbNumber: { 
           type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view/3'
+          href: '/forwarder/job-request-view/3'
         },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
@@ -282,14 +288,14 @@ export default {
         status: { type: 'tag', value: 3, text: 'รอยืนยันคิว', classer: 'ss-tag-danger' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view/3' }
+          view: { type: 'link', href: '/forwarder/job-request-view/3' }
         }
       });
       
       this.rows4.push({
         awbNumber: { 
           type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view/4'
+          href: '/forwarder/job-request-view/4'
         },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
@@ -302,14 +308,14 @@ export default {
           { type: 'tag', value: 3, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view/4' }
+          view: { type: 'link', href: '/forwarder/job-request-view/4' }
         }
       });
       
       this.rows5.push({
         awbNumber: { 
           type: 'link', text: '131-56591080',
-          href: '/admin/job-request-view/5'
+          href: '/forwarder/job-request-view/5'
         },
         flightNumber: { text: 'JL0707' },
         numberOfPieces: { text: this.formatNumber(2400, 0) },
@@ -325,7 +331,7 @@ export default {
           { type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success' },
         options: {
           type: 'options',
-          view: { type: 'link', href: '/admin/job-request-view/5' }
+          view: { type: 'link', href: '/forwarder/job-request-view/5' }
         }
       });
     }

@@ -9,6 +9,7 @@
         :name="name" :rows="rows" 
         :placeholder="placeholder" 
         v-model="value" 
+        :minlength="minlength" :maxlength="maxlength" 
         @input="(event)=>$emit('input', event.target.value)" 
         @focusin="isFocused = true" @focusout="isFocused = false" 
         :required="required? true: false"
@@ -68,7 +69,7 @@
       v-model="value" is-inline title-position="left" 
       :is-required="required? true: false" 
       @click="handleInput" 
-      :masks="{ input: 'DD/MM/YYYY' }" locale="th" 
+      :masks="{ input: dateFormat }" locale="th" 
     >
       <template v-slot="{ inputValue, inputEvents }">
         <div :class="wrapperClass">
@@ -79,6 +80,7 @@
             :value="inputValue"
             v-on="inputEvents" 
             @focusin="isFocused = true" @focusout="isFocused = false" 
+            :required="required? true: false"
           />
           <div v-if="icon" class="icon">
             <img :src="'/assets/img/icon/'+icon" alt="Image Icon" />
@@ -137,44 +139,6 @@
     </p>
   </div>
 
-  <div v-else-if="type == 'special-1'" class="form-group" :class="classer">
-    <label v-if="label" class="p color-gray" :class="{ 'focused': isFocused }">
-      {{label}} <div v-if="errorText" class="error">{{ errorText }}</div>
-    </label>
-    <div class="d-flex">
-      <input 
-        :type="'text'" 
-        :name="name" 
-        :placeholder="placeholder" 
-        v-model="value" 
-        @input="(event)=>$emit('input', event.target.value)" 
-        @focusin="isFocused = true" @focusout="isFocused = false" 
-        :required="required? true: false"
-        :readonly="readonly? true: false"
-        :disabled="disabled? true: false"
-        style="border-radius: .375rem 0 0 .375rem;"
-      />
-      <select 
-        :name="name2" 
-        v-model="value2" 
-        @input="(event)=>$emit('input2', event.target.value)" 
-        @focusin="isFocused = true" @focusout="isFocused = false" 
-        :required="required? true: false"
-        :readonly="readonly? true: false"
-        :disabled="disabled? true: false"
-        style="border-radius: 0 .375rem .375rem 0;"
-      >
-        <option v-for="option in options" :value="option.value" 
-        :selected="option.value == value || option.text == value" :key="option.value">
-          {{option.text}}
-        </option>
-      </select>
-      <div v-if="icon" class="icon">
-        <img :src="'/assets/img/icon/'+icon" alt="Image Icon" />
-      </div>
-    </div>
-  </div>
-
   <div v-else class="form-group" :class="classer">
     <label v-if="label" class="p color-gray" :class="{ 'focused': isFocused }">
       {{label}} <div v-if="errorText" class="error">{{errorText}}</div>
@@ -185,6 +149,7 @@
         :name="name" 
         :placeholder="placeholder" 
         v-model="value" 
+        :minlength="minlength" :maxlength="maxlength" 
         @input="(event)=>$emit('input', event.target.value)" 
         @focusin="isFocused = true" @focusout="isFocused = false" 
         :required="required? true: false"
@@ -220,7 +185,10 @@ export default {
     wrapperClass: { type: String, default: '' },
     icon: { type: String, default: '' },
     isFocused: { type: Boolean, default: false },
-    rows: { type: Number, default: 4 }
+    rows: { type: Number, default: 4 },
+    minlength: { type: Number, default: null },
+    maxlength: { type: Number, default: null },
+    dateFormat: { type: String, default: 'DD/MM/YYYY' }
   },
   methods: {
     handleInput() {

@@ -6,7 +6,7 @@
     <div class="container">
       <div class="section-header" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
-          <a href="/user/dashboard" class="btn color-gray h-color-01 disabled">
+          <a href="/admin/dashboard" class="btn color-gray h-color-01 disabled">
             <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
             ย้อนกลับ
           </a>
@@ -24,39 +24,52 @@
           <div class="grids grid-mt">
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="New Requests" :count="5" unit="งาน" 
-                classer="no-hover" 
-              />
-            </div>
-            <div class="grid xl-25 lg-1-3">
-              <SpecialCard03 
-                label="Job Requests ที่กำลังดำเนินการ" :count="24" unit="งาน" 
+                label="Job Requests รอการ Matching" :count="3" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="105" unit="งาน" 
+                label="Job Requests รอคิวการรับ" :count="2" unit="งาน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
+                label="Job Requests รอยืนยันคิว" :count="2" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="sep"></div>
-
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Total Product Owners" :count="84" unit="คน" 
+                label="Job Requests ที่กำลังดำเนินการ" :count="4" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Total Companies" :count="26" unit="บริษัท" 
+                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="34" unit="งาน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="sep"></div>
+            
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
+                label="Total Freight Forwarders" :count="24" unit="คน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Total Truck Drivers" :count="72" unit="คน" 
+                label="Total Freight Forwarder Accounts" :count="36" unit="คน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
+                label="Total Truck Drivers" :count="124" unit="คน" 
                 classer="no-hover"
               />
             </div>
@@ -84,17 +97,18 @@ export default {
     return {
       sidenavActiveIndex: 0,
       user: {
-        id: 1,
-        role: 'Admin', /* Product Owner, Company, Driver, Admin */
-        company: 'บริษัท พีอาร์เดริเวรี่ จำกัด',
-        username: 'General User',
-        prefix: 'นาย',
-        firstname: 'สมศักดิ์',
-        lastname: 'จริงใจ',
-        email: 'user@gmail.com',
-        phone: '081-1123456',
-        avatar: '/assets/img/misc/profile.jpg'
-      },
+        id: 4,
+        role: 'Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: 'Admin',
+        email: 'admin@gmail.com',
+        avatar: '/assets/img/misc/profile.jpg',
+        detail: {
+          prefix: 'นาย',
+          firstname: 'สมศักดิ์',
+          lastname: 'จริงใจ',
+          phone: '0811123456'
+        }
+      }
     }
   },
   created() {

@@ -5,7 +5,7 @@
     <div class="container">
       <div class="section-header" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
-          <a href="/customer/dashboard" class="btn color-gray h-color-01 disabled">
+          <a href="/forwarder/dashboard" class="btn color-gray h-color-01 disabled">
             <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
             ย้อนกลับ
           </a>
@@ -23,13 +23,26 @@
           <div class="grids grid-mt">
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอการเสนอราคา" :count="3" unit="งาน" 
+                label="Job Requests รอการ Matching" :count="3" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่กำลังดำเนินการ" :count="2" unit="งาน" 
+                label="Job Requests รอคิวการรับ" :count="2" unit="งาน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
+                label="Job Requests รอยืนยันคิว" :count="2" unit="งาน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="sep"></div>
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
+                label="Job Requests ที่กำลังดำเนินการ" :count="4" unit="งาน" 
                 classer="no-hover"
               />
             </div>
@@ -54,7 +67,7 @@ import Topnav from '../../components/Topnav';
 import SpecialCard03 from '../../components/SpecialCard03';
 
 export default {
-  name: 'CustomerDashboardPage',
+  name: 'ForwarderDashboardPage',
   components: {
     Topnav,
     SpecialCard03
@@ -64,18 +77,27 @@ export default {
       topnavActiveIndex: 0,
       user: {
         id: 1,
-        role: 'Product Owner', /* Product Owner, Company, Driver, Admin */
+        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
         username: 'General User',
-        prefix: 'นาย',
-        firstname: 'สมศักดิ์',
-        lastname: 'จริงใจ',
         email: 'user@gmail.com',
-        phone: '081-1123456',
-        avatar: '/assets/img/misc/profile-01.svg'
+        avatar: '/assets/img/misc/profile.jpg',
+        detail: {
+          prefix: 'นาย',
+          firstname: 'สมศักดิ์',
+          lastname: 'จริงใจ',
+          phone: '0811123456'
+        },
+        company: {
+          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
+          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
+          province: 'สมุทรปราการ',
+          zipcode: '10540',
+          taxId: '500218893025'
+        }
       }
     }
   },
-  created() {
+  mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
   }
 }

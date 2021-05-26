@@ -1,13 +1,12 @@
 <template>
-  <Topnav :user="user" />
-  <Sidenav :user="user" :activeIndex="sidenavActiveIndex" />
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" />
 
-  <section class="section-full pull-right">
+  <section class="section-full">
     <div class="container">
 
       <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
-          <a :href="'/admin/job-requests/'+jobRequest.status" class="btn color-gray h-color-01">
+          <a :href="'/forwarder/job-requests/'+jobRequest.status" class="btn color-gray h-color-01">
             <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
             ย้อนกลับ
           </a>
@@ -23,13 +22,13 @@
           </div>
           <div class="btns hide-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/admin/job-requests/'+jobRequest.status" 
+              text="ย้อนกลับ" :href="'/forwarder/job-requests/'+jobRequest.status" 
               classer="btn-color-08"
             />
           </div>
           <div class="btns show-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/admin/job-requests/'+jobRequest.status" 
+              text="ย้อนกลับ" :href="'/forwarder/job-requests/'+jobRequest.status" 
               classer="btn-color-08 btn-sm" 
             />
           </div>
@@ -84,41 +83,6 @@
         </div>
       </div>
 
-      <div v-if="jobRequest.status == 2 && !jobRequestConfirmValid">
-        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
-          <p class="fw-400">จัดคิวการรับสินค้า</p>
-        </div>
-        <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
-          <form action="/admin/job-request-view/3" method="GET">
-            <div class="grids">
-              <div class="grid xl-30 lg-1-3 sm-50">
-                <FormGroup 
-                  type="text" label="หมายเลขช่องจอด *" placeholder="โปรดระบุ" :required="true" 
-                  :value="jobRequest.dockNumber" @input="jobRequest.dockNumber = $event" 
-                />
-              </div>
-              <div class="grid xl-20 lg-25 sm-50">
-                <FormGroupTime
-                  label="เวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
-                  :value0="jobRequest.pickupTimeHours" 
-                  @input0="jobRequest.pickupTimeHours = $event" 
-                  :value1="jobRequest.pickupTimeMinutes" 
-                  @input1="jobRequest.pickupTimeMinutes = $event" 
-                />
-              </div>
-              <div class="grid sm-100">
-                <div class="btns mt-0">
-                  <Button 
-                    type="submit" text="จัดคิวการรับสินค้า" 
-                    classer="btn-color-01" :append="true" icon="check-white.svg" 
-                  />
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-
       <div v-if="jobRequest.status > 2">
         <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
           <p class="fw-400">ยืนยันการรับสินค้า</p>
@@ -126,7 +90,7 @@
         <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
           <form v-if="!jobRequestConfirmValid" action="/" method="GET" @submit.prevent="onSubmitConfirm">
             <div class="grids">
-              <div class="grid xl-30 lg-1-3 sm-60">
+              <div class="grid xl-30 lg-1-3 sm-50">
                 <FormGroup 
                   type="select" label="ผู้ขับรถ *" placeholder="เลือกผู้ขับรถ" :required="true" 
                   :value="jobRequest.driver" @input="jobRequest.driver = $event" 
@@ -135,13 +99,13 @@
                   ]"
                 />
               </div>
-              <div class="grid xl-30 lg-1-3 sm-60">
+              <div class="grid xl-25 lg-30 sm-50">
                 <FormGroupTrucks
                   :required="true" :value="jobRequest.trucks" 
                   @input="jobRequest.trucks = $event" 
                 />
               </div>
-              <div class="grid xl-20 lg-25 sm-60">
+              <div class="grid xl-20 lg-25 sm-50">
                 <FormGroupTime
                   label="ยืนยันเวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
                   :value0="jobRequest.confPickupTimeHours" 
@@ -298,22 +262,22 @@
 
     </div>
   </section>
+
+  <Topnav :user="user" :activeIndex="topnavActiveIndex" :isBottom="true" />
 </template>
 
 <script>
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
-import Sidenav from '../../components/Sidenav';
 import Step01 from '../../components/Step01';
 import ChatContainer from '../../components/ChatContainer';
 import FormGroupTime from '../../components/FormGroupTime';
 import FormGroupTrucks from '../../components/FormGroupTrucks';
 
 export default {
-  name: 'AdminJobRequestViewPage',
+  name: 'ForwarderJobRequestViewPage',
   components: {
     Topnav,
-    Sidenav,
     Step01,
     ChatContainer,
     FormGroupTime,
@@ -321,18 +285,25 @@ export default {
   },
   data() {
     return {
-      sidenavActiveIndex: 1,
+      topnavActiveIndex: 1,
       user: {
-        id: 4,
-        role: 'Admin', /* Freight Forwarder, Driver, TG Admin, Admin */
-        username: 'Admin',
-        email: 'admin@gmail.com',
+        id: 1,
+        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: 'General User',
+        email: 'user@gmail.com',
         avatar: '/assets/img/misc/profile.jpg',
         detail: {
           prefix: 'นาย',
           firstname: 'สมศักดิ์',
           lastname: 'จริงใจ',
           phone: '0811123456'
+        },
+        company: {
+          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
+          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
+          province: 'สมุทรปราการ',
+          zipcode: '10540',
+          taxId: '500218893025'
         }
       },
       jobRequest: {

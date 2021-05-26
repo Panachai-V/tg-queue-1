@@ -24,107 +24,50 @@ const routes = [
   },
 
 
-  // Customer Dashboard
+  // Freight Forwarder
   {
-    path: '/customer/dashboard',
-    name: 'CustomerDashboardPage',
-    component: () => import('../views/customer/Dashboard.vue')
+    path: '/forwarder/dashboard',
+    name: 'ForwarderDashboardPage',
+    component: () => import('../views/forwarder/Dashboard.vue')
   },
-
-  // Customer - Job Requests
+  
+  // Freight Forwarder - Job Requests
   {
-    path: '/customer/job-requests/:tab?',
-    name: 'CustomerJobRequestsPage',
-    component: () => import('../views/customer/JobRequests.vue')
-  },
-  {
-    path: '/customer/job-request-add',
-    name: 'CustomerJobRequestAddPage',
-    component: () => import('../views/customer/JobRequestAdd.vue')
+    path: '/forwarder/job-requests/:tab?',
+    name: 'ForwarderJobRequestsPage',
+    component: () => import('../views/forwarder/JobRequests.vue')
   },
   {
-    path: '/customer/job-request-edit',
-    name: 'CustomerJobRequestEditPage',
-    component: () => import('../views/customer/JobRequestEdit.vue')
+    path: '/forwarder/job-request-add',
+    name: 'ForwarderJobRequestAddPage',
+    component: () => import('../views/forwarder/JobRequestAdd.vue')
   },
   {
-    path: '/customer/job-request-view',
-    name: 'CustomerJobRequestViewPage',
-    component: () => import('../views/customer/JobRequestView.vue')
+    path: '/forwarder/job-request-view/:status?',
+    name: 'ForwarderJobRequestViewPage',
+    component: () => import('../views/forwarder/JobRequestView.vue')
+  },
+  
+  // Freight Forwarder - Drivers
+  {
+    path: '/forwarder/drivers',
+    name: 'ForwarderDriversPage',
+    component: () => import('../views/forwarder/Drivers.vue')
   },
   {
-    path: '/customer/job-request-tracking',
-    name: 'CustomerJobRequestTrackingPage',
-    component: () => import('../views/customer/JobRequestTracking.vue')
+    path: '/forwarder/driver-add',
+    name: 'ForwarderDriverAddPage',
+    component: () => import('../views/forwarder/DriverAdd.vue')
   },
   {
-    path: '/customer/job-request-result',
-    name: 'CustomerJobRequestResultPage',
-    component: () => import('../views/customer/JobRequestResult.vue')
-  },
-
-
-  // Company Dashboard
-  {
-    path: '/company/dashboard',
-    name: 'CompanyDashboardPage',
-    component: () => import('../views/company/Dashboard.vue')
-  },
-
-  // Company - Job Requests
-  {
-    path: '/company/job-requests/:tab?',
-    name: 'CompanyJobRequestsPage',
-    component: () => import('../views/company/JobRequests.vue')
+    path: '/forwarder/driver-edit',
+    name: 'ForwarderDriverEditPage',
+    component: () => import('../views/forwarder/DriverEdit.vue')
   },
   {
-    path: '/company/job-request-view',
-    name: 'CompanyJobRequestViewPage',
-    component: () => import('../views/company/JobRequestView.vue')
-  },
-
-  // Company - My Jobs
-  {
-    path: '/company/my-jobs/:tab?',
-    name: 'CompanyMyJobsPage',
-    component: () => import('../views/company/MyJobs.vue')
-  },
-  {
-    path: '/company/my-job-assignment',
-    name: 'CompanyMyJobAssignmentPage',
-    component: () => import('../views/company/MyJobAssignment.vue')
-  },
-  {
-    path: '/company/my-job-tracking',
-    name: 'CompanyMyJobTrackingPage',
-    component: () => import('../views/company/MyJobTracking.vue')
-  },
-  {
-    path: '/company/my-job-result',
-    name: 'CompanyMyJobResultPage',
-    component: () => import('../views/company/MyJobResult.vue')
-  },
-
-  // Company - Drivers
-  {
-    path: '/company/drivers',
-    name: 'CompanyDriversPage',
-    component: () => import('../views/company/Drivers.vue')
-  },
-  {
-    path: '/company/driver-add',
-    name: 'CompanyDriverAddPage',
-    component: () => import('../views/company/DriverAdd.vue')
-  },
-  {
-    path: '/company/driver-view',
-    name: 'CompanyDriverViewPage',
-    component: () => import('../views/company/DriverView.vue')
-  },
-  {
-    path: '/company/driver-edit',
-    name: 'CompanyDriverEditPage',
-    component: () => import('../views/company/DriverEdit.vue')
+    path: '/forwarder/driver-view',
+    name: 'ForwarderDriverViewPage',
+    component: () => import('../views/forwarder/DriverView.vue')
   },
 
 
@@ -135,14 +78,29 @@ const routes = [
     component: () => import('../views/driver/MyJobs.vue')
   },
   {
-    path: '/driver/my-job-tracking',
-    name: 'DriverMyJobTrackingPage',
-    component: () => import('../views/driver/MyJobTracking.vue')
+    path: '/driver/my-job-view/:status?',
+    name: 'DriverMyJobViewPage',
+    component: () => import('../views/driver/MyJobView.vue')
+  },
+
+
+  // TG Admin Dashboard
+  {
+    path: '/tgadmin/dashboard',
+    name: 'TGAdminDashboardPage',
+    component: () => import('../views/tgadmin/Dashboard.vue')
+  },
+
+  // TG Admin - Job Requests
+  {
+    path: '/tgadmin/job-requests/:tab?',
+    name: 'TGAdminJobRequestsPage',
+    component: () => import('../views/tgadmin/JobRequests.vue')
   },
   {
-    path: '/driver/my-job-result',
-    name: 'DriverMyJobResultPage',
-    component: () => import('../views/driver/MyJobResult.vue')
+    path: '/tgadmin/job-request-view/:status?',
+    name: 'TGAdminJobRequestViewPage',
+    component: () => import('../views/tgadmin/JobRequestView.vue')
   },
 
 
@@ -165,73 +123,31 @@ const routes = [
     component: () => import('../views/admin/JobRequestAdd.vue')
   },
   {
-    path: '/admin/job-request-view',
+    path: '/admin/job-request-view/:status?',
     name: 'AdminJobRequestViewPage',
     component: () => import('../views/admin/JobRequestView.vue')
   },
-  {
-    path: '/admin/job-request-edit',
-    name: 'AdminJobRequestEditPage',
-    component: () => import('../views/admin/JobRequestEdit.vue')
-  },
-  {
-    path: '/admin/job-request-assignment',
-    name: 'AdminJobRequestAssignmentPage',
-    component: () => import('../views/admin/JobRequestAssignment.vue')
-  },
-  {
-    path: '/admin/job-request-tracking',
-    name: 'AdminJobRequestTrackingPage',
-    component: () => import('../views/admin/JobRequestTracking.vue')
-  },
-  {
-    path: '/admin/job-request-result',
-    name: 'AdminJobRequestResultPage',
-    component: () => import('../views/admin/JobRequestResult.vue')
-  },
 
-  // Admin - Customers
+  // Admin - Freight Forwarders
   {
-    path: '/admin/customers',
-    name: 'AdminCustomersPage',
-    component: () => import('../views/admin/Customers.vue')
+    path: '/admin/forwarders',
+    name: 'AdminForwardersPage',
+    component: () => import('../views/admin/Forwarders.vue')
   },
   {
-    path: '/admin/customer-add',
-    name: 'AdminCustomerAddPage',
-    component: () => import('../views/admin/CustomerAdd.vue')
+    path: '/admin/forwarder-add',
+    name: 'AdminForwarderAddPage',
+    component: () => import('../views/admin/ForwarderAdd.vue')
   },
   {
-    path: '/admin/customer-view',
-    name: 'AdminCustomerViewPage',
-    component: () => import('../views/admin/CustomerView.vue')
+    path: '/admin/forwarder-edit',
+    name: 'AdminForwarderEditPage',
+    component: () => import('../views/admin/ForwarderEdit.vue')
   },
   {
-    path: '/admin/customer-edit',
-    name: 'AdminCustomerEditPage',
-    component: () => import('../views/admin/CustomerEdit.vue')
-  },
-
-  // Admin - Companies
-  {
-    path: '/admin/companies',
-    name: 'AdminCompaniesPage',
-    component: () => import('../views/admin/Companies.vue')
-  },
-  {
-    path: '/admin/company-add',
-    name: 'AdminCompanyAddPage',
-    component: () => import('../views/admin/CompanyAdd.vue')
-  },
-  {
-    path: '/admin/company-edit',
-    name: 'AdminCompanyEditPage',
-    component: () => import('../views/admin/CompanyEdit.vue')
-  },
-  {
-    path: '/admin/company-view',
-    name: 'AdminCompanyViewPage',
-    component: () => import('../views/admin/CompanyView.vue')
+    path: '/admin/forwarder-view',
+    name: 'AdminForwarderViewPage',
+    component: () => import('../views/admin/ForwarderView.vue')
   },
 
   // Admin - History
