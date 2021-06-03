@@ -22,6 +22,11 @@ const routes = [
     name: 'AuthRegisterPage',
     component: () => import('../views/auth/Register.vue')
   },
+  {
+    path: '/auth/forget-password',
+    name: 'AuthForget',
+    component: () => import('../views/auth/Forget.vue')
+  },
 
 
   // Freight Forwarder

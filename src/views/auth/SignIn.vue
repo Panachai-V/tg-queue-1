@@ -14,22 +14,22 @@
           <p class="h2 fw-500 color-p">
             เข้าสู่ระบบ
           </p>
-          <form action="/customer/dashboard" method="GET" @submit="onSubmit">
+          <form @submit="handleSubmit">
             <div class="grids">
               <div class="grid sm-100">
                 <FormGroup 
                   label="ชื่อผู้ใช้" wrapperClass="prepend" icon="user.svg" 
-                  :value="dataset.username" @input="dataset.username = $event" 
-                  :errorText="isValidated && !dataset.username? 'กรุณาระบุ': ''" 
-                  :classer="isValidated && !dataset.username? 'error': ''" 
+                  :value="user.username" @input="user.username = $event" 
+                  :errorText="isValidated && !user.username? 'กรุณาระบุ': ''" 
+                  :classer="isValidated && !user.username? 'error': ''" 
                 />
               </div>
               <div class="grid sm-100">
                 <FormGroup 
                   label="รหัสผ่าน" type="password" wrapperClass="prepend password" icon="lock.svg" 
-                  :value="dataset.password" @input="dataset.password = $event" 
-                  :errorText="isValidated && !dataset.password? 'กรุณาระบุ': ''" 
-                  :classer="isValidated && !dataset.password? 'error': ''" 
+                  :value="user.password" @input="user.password = $event" 
+                  :errorText="isValidated && !user.password? 'กรุณาระบุ': ''" 
+                  :classer="isValidated && !user.password? 'error': ''" 
                 />
               </div>
             </div>
@@ -54,6 +54,7 @@
 <script>
 import FormGroup from '../../components/FormGroup';
 import Button from '../../components/Button';
+import User from '../../models/user';
 
 export default {
   name: 'AuthSignInPage',
@@ -61,35 +62,53 @@ export default {
     FormGroup,
     Button
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    if (this.loggedIn) {
+      if (this.$store.state.auth.user.role == "driver") {
+        this.$router.push('/driver/my-jobs');
+      }
+      if (this.$store.state.auth.user.role == "freight-forwarder") {
+        this.$router.push('/forwarder/dashboard');
+      }
+    }
   },
   data() {
     return {
       isValidated: false,
-      dataset: {
-        username: '',
-        password: ''
-      }
+      user: new User('', '')
     }
   },
   methods: {
-    onSubmit(e) {
-      var that = this;
-      that.isValidated = true;
-      
-      var isValid = true;
-      ['username', 'password'].forEach(function(k){
-        if(!that.dataset[k]){
-          isValid = false;
-        }
-      });
 
-      if(!isValid){
-        e.preventDefault();
-      }else{
-        that.isValidated = false;
-      }
+    handleSubmit(e) {
+        e.preventDefault()
+        console.log(this.user);
+        if (this.user.username && this.user.password) {
+          this.$store.dispatch('auth/login', this.user).then(
+            () => {
+              console.log("logged in")
+              console.log('user role: ',this.$store.state.auth.user.role)
+              if (this.$store.state.auth.user.role == "driver") {
+                this.$router.push('/driver/my-jobs');
+              }
+              if (this.$store.state.auth.user.role == "freight-forwarder") {
+                this.$router.push('/forwarder/dashboard');
+              }
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data) ||
+                error.message ||
+                error.toString();
+            }
+          );}
+        this.isValidated = true;
     }
   }
 }

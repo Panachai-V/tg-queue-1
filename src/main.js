@@ -1,6 +1,11 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store'
+
+import axios from 'axios'
+
+axios.defaults.baseURL = 'http://localhost:8081/apis'
 
 const app = createApp(App)
 
@@ -17,4 +22,5 @@ app.component('FormGroupAge', FormGroupAge)
 app.component('CheckboxSet', CheckboxSet)
 app.component('PopupOptions', PopupOptions)
 
+app.use(store)
 app.use(router).mount('#app')
