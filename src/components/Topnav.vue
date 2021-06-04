@@ -118,7 +118,7 @@
               </a>
             </div>
             <div class="submenu exit">
-              <a href="/auth/signin">
+              <a href="/auth/signin" @click= "logOut">
                 <div class="icon">
                   <img src="/assets/img/icon/exit.svg" alt="Image Icon" />
                 </div>
@@ -398,6 +398,10 @@ export default {
     },
     onSubmitCompany() {
       this.isActivePopupCompany = false;
+    },
+
+    logOut() {
+      this.$store.dispatch('auth/logout');
     }
 
   }

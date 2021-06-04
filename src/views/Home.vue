@@ -5,6 +5,7 @@
     <div>
       <a href="/auth/signin" target="_blank">/auth/signin</a> <br>
       <a href="/auth/register" target="_blank">/auth/register</a> <br>
+      <a href="/auth/forget" target="_blank">/auth/forget</a> <br>
       <br>
     </div>
   </div>

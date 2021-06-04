@@ -65,6 +65,7 @@
 <script>
 import Topnav from '../../components/Topnav';
 import SpecialCard03 from '../../components/SpecialCard03';
+import UserService from '../../services/user.service';
 
 export default {
   name: 'ForwarderDashboardPage',
@@ -72,6 +73,7 @@ export default {
     Topnav,
     SpecialCard03
   },
+  
   data() {
     return {
       topnavActiveIndex: 0,
@@ -94,11 +96,51 @@ export default {
           zipcode: '10540',
           taxId: '500218893025'
         }
+  
+      },
+      job: {
+        status1: 0,
+        status2: 0,
+        status3: 0,
+        status4: 0,
+        status5: 0,
       }
+
     }
+  },
+  
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    }
+  },
+// เดียวกูกลับมาทำ
+
+  created() {
+    AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+     UserService.getJobFreightforwarder().then(
+       response => {
+
+    /*var i;
+    for (i = 0; i <  response.data.length; i++) { 
+      console.log('ai kuy jour');
+
+    }*/
+    console.log(response.data.length)
+       }
+      
+      
+    );
+
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    //เช็ค currentuser ถ้าไม่มีการ sign in ให้ไป sign in
+    if (!this.currentUser) {
+      this.$router.push('/auth/signin');
+    }
+  },
+  methods: {
   }
 }
 </script>
