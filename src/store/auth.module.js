@@ -1,10 +1,9 @@
 import AuthService from '../services/auth.service';
 
 const user = JSON.parse(localStorage.getItem('user'));
-const userDetail = JSON.parse(localStorage.getItem('userDetail'));
 const initialState = user
-  ? { status: { loggedIn: true }, user ,userDetail}
-  : { status: { loggedIn: false }, user: null , userDetail : null };
+  ? { status: { loggedIn: true }, user }
+  : { status: { loggedIn: false }, user: null };
 
 export const auth = {
   namespaced: true,
@@ -43,17 +42,14 @@ export const auth = {
     loginSuccess(state, user) {
       state.status.loggedIn = true;
       state.user = user;
-      state.userDetail = userDetail;
     },
     loginFailure(state) {
       state.status.loggedIn = false;
       state.user = null;
-      state.userDetail = null;
     },
     logout(state) {
       state.status.loggedIn = false;
       state.user = null;
-      state.userDetail = null;
     },
     registerSuccess(state) {
       state.status.loggedIn = false;

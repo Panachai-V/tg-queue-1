@@ -131,31 +131,8 @@ export default {
       rows2: []
     }
   },
-  computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-      
-    },
-    /*currentUserDetail() {
-      return this.$store.state.auth.userDetail;
-    }*/
-  },
-  watch: {
-    '$route'() {
-        console.log('watch: ', this.$store.state.auth.userDetail.prefix);
-        this.user.detail.prefix = this.$store.state.auth.userDetail.prefix
-        this.user.detail.firstname = this.$store.state.auth.user.username
-    }
-  },
-  beforeMount() {
-    // this.user.detail.prefix = this.$store.state.auth.userDetail.prefix
-  },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    //เช็ค currentuser ถ้าไม่มีการ sign in ให้ไป sign in
-    if (!this.currentUser) {
-      this.$router.push('/auth/signin');
-    }
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
@@ -202,25 +179,6 @@ export default {
         }
       });
     }
-
-    //this.user.detail = this.$store.state.auth.userDetail
-    
-    /*UserService.getUserDetail().then(
-      response => {
-        console.log(response.data)
-        //this.user.detail = response.data;
-      }
-    );*/
-    UserService.getUserCompanyDetail().then(
-      response => {
-        this.user.company.name = response.data.company_detail[0].company_name
-        this.user.company.address = response.data.company_detail[0].address
-        this.user.company.province = response.data.company_detail[0].company_province
-        this.user.company.zipcode = response.data.company_detail[0].company_postal
-        this.user.company.taxId = response.data.tax_id
-        console.log(this.user.company)
-      }
-    );
   },
   methods: {
     formatNumber(value, digits=2) {

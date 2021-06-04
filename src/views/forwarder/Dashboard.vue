@@ -1,4 +1,4 @@
-<template>
+y<template>
   <Topnav :user="user" :activeIndex="topnavActiveIndex" />
 
   <section class="section-full">
@@ -66,6 +66,7 @@
 import Topnav from '../../components/Topnav';
 import SpecialCard03 from '../../components/SpecialCard03';
 import UserService from '../../services/user.service';
+import CompanyService from '../../services/company.service';
 
 export default {
   name: 'ForwarderDashboardPage',
@@ -79,22 +80,22 @@ export default {
       topnavActiveIndex: 0,
       user: {
         id: 1,
-        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
-        username: 'General User',
-        email: 'user@gmail.com',
+        role: '', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: '',
+        email: '',
         avatar: '/assets/img/misc/profile.jpg',
         detail: {
-          prefix: 'นาย',
-          firstname: 'สมศักดิ์',
-          lastname: 'จริงใจ',
-          phone: '0811123456'
+          prefix: '',
+          firstname: '',
+          lastname: '',
+          phone: ''
         },
         company: {
-          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
-          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
-          province: 'สมุทรปราการ',
-          zipcode: '10540',
-          taxId: '500218893025'
+          name: '',
+          address: '',
+          province: '',
+          zipcode: '',
+          taxId: ''
         }
   
       },
@@ -108,25 +109,17 @@ export default {
 
     }
   },
-  
-  computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    }
-  },
 // เดียวกูกลับมาทำ
 
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-     UserService.getJobFreightforwarder().then(
+     CompanyService.getCountJob().then(
        response => {
-
-    /*var i;
-    for (i = 0; i <  response.data.length; i++) { 
-      console.log('ai kuy jour');
-
-    }*/
-    console.log(response.data.length)
+        for (let i = 0; i <  response.data.length; i++) { 
+          console.log(i.data);
+        }
+        console.log('responce :',response.data.length)
+      
        }
       
       
@@ -135,10 +128,6 @@ export default {
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    //เช็ค currentuser ถ้าไม่มีการ sign in ให้ไป sign in
-    if (!this.currentUser) {
-      this.$router.push('/auth/signin');
-    }
   },
   methods: {
   }

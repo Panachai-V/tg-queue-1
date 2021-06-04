@@ -365,7 +365,9 @@ export default {
       return this.$store.state.auth.status.loggedIn;
     }
   },
-  mounted() {    
+  mounted() {
+    AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    
     //เช็ค currentuser ถ้าไม่มีการ sign in ให้ไป sign in
     if (!this.loggedIn) {
       this.$router.push('/auth/signin');
@@ -374,9 +376,13 @@ export default {
   created() {
     console.log('TopNec created')
 
+    this.user.id = this.$store.state.auth.user.id,
+    this.user.role = this.$store.state.auth.user.role, /* Freight Forwarder, Driver, TG Admin, Admin */
+    this.user.username = this.$store.state.auth.user.username,
+    this.user.email = this.$store.state.auth.user.email,
+
     UserService.getUserDetail().then(
       response => {        
-        console.log('user detail: ', response.data)
         this.user.detail = response.data
       }
     );
@@ -391,7 +397,7 @@ export default {
   methods: {
 
     isFreightForwarder() {
-      if(this.user && this.user.role == 'Freight Forwarder'){
+      if(this.user && this.user.role == 'freight-forwarder'){
         return true;
       }else{
         return false;

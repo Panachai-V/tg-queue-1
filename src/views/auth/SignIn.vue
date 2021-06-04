@@ -20,7 +20,7 @@
                 <FormGroup 
                   label="ชื่อผู้ใช้" wrapperClass="prepend" icon="user.svg" 
                   :value="user.username" @input="user.username = $event" 
-                  :errorText="isValidated && !user.username? 'กรุณาระบุ': ''" 
+                  :errorText="isValidated && !user.username? text_notification: ''" 
                   :classer="isValidated && !user.username? 'error': ''" 
                 />
               </div>
@@ -28,7 +28,7 @@
                 <FormGroup 
                   label="รหัสผ่าน" type="password" wrapperClass="prepend password" icon="lock.svg" 
                   :value="user.password" @input="user.password = $event" 
-                  :errorText="isValidated && !user.password? 'กรุณาระบุ': ''" 
+                  :errorText="isValidated && !user.password? text_notification: ''" 
                   :classer="isValidated && !user.password? 'error': ''" 
                 />
               </div>
@@ -62,6 +62,19 @@ export default {
     FormGroup,
     Button
   },
+  watch: {
+    // whenever question changes, this function will run
+    loggedIn: function () {
+      /*if (this.$store.state.auth.user.role == "driver") {
+        this.$router.push('/driver/my-jobs');
+      }
+      if (this.$store.state.auth.user.role == "freight-forwarder") {
+        this.$router.push('/forwarder/dashboard');
+      }*/
+      console.log('user :', this.$store.state.auth.user)
+      console.log("redirecting...")
+    }
+  },
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
@@ -69,6 +82,7 @@ export default {
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    console.log(this.$store.state.auth.user)
     if (this.loggedIn) {
       if (this.$store.state.auth.user.role == "driver") {
         this.$router.push('/driver/my-jobs');
@@ -81,11 +95,17 @@ export default {
   data() {
     return {
       isValidated: false,
-      user: new User('', '')
+      user: new User('', ''),
+      text_notification: 'กรุณาระบุ'
+    }
+  },
+  updated(){
+    if ((this.user.username && !this.user.password) || (!this.user.username && this.user.password)){
+      this.text_notification = 'กรุณาระบุ'
+      console.log('action')
     }
   },
   methods: {
-
     handleSubmit(e) {
         e.preventDefault()
         console.log(this.user);
@@ -93,7 +113,6 @@ export default {
           this.$store.dispatch('auth/login', this.user).then(
             () => {
               console.log("logged in")
-              console.log('user role: ',this.$store.state.auth.user.role)
               if (this.$store.state.auth.user.role == "driver") {
                 this.$router.push('/driver/my-jobs');
               }
@@ -106,8 +125,12 @@ export default {
                 (error.response && error.response.data) ||
                 error.message ||
                 error.toString();
+                this.text_notification = 'username or password is incorrect'
+                this.user.username = ''
+                this.user.password = ''
             }
-          );}
+          );
+        }
         this.isValidated = true;
     }
   }
