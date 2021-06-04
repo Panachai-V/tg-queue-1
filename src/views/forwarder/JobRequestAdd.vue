@@ -3,7 +3,7 @@
 
   <section class="section-full">
     <div class="container">
-      <form action="/forwarder/job-requests" method="GET" @submit="onSubmit">
+      <form @submit="onSubmit">
 
         <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
           <div class="btns mt-0">
@@ -102,22 +102,22 @@ export default {
       topnavActiveIndex: 1,
       user: {
         id: 1,
-        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
-        username: 'General User',
-        email: 'user@gmail.com',
+        role: '', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: '',
+        email: '',
         avatar: '/assets/img/misc/profile.jpg',
         detail: {
-          prefix: 'นาย',
-          firstname: 'สมศักดิ์',
-          lastname: 'จริงใจ',
-          phone: '0811123456'
+          prefix: '',
+          firstname: '',
+          lastname: '',
+          phone: ''
         },
         company: {
-          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
-          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
-          province: 'สมุทรปราการ',
-          zipcode: '10540',
-          taxId: '500218893025'
+          name: '',
+          address: '',
+          province: '',
+          zipcode: '',
+          taxId: ''
         }
       },
       jobRequest: {
@@ -151,6 +151,7 @@ export default {
   },
   methods: {
     onSubmit(e) {
+      e.preventDefault()
       var that = this;
       var isValid = true;
       [
@@ -163,7 +164,25 @@ export default {
       });
 
       if(!isValid){
-        e.preventDefault();
+        //e.preventDefault();
+        console.log('not valid')
+      } else {
+        console.log('adding request...')
+        this.$store.dispatch('requests/add', this.jobRequest).then(
+            () => {
+              console.log("job request created")
+              this.$router.push('/forwarder/job-requests');
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data) ||
+                error.message ||
+                error.toString();
+                this.text_notification = 'username or password is incorrect'
+                this.user.username = ''
+                this.user.password = ''
+            }
+          );
       }
     }
   }

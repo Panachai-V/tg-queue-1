@@ -2,6 +2,7 @@
 import { createStore } from 'vuex'
 
 import { auth } from './auth.module';
+import { requests } from './request.module';
 
 //Vue.use(Vuex);
 
@@ -19,7 +20,8 @@ import { auth } from './auth.module';
 
 const store = createStore({
   modules: {
-    auth
+    auth,
+    requests
   }
 })
 

@@ -338,6 +338,7 @@
 <script>
 import FormGroup from './FormGroup';
 import Button from './Button';
+import UserService from '../services/user.service';
 
 export default {
   name: 'Topnav',
@@ -358,6 +359,34 @@ export default {
       isActivePopupPassword: false,
       isActivePopupCompany: false
     }
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
+  mounted() {    
+    //เช็ค currentuser ถ้าไม่มีการ sign in ให้ไป sign in
+    if (!this.loggedIn) {
+      this.$router.push('/auth/signin');
+    }
+  },
+  created() {
+    console.log('TopNec created')
+
+    UserService.getUserDetail().then(
+      response => {        
+        console.log('user detail: ', response.data)
+        this.user.detail = response.data
+      }
+    );
+    
+    UserService.getUserCompanyDetail().then(
+      response => {
+        console.log('user company: ', response.data)
+        this.user.company = response.data
+      }
+    );
   },
   methods: {
 
