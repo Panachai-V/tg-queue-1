@@ -1,5 +1,4 @@
 import axios from 'axios';
-import UserService from './user.service';
 
 class AuthService {
   login(user) {

@@ -3,7 +3,6 @@ import authHeader from './auth-header';
 
 class RequestService {
     add(jobRequest) {
-        console.log('request service')
         return axios.post('ff/jrq/create', {
             awbNumber: jobRequest.awbNumber,
             hwbSerialNumber: jobRequest.hwbSerialNumber,
