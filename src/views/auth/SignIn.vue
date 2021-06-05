@@ -102,7 +102,6 @@ export default {
   updated(){
     if ((this.user.username && !this.user.password) || (!this.user.username && this.user.password)){
       this.text_notification = 'กรุณาระบุ'
-      console.log('action')
     }
   },
   methods: {
