@@ -338,6 +338,7 @@
 <script>
 import FormGroup from './FormGroup';
 import Button from './Button';
+import UserService from '../services/user.service';
 
 export default {
   name: 'Topnav',
@@ -359,10 +360,44 @@ export default {
       isActivePopupCompany: false
     }
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
+  mounted() {
+    AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    
+    //เช็ค currentuser ถ้าไม่มีการ sign in ให้ไป sign in
+    if (!this.loggedIn) {
+      this.$router.push('/auth/signin');
+    }
+  },
+  created() {
+    console.log('TopNec created')
+
+    this.user.id = this.$store.state.auth.user.id,
+    this.user.role = this.$store.state.auth.user.role, /* Freight Forwarder, Driver, TG Admin, Admin */
+    this.user.username = this.$store.state.auth.user.username,
+    this.user.email = this.$store.state.auth.user.email,
+
+    UserService.getUserDetail().then(
+      response => {        
+        this.user.detail = response.data
+      }
+    );
+    
+    UserService.getUserCompanyDetail().then(
+      response => {
+        console.log('user company: ', response.data)
+        this.user.company = response.data
+      }
+    );
+  },
   methods: {
 
     isFreightForwarder() {
-      if(this.user && this.user.role == 'Freight Forwarder'){
+      if(this.user && this.user.role == 'freight-forwarder'){
         return true;
       }else{
         return false;
