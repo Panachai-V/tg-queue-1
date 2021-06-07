@@ -77,14 +77,9 @@
               </p>
               <p class="sm lh-xs">{{user.email}}</p>
             </div>
-            <div 
-              v-if="user.avatar" class="img-bg" 
-              :style="'background-image:url(\''+user.avatar+'\');'"
-            ></div>
-            <div 
-              v-else class="img-bg" 
-              style="background-image:url('/assets/img/misc/profile.jpg');"
-            ></div>
+            <div v-if="user.detail.avatar">
+              <img class="img-bg" v-bind:src="'data:image/jpeg;base64,' + user.detail.avatar" />
+            </div>
           </a>
           <div class="dropdown">
             <div class="submenu">
