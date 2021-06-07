@@ -72,6 +72,7 @@
 <script>
 import Topnav from '../../components/Topnav';
 import DataTable from '../../components/DataTable';
+import CompanyService from '../../services/company.service';
 
 export default {
   name: 'ForwarderDriversPage',
@@ -84,22 +85,22 @@ export default {
       topnavActiveIndex: 2,
       user: {
         id: 1,
-        role: 'Freight Forwarder', /* Freight Forwarder, Driver, TG Admin, Admin */
-        username: 'General User',
-        email: 'user@gmail.com',
+        role: '', /* Freight Forwarder, Driver, TG Admin, Admin */
+        username: '',
+        email: '',
         avatar: '/assets/img/misc/profile.jpg',
         detail: {
-          prefix: 'นาย',
-          firstname: 'สมศักดิ์',
-          lastname: 'จริงใจ',
-          phone: '0811123456'
+          prefix: '',
+          firstname: '',
+          lastname: '',
+          phone: ''
         },
         company: {
-          name: 'บริษัท เอบีดีริเวรี่ จำกัด',
-          address: '999 หมู่ 1 ตำบลหนองปรือ อำเภอบางพลี',
-          province: 'สมุทรปราการ',
-          zipcode: '10540',
-          taxId: '500218893025'
+          name: '',
+          address: '',
+          province: '',
+          zipcode: '',
+          taxId: ''
         }
       },
 

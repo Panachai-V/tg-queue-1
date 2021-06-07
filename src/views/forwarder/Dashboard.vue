@@ -23,38 +23,37 @@ y<template>
           <div class="grids grid-mt">
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอการ Matching" :count="3" unit="งาน" 
+                label="Job Requests รอการ Matching" :count="status.state_0" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอคิวการรับ" :count="2" unit="งาน" 
+                label="Job Requests รอคิวการรับ" :count="status.state_1" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอยืนยันคิว" :count="2" unit="งาน" 
+                label="Job Requests รอยืนยันคิว" :count="status.state_2" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="sep"></div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่กำลังดำเนินการ" :count="4" unit="งาน" 
+                label="Job Requests ที่กำลังดำเนินการ" :count="status.state_3 + status.state_4 + status.state_5 + status.state_6" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="34" unit="งาน" 
+                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="status.state_7" unit="งาน" 
                 classer="no-hover"
               />
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -97,34 +96,17 @@ export default {
           zipcode: '',
           taxId: ''
         }
-  
       },
-      job: {
-        status1: 0,
-        status2: 0,
-        status3: 0,
-        status4: 0,
-        status5: 0,
-      }
-
+      status: null
     }
   },
 // เดียวกูกลับมาทำ
 
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-     CompanyService.getCountJob().then(
-       response => {
-        for (let i = 0; i <  response.data.length; i++) { 
-          console.log(i.data);
-        }
-        console.log('responce :',response.data.length)
-      
-       }
-      
-      
-    );
 
+    this.$store.dispatch('company/get_overview');
+    this.status = this.$store.state.company.overview
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
