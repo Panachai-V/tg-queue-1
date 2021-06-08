@@ -365,6 +365,14 @@ export default {
       ]
     }
   },
+  created() {
+    var socket = io.connect('http://localhost:8081');
+    // socket.on('connected', function (data) {
+    //     console.log("client connected");
+    //     console.log(data);
+    //     socket.emit('test_send', { my: 'data' });
+    // });
+  },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     if(this.jobRequest.status > 1){
