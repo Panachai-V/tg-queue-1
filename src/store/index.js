@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 
 import { auth } from './auth.module';
 import { requests } from './request.module';
+import { company } from './company.module';
 
 //Vue.use(Vuex);
 
@@ -21,7 +22,8 @@ import { requests } from './request.module';
 const store = createStore({
   modules: {
     auth,
-    requests
+    requests,
+    company
   }
 })
 

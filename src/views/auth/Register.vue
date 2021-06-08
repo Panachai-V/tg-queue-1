@@ -355,16 +355,6 @@ export default {
     handleRegister(e) {
         e.preventDefault()
 
-        console.log(this.dataset.username);
-        console.log(this.dataset.password);
-        console.log(this.dataset.email);
-        console.log(this.datasetCompany.taxId);
-        console.log(this.dataset.roleId);
-        console.log(this.dataset.prefix);
-        console.log(this.dataset.firstname);
-        console.log(this.dataset.lastname);
-        console.log(this.dataset.phone);
-
         let regisUser = new RegisUser(
           this.dataset.username,
           this.dataset.password,

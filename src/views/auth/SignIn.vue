@@ -63,17 +63,6 @@ export default {
     Button
   },
   watch: {
-    // whenever question changes, this function will run
-    loggedIn: function () {
-      /*if (this.$store.state.auth.user.role == "driver") {
-        this.$router.push('/driver/my-jobs');
-      }
-      if (this.$store.state.auth.user.role == "freight-forwarder") {
-        this.$router.push('/forwarder/dashboard');
-      }*/
-      console.log('user :', this.$store.state.auth.user)
-      console.log("redirecting...")
-    }
   },
   computed: {
     loggedIn() {

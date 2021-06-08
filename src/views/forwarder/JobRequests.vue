@@ -238,103 +238,111 @@ export default {
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    for(var i=0; i<4; i++){
-      this.rows1.push({
-        awbNumber: { 
-          type: 'link', text: '131-56591080',
-          href: '/forwarder/job-request-view'
-        },
-        hwbSerialNumber: { text: 'MLC10131957' },
-        flightNumber: { text: 'JL0707' },
-        jobNumber: { text: 'A0020640302798' },
-        customsEntryNumber: { text: 'A0020640302798' },
-        customsEntryNumberDate: { text: this.formatDate(new Date()) },
-        status: { type: 'tag', value: 1, text: 'รอการ Matching', classer: 'ss-tag-danger' },
-        options: {
-          type: 'options',
-          view: { type: 'link', href: '/forwarder/job-request-view' }
-        }
-      });
+
+    this.$store.dispatch('company/get_overview');
+    var temp_overview = this.$store.state.company.overview
+
+    this.rows1 = temp_overview.job_detail_0;
+    console.log('temp_overview.job_detail_0: ', temp_overview.job_detail_0)
+
+
+    // for(var i=0; i<4; i++){
+    //   this.rows1.push({
+    //     awbNumber: { 
+    //       type: 'link', text: '131-56591080',
+    //       href: '/forwarder/job-request-view'
+    //     },
+    //     hwbSerialNumber: { text: 'MLC10131957' },
+    //     flightNumber: { text: 'JL0707' },
+    //     jobNumber: { text: 'A0020640302798' },
+    //     customsEntryNumber: { text: 'A0020640302798' },
+    //     customsEntryNumberDate: { text: this.formatDate(new Date()) },
+    //     status: { type: 'tag', value: 1, text: 'รอการ Matching', classer: 'ss-tag-danger' },
+    //     options: {
+    //       type: 'options',
+    //       view: { type: 'link', href: '/forwarder/job-request-view' }
+    //     }
+    //   });
       
-      this.rows2.push({
-        awbNumber: { 
-          type: 'link', text: '131-56591080',
-          href: '/forwarder/job-request-view/2'
-        },
-        flightNumber: { text: 'JL0707' },
-        numberOfPieces: { text: this.formatNumber(2400, 0) },
-        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
-        dockNumber: { text: '-' },
-        pickupTime: { text: '-' },
-        truckNumber: { text: '-' },
-        status: { type: 'tag', value: 2, text: 'รอคิวการรับ', classer: 'ss-tag-info' },
-        options: {
-          type: 'options',
-          view: { type: 'link', href: '/forwarder/job-request-view/2' }
-        }
-      });
+    //   this.rows2.push({
+    //     awbNumber: { 
+    //       type: 'link', text: '131-56591080',
+    //       href: '/forwarder/job-request-view/2'
+    //     },
+    //     flightNumber: { text: 'JL0707' },
+    //     numberOfPieces: { text: this.formatNumber(2400, 0) },
+    //     date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+    //     dockNumber: { text: '-' },
+    //     pickupTime: { text: '-' },
+    //     truckNumber: { text: '-' },
+    //     status: { type: 'tag', value: 2, text: 'รอคิวการรับ', classer: 'ss-tag-info' },
+    //     options: {
+    //       type: 'options',
+    //       view: { type: 'link', href: '/forwarder/job-request-view/2' }
+    //     }
+    //   });
       
-      this.rows3.push({
-        awbNumber: { 
-          type: 'link', text: '131-56591080',
-          href: '/forwarder/job-request-view/3'
-        },
-        flightNumber: { text: 'JL0707' },
-        numberOfPieces: { text: this.formatNumber(2400, 0) },
-        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
-        dockNumber: { text: 'G14' },
-        pickupTime: { text: '09.45 น.' },
-        truckNumber: { text: '-' },
-        status: { type: 'tag', value: 3, text: 'รอยืนยันคิว', classer: 'ss-tag-danger' },
-        options: {
-          type: 'options',
-          view: { type: 'link', href: '/forwarder/job-request-view/3' }
-        }
-      });
+    //   this.rows3.push({
+    //     awbNumber: { 
+    //       type: 'link', text: '131-56591080',
+    //       href: '/forwarder/job-request-view/3'
+    //     },
+    //     flightNumber: { text: 'JL0707' },
+    //     numberOfPieces: { text: this.formatNumber(2400, 0) },
+    //     date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+    //     dockNumber: { text: 'G14' },
+    //     pickupTime: { text: '09.45 น.' },
+    //     truckNumber: { text: '-' },
+    //     status: { type: 'tag', value: 3, text: 'รอยืนยันคิว', classer: 'ss-tag-danger' },
+    //     options: {
+    //       type: 'options',
+    //       view: { type: 'link', href: '/forwarder/job-request-view/3' }
+    //     }
+    //   });
       
-      this.rows4.push({
-        awbNumber: { 
-          type: 'link', text: '131-56591080',
-          href: '/forwarder/job-request-view/4'
-        },
-        flightNumber: { text: 'JL0707' },
-        numberOfPieces: { text: this.formatNumber(2400, 0) },
-        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
-        dockNumber: { text: 'G14' },
-        pickupTime: { text: '09.45 น.' },
-        truckNumber: { text: '5กศ5859' },
-        status: i < 2 ?
-          { type: 'tag', value: 3, text: 'รอการชำระเงิน', classer: 'ss-tag-danger' } :
-          { type: 'tag', value: 3, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
-        options: {
-          type: 'options',
-          view: { type: 'link', href: '/forwarder/job-request-view/4' }
-        }
-      });
+    //   this.rows4.push({
+    //     awbNumber: { 
+    //       type: 'link', text: '131-56591080',
+    //       href: '/forwarder/job-request-view/4'
+    //     },
+    //     flightNumber: { text: 'JL0707' },
+    //     numberOfPieces: { text: this.formatNumber(2400, 0) },
+    //     date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+    //     dockNumber: { text: 'G14' },
+    //     pickupTime: { text: '09.45 น.' },
+    //     truckNumber: { text: '5กศ5859' },
+    //     status: i < 2 ?
+    //       { type: 'tag', value: 3, text: 'รอการชำระเงิน', classer: 'ss-tag-danger' } :
+    //       { type: 'tag', value: 3, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
+    //     options: {
+    //       type: 'options',
+    //       view: { type: 'link', href: '/forwarder/job-request-view/4' }
+    //     }
+    //   });
       
-      this.rows5.push({
-        awbNumber: { 
-          type: 'link', text: '131-56591080',
-          href: '/forwarder/job-request-view/5'
-        },
-        flightNumber: { text: 'JL0707' },
-        numberOfPieces: { text: this.formatNumber(2400, 0) },
-        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
-        dockNumber: { text: 'G14' },
-        pickupTime: { text: '09.45 น.' },
-        truckNumber: { text: '5กศ5859' },
-        status: i < 2 ? 
-          { 
-            type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success',
-            append: true, icon: '/assets/img/icon/comment-black.svg'
-          } :
-          { type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success' },
-        options: {
-          type: 'options',
-          view: { type: 'link', href: '/forwarder/job-request-view/5' }
-        }
-      });
-    }
+    //   this.rows5.push({
+    //     awbNumber: { 
+    //       type: 'link', text: '131-56591080',
+    //       href: '/forwarder/job-request-view/5'
+    //     },
+    //     flightNumber: { text: 'JL0707' },
+    //     numberOfPieces: { text: this.formatNumber(2400, 0) },
+    //     date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+    //     dockNumber: { text: 'G14' },
+    //     pickupTime: { text: '09.45 น.' },
+    //     truckNumber: { text: '5กศ5859' },
+    //     status: i < 2 ? 
+    //       { 
+    //         type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success',
+    //         append: true, icon: '/assets/img/icon/comment-black.svg'
+    //       } :
+    //       { type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success' },
+    //     options: {
+    //       type: 'options',
+    //       view: { type: 'link', href: '/forwarder/job-request-view/5' }
+    //     }
+    //   });
+    // }
   },
   methods: {
     formatNumber(value, digits=2) {

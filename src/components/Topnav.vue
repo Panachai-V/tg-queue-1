@@ -77,9 +77,14 @@
               </p>
               <p class="sm lh-xs">{{user.email}}</p>
             </div>
-            <div v-if="user.detail.avatar">
-              <img class="img-bg" v-bind:src="'data:image/jpeg;base64,' + user.detail.avatar" />
-            </div>
+            <div 
+              v-if="user.avatar" class="img-bg" 
+              :style="'background-image:url(\''+user.avatar+'\');'"
+            ></div>
+            <div 
+              v-else class="img-bg" 
+              style="background-image:url('/assets/img/misc/profile.jpg');"
+            ></div>
           </a>
           <div class="dropdown">
             <div class="submenu">
@@ -224,7 +229,7 @@
                 <h6 class="h3">เปลี่ยนรหัสผ่าน</h6>
               </div>
               <div class="btns">
-                <Button type="submit" text="บันทึก" classer="btn-color-01" :prepend="true" icon="check-white.svg" />
+                <Button type="submit" text="บันทึก" classer="btn-color-01" :prepend="true" icon="check-white.svg"/>
               </div>
             </div>
           </div>
@@ -233,19 +238,21 @@
               <div class="grid sm-100">
                 <FormGroup
                   label="รหัสผ่านเดิม *" type="password" :required="true" 
-                  :value="selfUser.password" @input="selfUser.password = $event" 
+                  :value="selfUser.password" @input="selfUser.password = $event" :errorText="!wrongpwd? text_notification: 'รหัสผ่านผิด'" 
                 />
               </div>
               <div class="grid sm-100">
                 <FormGroup 
                   label="รหัสผ่านใหม่ *" type="password" :required="true" 
-                  :value="selfUser.newPassword" @input="selfUser.newPassword = $event" 
+                  :value="selfUser.newPassword" 
+                  @input="selfUser.newPassword = $event " 
+                  :errorText="(selfUser.password != selfUser.newPassword) || !selfUser.password ? text_notification: 'รหัสผ่านซ้ำเดิม'"
                 />
               </div>
               <div class="grid sm-100">
                 <FormGroup 
                   label="ยืนยันรหัสผ่าน *" type="password" :required="true" 
-                  :value="selfUser.confPassword" @input="selfUser.confPassword = $event" 
+                  :value="selfUser.confPassword" @input="selfUser.confPassword = $event" :errorText="selfUser.confPassword == selfUser.newPassword ? text_notification: 'รหัสผ่านไม่ตรงกัน'" 
                 />
               </div>
             </div>
@@ -352,7 +359,8 @@ export default {
       selfUser: {...this.user},
       isActivePopupProfile: false,
       isActivePopupPassword: false,
-      isActivePopupCompany: false
+      isActivePopupCompany: false,
+      worngpwd: false
     }
   },
   computed: {
@@ -379,6 +387,7 @@ export default {
     UserService.getUserDetail().then(
       response => {        
         this.user.detail = response.data
+        this.selfUser.detail = response.data
       }
     );
     
@@ -386,8 +395,12 @@ export default {
       response => {
         console.log('user company: ', response.data)
         this.user.company = response.data
+        this.selfUser.company = response.data
       }
-    );
+    );    
+  },
+  updated() {
+    this.wrongpwd = false
   },
   methods: {
 
@@ -422,12 +435,35 @@ export default {
 
     onSubmitProfile() {
       this.isActivePopupProfile = false;
+      UserService.editUserDetail(this.selfUser.detail).then(
+        response => {
+          this.user.detail = this.selfUser.detail
+        }
+      ); 
     },
     onSubmitPassword() {
-      this.isActivePopupPassword = false;
+      if ((this.selfUser.confPassword == this.selfUser.newPassword) && (this.selfUser.password != this.selfUser.newPassword)) {
+        this.isActivePopupPassword = false
+        UserService.changePWD({
+          password: this.selfUser.password,
+          newPassword: this.selfUser.newPassword
+        }).then(
+          response => {
+            console.log(response)
+          },error => {
+            this.isActivePopupPassword = true
+            this.wrongpwd = true
+          }
+        ); 
+      }      
     },
     onSubmitCompany() {
       this.isActivePopupCompany = false;
+      UserService.editUserCompanyDetail(this.selfUser.company).then(
+        response => {
+          this.user.company = this.selfUser.company
+        }
+      );
     },
 
     logOut() {
