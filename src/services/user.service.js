@@ -3,27 +3,21 @@ import authHeader from './auth-header';
 
 class UserService {
   getUserDetail() {
-    console.log('getting user data...')
-    return axios.get('user/', { headers: authHeader() })
+    return axios.get('user/', { headers: authHeader() }).then(response => {
+      localStorage.setItem('userDetail', JSON.stringify(response.data));
+      return response.data
+    })
   }
   
-  editUserDetail(userDetail) {
-    console.log('editting user data...')
-    return axios.post('user/edit-personal-information', {
-      prefix: userDetail.prefix,
-      firstname: userDetail.firstname,
-      lastname: userDetail.lastname,
-      phone: userDetail.phone
-    }, { headers: authHeader() })
+  editUserDetail(fromData) {
+    return axios.post('user/edit-personal-information', fromData, { headers: authHeader() })
   }
   
   getUserCompanyDetail() {
-    console.log('getting user company data...')
     return axios.get('user/user-company-detail', { headers: authHeader() })
   }
 
   editUserCompanyDetail(companyDetail) {
-    console.log('editting user data...')
     return axios.post('user/edit-company', {
       companyName: companyDetail.name,
       address: companyDetail.address,
@@ -40,7 +34,6 @@ class UserService {
   }
 
   getJobFreightforwarder() {
-    console.log('getting company job request data...')
     return axios.get('ff/jrq', { headers: authHeader() })
   }
 }

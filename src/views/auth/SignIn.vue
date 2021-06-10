@@ -55,6 +55,7 @@
 import FormGroup from '../../components/FormGroup';
 import Button from '../../components/Button';
 import User from '../../models/user';
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'AuthSignInPage',
@@ -65,18 +66,19 @@ export default {
   watch: {
   },
   computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    }
+    ...mapGetters({
+      getUser: 'auth/getUser',
+      getUserDetail: 'auth/getUserDetail',
+      isAuthenticated: 'auth/isAuthenticated'
+    })
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    console.log(this.$store.state.auth.user)
-    if (this.loggedIn) {
-      if (this.$store.state.auth.user.role == "driver") {
+    if (this.isAuthenticated) {
+      if (this.getUser.role == "driver") {
         this.$router.push('/driver/my-jobs');
       }
-      if (this.$store.state.auth.user.role == "freight-forwarder") {
+      if (this.getUser.role == "freight-forwarder") {
         this.$router.push('/forwarder/dashboard');
       }
     }
@@ -94,17 +96,20 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      login: 'auth/login',
+    }),
     handleSubmit(e) {
         e.preventDefault()
         console.log(this.user);
         if (this.user.username && this.user.password) {
-          this.$store.dispatch('auth/login', this.user).then(
+          this.login(this.user).then(
             () => {
               console.log("logged in")
-              if (this.$store.state.auth.user.role == "driver") {
+              if (this.getUser.role == "driver") {
                 this.$router.push('/driver/my-jobs');
               }
-              if (this.$store.state.auth.user.role == "freight-forwarder") {
+              if (this.getUser.role == "freight-forwarder") {
                 this.$router.push('/forwarder/dashboard');
               }
             },

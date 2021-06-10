@@ -37,11 +37,11 @@
             ]" 
           />
         </div>
-        <div class="tab-contents" data-aos="fade-up" data-aos-delay="150">
+        <div v-if="!company_loading_status" class="tab-contents" data-aos="fade-up" data-aos-delay="150">
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable 
-              :rows="rows1" 
+              :rows="company_overview.job_detail_0" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'hwbSerialNumber', text: 'House Airway Bill' },
@@ -182,7 +182,6 @@
               ]" 
             />
           </div>
-
         </div>
       </div>
     </div>
@@ -196,6 +195,7 @@ import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Tabs01 from '../../components/Tabs01';
 import DataTable from '../../components/DataTable';
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ForwarderJobRequestsPage',
@@ -203,6 +203,12 @@ export default {
     Topnav,
     Tabs01,
     DataTable
+  },
+  computed: {
+    ...mapGetters({
+      company_overview: 'company/print_overview',
+      company_loading_status: 'company/get_status'
+    })
   },
   data() {
     return {
@@ -239,12 +245,9 @@ export default {
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
 
-    this.$store.dispatch('company/get_overview');
-    var temp_overview = this.$store.state.company.overview
+    this.func_company_getoverview()
 
-    this.rows1 = temp_overview.job_detail_0;
-    console.log('temp_overview.job_detail_0: ', temp_overview.job_detail_0)
-
+    console.log('job:', this.company_overview.job_detail_0)
 
     // for(var i=0; i<4; i++){
     //   this.rows1.push({
@@ -263,6 +266,7 @@ export default {
     //       view: { type: 'link', href: '/forwarder/job-request-view' }
     //     }
     //   });
+    // }
       
     //   this.rows2.push({
     //     awbNumber: { 
@@ -351,7 +355,12 @@ export default {
     },
     formatDate(value, format='YYYYMMDD') {
       return moment(String(value)).format(format);
-    }
+    },    
+    ...mapActions({
+      func_company_getoverview: 'company/get_overview',
+    })
+  },
+  updated() {
   }
 }
 </script>

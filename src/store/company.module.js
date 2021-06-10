@@ -1,5 +1,6 @@
 import CompanyService from '../services/company.service';
 import Overview from '../models/company-info';
+import moment from 'moment';
 
 let temp_variable = new Overview(0, 0, 0, 0, 0, 0, 0, 0);
 
@@ -7,26 +8,27 @@ export const company = {
     namespaced: true,
     state: {
       message: 'Hello World!',
-      overview: temp_variable
+      overview: temp_variable,
+      loading: false
     },
     actions: {
         get_overview({ commit }) {
+            commit('change_status_loading', true);
             CompanyService.getCountJob().then(
               companys => {
                 // let temp_variable = new Overview();
-                for (let i = 0; i <  companys.data.length; i++) {
-                    console.log(companys.data[i])
+                for (let i = 0; i <  companys.data.docs.length; i++) {
                     let temp = {
                         awbNumber: { 
-                            type: 'link', text: companys.data[i].awbNumber,
+                            type: 'link', text: companys.data.docs[i].awbNumber,
                             href: '/forwarder/job-request-view'
                         },
-                        hwbSerialNumber: { text: companys.data[i].hwbSerialNumber },
-                        flightNumber: { text: companys.data[i].flightNumber },
-                        jobNumber: { text: companys.data[i].jobNumber },
-                        customsEntryNumber: { text: companys.data[i].customsEntryNumber },
-                        customsEntryNumberDate: { text: companys.data[i].customsEntryNumberDate },
-                        status: { type: 'tag', value: companys.data[i].status, text: 'รอการ Matching', classer: 'ss-tag-danger' },
+                        hwbSerialNumber: { text: companys.data.docs[i].hwbSerialNumber },
+                        flightNumber: { text: companys.data.docs[i].flightNumber },
+                        jobNumber: { text: companys.data.docs[i].jobNumber },
+                        customsEntryNumber: { text: companys.data.docs[i].customsEntryNumber },
+                        customsEntryNumberDate: { text: moment(String(companys.data.docs[i].customsEntryNumberDate)).format('YYYYMMDD') },
+                        status: { type: 'tag', value: companys.data.docs[i].status, text: 'รอการ Matching', classer: 'ss-tag-danger' },
                         options: {
                             type: 'options',
                             view: { type: 'link', href: '/forwarder/job-request-view' }
@@ -34,6 +36,8 @@ export const company = {
                     }
                     commit('update_overview', temp)
                 }
+
+                commit('change_status_loading', false)
                 return ;
               },
               error => {
@@ -85,6 +89,17 @@ export const company = {
                 state.overview.state_7 = state.overview.state_7 + 1
                 state.overview.job_detail_7.push(data_detail)
             }
+        },
+        change_status_loading(state, input){
+            state.loading = input
+        },
+    },
+    getters: {
+        print_overview(state) {
+            return state.overview
+        },
+        get_status(state) {
+            return state.loading
         }
     }
 }

@@ -167,10 +167,7 @@
                     type="select" label="ตำแหน่ง *" :required="true" placeholder="โปรดเลือก" 
                     :value="dataset.roleId" 
                     @input="dataset.roleId = $event" 
-                    :options="[
-                      { value: 'freight-forwarder', text: 'Freight Forwarder' },
-                      { value: 'driver', text: 'Driver' }
-                    ]"
+                    :options="roleOptions()"
                   />
                 </div>
               </div>
@@ -298,6 +295,16 @@ export default {
     }
   },
   methods: {
+    roleOptions() {
+      if (this.thisexist == 1) {
+        return [
+                  { value: 'freight-forwarder', text: 'Freight Forwarder' },
+                  { value: 'driver', text: 'Driver' }
+                ]
+      } else {
+        return [{ value: 'freight-forwarder', text: 'Freight Forwarder' }]
+      }
+    },
     onSubmitStep() {
       console.log(this.datasetCompany.taxId)
       const response = axios.post('auth/companydetail_ifexist' , {

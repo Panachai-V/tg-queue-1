@@ -6,7 +6,7 @@ class CompanyService {
     getCountJob() {
         // console.log('getting count each job...')
         
-        return axios.get('ff/jrq/', { headers: authHeader() })
+        return axios.get('ff/jrq/?page=1&limit=20', { headers: authHeader() })
     }
 
     driver() {

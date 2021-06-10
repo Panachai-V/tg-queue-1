@@ -2,7 +2,6 @@ import axios from 'axios';
 
 class AuthService {
   login(user) {
-    console.log('username: ',user.username)
     return axios
       .post('auth/signin', {
         username: user.username,
@@ -10,7 +9,6 @@ class AuthService {
       }).then(response => {
         if (response.data.accessToken) {
           localStorage.setItem('user', JSON.stringify(response.data));
-          console.log('logged in: ', response.data)
           return response.data
         }
       });
@@ -18,6 +16,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem('user');
+    localStorage.removeItem('userDetail');
   }
 
   register(regisuser) {

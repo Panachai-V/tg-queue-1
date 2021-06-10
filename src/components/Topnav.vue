@@ -65,26 +65,21 @@
         <div class="option">
           <a href="#">
             <img src="/assets/img/icon/bell.svg" alt="Image Icon" />
-            <div v-if="alert" class="num">{{alert}}</div>
+            <!-- <div v-if="alert" class="num">{{alert}}</div> -->
           </a>
         </div>
         <div class="option">
           <a href="javascript:">
             <div class="info text-right hide-mobile mr-2">
               <p class="lh-sm">
-                {{user.detail.prefix}}{{user.detail.firstname}} 
-                {{user.detail.lastname}}
+                {{getUserDetail.prefix}}{{getUserDetail.firstname}} 
+                {{getUserDetail.lastname}}
               </p>
-              <p class="sm lh-xs">{{user.email}}</p>
+              <p class="sm lh-xs">{{getUser.email}}</p>
             </div>
-            <div 
-              v-if="user.avatar" class="img-bg" 
-              :style="'background-image:url(\''+user.avatar+'\');'"
-            ></div>
-            <div 
-              v-else class="img-bg" 
-              style="background-image:url('/assets/img/misc/profile.jpg');"
-            ></div>
+            <div class="img-bg" >
+              <img class="img-bg" v-bind:src="'data:image/jpeg;base64,' + getUserDetail.avatar" />
+            </div>
           </a>
           <div class="dropdown">
             <div class="submenu">
@@ -200,8 +195,7 @@
               </div>
               <div class="grid sm-50">
                 <FormGroup
-                  label="รูปโปรไฟล์" type="file-image" name="avatar" 
-                  :value="user.avatar"
+                  label="รูปโปรไฟล์" type="file-image" name="avatar" @change="onFileSelected"
                 />
               </div>
             </div>
@@ -292,20 +286,20 @@
               <div class="grid sm-100">
                 <FormGroup
                   label="ชื่อบริษัท *" type="text" placeholder="โปรดระบุ" :required="true" 
-                  :value="selfUser.company.name" @input="selfUser.company.name = $event" 
+                  :value="getSelfUserCompany.name" @input="getSelfUserCompany.name = $event" 
                 />
               </div>
               <div class="grid sm-100">
                 <FormGroup
                   label="ที่อยู่ *" type="textarea" placeholder="โปรดระบุ" :required="true" :rows="3" 
-                  :value="selfUser.company.address" @input="selfUser.company.address = $event" 
+                  :value="getSelfUserCompany.address" @input="getSelfUserCompany.address = $event" 
                 />
               </div>
               <div class="grid sm-50">
                 <FormGroup 
                   type="select" label="จังหวัด *" :required="true" placeholder="โปรดเลือก" 
-                  :value="selfUser.company.province" 
-                  @input="selfUser.company.province = $event" 
+                  :value="getSelfUserCompany.province" 
+                  @input="getSelfUserCompany.province = $event" 
                   :options="[
                     { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
                     { value: 'สมุทรปราการ', text: 'สมุทรปราการ' }
@@ -316,15 +310,15 @@
                 <FormGroup 
                   type="text" label="รหัสไปรษณีย์ *" :required="true" 
                   placeholder="โปรดระบุ" :minlength="5" :maxlength="5" 
-                  :value="selfUser.company.zipcode" 
-                  @input="selfUser.company.zipcode = $event" 
+                  :value="getSelfUserCompany.zipcode" 
+                  @input="getSelfUserCompany.zipcode = $event" 
                 />
               </div>
               <div class="grid sm-100">
                 <FormGroup 
                   type="text" label="เลขประจำตัวผู้เสียภาษี *" :required="true" 
                   placeholder="โปรดระบุ" :minlength="13" :maxlength="13" 
-                  :value="selfUser.company.taxId" 
+                  :value="getSelfUserCompany.taxId" 
                   :readonly="true" :disabled="true" 
                 />
               </div>
@@ -341,6 +335,7 @@
 import FormGroup from './FormGroup';
 import Button from './Button';
 import UserService from '../services/user.service';
+import {mapGetters, mapActions} from "vuex"
 
 export default {
   name: 'Topnav',
@@ -363,94 +358,93 @@ export default {
       worngpwd: false
     }
   },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    }
+  created() {
+    this.getCompany()
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    
-    //เช็ค currentuser ถ้าไม่มีการ sign in ให้ไป sign in
-    if (!this.loggedIn) {
-      this.$router.push('/auth/signin');
-    }
-  },
-  created() {
-    console.log('TopNec created')
-
-    this.user.id = this.$store.state.auth.user.id,
-    this.user.role = this.$store.state.auth.user.role, /* Freight Forwarder, Driver, TG Admin, Admin */
-    this.user.username = this.$store.state.auth.user.username,
-    this.user.email = this.$store.state.auth.user.email,
-
-    UserService.getUserDetail().then(
-      response => {        
-        this.user.detail = response.data
-        this.selfUser.detail = response.data
-      }
-    );
-    
-    UserService.getUserCompanyDetail().then(
-      response => {
-        console.log('user company: ', response.data)
-        this.user.company = response.data
-        this.selfUser.company = response.data
-      }
-    );    
+    this.selfUser.detail = { ...this.getUserDetail };
   },
   updated() {
     this.wrongpwd = false
   },
+  computed: {
+    ...mapGetters({
+      getUser: 'auth/getUser',
+      getUserDetail: 'auth/getUserDetail',
+      getUserCompany: 'auth/getUserCompany',
+      getSelfUserCompany: 'auth/getSelfUserCompany',
+      getLoginStatus: 'auth/getLoginStatus'
+    })
+  },
   methods: {
 
     isFreightForwarder() {
-      if(this.user && this.user.role == 'freight-forwarder'){
+      if(this.getUser && this.getUser.role == 'freight-forwarder'){
         return true;
       }else{
         return false;
       }
     },
     isDriver() {
-      if(this.user && this.user.role == 'Driver'){
+      if(this.getUser && this.getUser.role == 'Driver'){
         return true;
       }else{
         return false;
       }
     },
     isTGAdmin() {
-      if(this.user && this.user.role == 'TG Admin'){
+      if(this.getUser && this.getUser.role == 'TG Admin'){
         return true;
       }else{
         return false;
       }
     },
     isAdmin() {
-      if(this.user && this.user.role == 'Admin'){
+      if(this.getUser && this.getUser.role == 'Admin'){
         return true;
       }else{
         return false;
       }
     },
 
-    onSubmitProfile() {
+    async onSubmitProfile() {
       this.isActivePopupProfile = false;
-      UserService.editUserDetail(this.selfUser.detail).then(
+      var formData = new FormData();
+      formData.append("avatar", this.selfUser.avatar);
+      formData.append("prefix", this.selfUser.detail.prefix);
+      formData.append("firstname", this.selfUser.detail.firstname);
+      formData.append("lastname", this.selfUser.detail.lastname);
+      formData.append("phone", this.selfUser.detail.phone);
+      await this.editUser(formData).then(
         response => {
-          this.user.detail = this.selfUser.detail
+        }, error => {
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
         }
       ); 
+      await this.fetchUser().then(
+        error => {
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        })
     },
     onSubmitPassword() {
       if ((this.selfUser.confPassword == this.selfUser.newPassword) && (this.selfUser.password != this.selfUser.newPassword)) {
         this.isActivePopupPassword = false
-        UserService.changePWD({
+        this.changePWD({
           password: this.selfUser.password,
           newPassword: this.selfUser.newPassword
         }).then(
           response => {
-            console.log(response)
-          },error => {
+            this.selfUser.password = '',
+            this.selfUser.newPassword = '',
+            this.selfUser.confPassword = ''
+          },error => {         
             this.isActivePopupPassword = true
             this.wrongpwd = true
           }
@@ -459,16 +453,23 @@ export default {
     },
     onSubmitCompany() {
       this.isActivePopupCompany = false;
-      UserService.editUserCompanyDetail(this.selfUser.company).then(
-        response => {
-          this.user.company = this.selfUser.company
-        }
-      );
+      this.editCompany()
     },
 
     logOut() {
-      this.$store.dispatch('auth/logout');
-    }
+      this.logout();
+    },
+    onFileSelected(event) {
+      this.selfUser.avatar = event.target.files[0]
+    },    
+    ...mapActions({
+      logout: 'auth/logout',
+      editUser: 'auth/editUser',
+      fetchUser: 'auth/fetchUser',
+      changePWD: 'auth/changePWD',
+      getCompany: 'auth/getCompany',
+      editCompany: 'auth/editCompany',
+    })
 
   }
 }

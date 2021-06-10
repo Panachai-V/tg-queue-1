@@ -1,5 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../views/Home.vue'
+import store from '../store/index.js';
+
+function requireAuth (to, from, next) {
+  if ( store.getters['auth/isAuthenticated'] ) {
+    next()
+  } else{
+    next('/auth/signin');
+  }  
+}
 
 const routes = [
 
@@ -33,7 +42,8 @@ const routes = [
   {
     path: '/forwarder/dashboard',
     name: 'ForwarderDashboardPage',
-    component: () => import('../views/forwarder/Dashboard.vue')
+    component: () => import('../views/forwarder/Dashboard.vue'),
+    beforeEnter: requireAuth
   },
   
   // Freight Forwarder - Job Requests
