@@ -12,6 +12,7 @@
 
 <script>
 import {mapGetters, mapActions, mapState} from "vuex"
+import {ConditionSelectViewJob} from '../models/select-company';
 
 export default {
   name: 'Tabs01',
@@ -24,20 +25,21 @@ export default {
     ...mapGetters({
       getUser: 'auth/getUser',
     })
-  }, 
+  },
+  created() {
+    // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
+    if ( this.getUser.role == 'freight-forwarder'){
+      let temp_condition = new ConditionSelectViewJob('1', '20', 'status', 'ascending', (this.activeIndex + 1).toString())
+      this.fetchJobRequest(temp_condition);
+    }
+  },
   methods: {
     onClick(index) {
 
-      // เมื่อ click เลือก tab ของ job requests จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
+      // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
       if ( this.getUser.role == 'freight-forwarder'){
-        let condition = {
-          page: '1',
-          limit: '20',
-          sort_by: 'status',
-          order: 'ascending',
-          status: (this.activeIndex + 1).toString()
-        }
-        this.fetchJobRequest(condition);
+        let temp_condition = new ConditionSelectViewJob('1', '20', 'status', 'ascending', (this.activeIndex + 1).toString())
+        this.fetchJobRequest(temp_condition);
       }
 
       return this.$emit('clicked', index);

@@ -37,10 +37,10 @@
             ]" 
           />
         </div>
-        <div class="tab-contents" data-aos="fade-up" data-aos-delay="150">
+        <div v-if="get_status == false" class="tab-contents" data-aos="fade-up" data-aos-delay="150">
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
-            <DataTable 
+            <DataTable
               :rows="getJobRequest1" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
@@ -69,7 +69,7 @@
           
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
             <DataTable 
-              :rows="rows2" 
+              :rows="getJobRequest2" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
@@ -98,7 +98,7 @@
           
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 2 }">
             <DataTable 
-              :rows="rows3" 
+              :rows="getJobRequest3" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
@@ -127,7 +127,7 @@
           
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 3 }">
             <DataTable 
-              :rows="rows4" 
+              :rows="getJobRequest4" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
@@ -156,7 +156,7 @@
           
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 4 }">
             <DataTable 
-              :rows="rows5" 
+              :rows="getJobRequest5" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
@@ -184,8 +184,6 @@
           </div>
         </div>
       </div>
-
-      {{getJobRequest4}}
     </div>
   </section>
 
@@ -366,11 +364,18 @@ export default {
       getJobRequest5: 'freight_forwarder/getJobRequest5',
     })
   },
+  mounted() {
+
+  },
   updated() {
-    console.log('rows1 :', this.rows1[0])
-    // console.log('getJobRequest1 :', this.getJobRequest1)
+    console.log('rows1 :', this.rows1)
+    console.log('rows2 :', this.rows2)
+    console.log('rows3 :', this.rows3)
+    console.log('rows4 :', this.rows4)
+    console.log('rows5 :', this.rows5)
+
     // console.log(this.getJobRequest2)
-    console.log(this.getJobRequest3)
+    // console.log(this.getJobRequest3)
     // console.log(this.getJobRequest4)
     // console.log(this.getJobRequest5)
   }

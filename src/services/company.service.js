@@ -5,7 +5,7 @@ import Overview from '../models/company-info';
 class CompanyService {
     ff_jobRequest(condition) {
         // console.log('getting count each job...')
-        
+        console.log('search filter :', condition)
         return axios.get(`ff/jrq/?page=${condition.page}&limit=${condition.limit}&sort_by=${condition.sort_by}&order=${condition.order}&status=${condition.status}`, { headers: authHeader() })
     }
 

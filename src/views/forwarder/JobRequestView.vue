@@ -369,7 +369,7 @@ export default {
     }
   },
   created() {
-    this.fetchJobDetail("60c4a753346ad76c7277ec4d");
+    // this.fetchJobDetail("60c4a753346ad76c7277ec4d");
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });

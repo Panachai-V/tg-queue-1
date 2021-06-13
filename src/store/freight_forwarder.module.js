@@ -1,5 +1,6 @@
 import CompanyService from '../services/company.service';
 import Overview from '../models/company-info';
+import {StatusCompany} from '../models/select-company';
 import moment from 'moment';
 
 let temp_variable = new Overview(0, 0, 0, 0, 0, 0, 0, 0);
@@ -18,26 +19,6 @@ export const freight_forwarder = {
             CompanyService.ff_Dashboard().then(
               companys => {
                 commit('update_overview', companys)
-                // for (let i = 0; i <  companys.data.docs.length; i++) {
-                    // let temp = {
-                    //     awbNumber: { 
-                    //         type: 'link', text: companys.data.docs[i].awbNumber,
-                    //         href: '/forwarder/job-request-view'
-                    //     },
-                    //     hwbSerialNumber: { text: companys.data.docs[i].hwbSerialNumber },
-                    //     flightNumber: { text: companys.data.docs[i].flightNumber },
-                    //     jobNumber: { text: companys.data.docs[i].jobNumber },
-                    //     customsEntryNumber: { text: companys.data.docs[i].customsEntryNumber },
-                    //     customsEntryNumberDate: { text: moment(String(companys.data.docs[i].customsEntryNumberDate)).format('YYYYMMDD') },
-                    //     status: { type: 'tag', value: companys.data.docs[i].status, text: 'รอการ Matching', classer: 'ss-tag-danger' },
-                    //     options: {
-                    //         type: 'options',
-                    //         view: { type: 'link', href: '/forwarder/job-request-view' }
-                    //     }
-                    // }
-                //     commit('update_overview', temp)
-                // }
-                commit('update_overview', companys)
                 commit('change_status_loading', false)
                 return ;
               },
@@ -47,8 +28,9 @@ export const freight_forwarder = {
               }
             );
         },
-        fetchJobRequest({ state, commit }, condition ){
+        fetchJobRequest({ commit }, condition ){
             commit('change_status_loading', true);
+            // console.log('change_status_loading :', true)
             CompanyService.ff_jobRequest(condition).then(
                 companys => {
                     console.log('company :', companys.data.docs[0]) 
@@ -56,75 +38,130 @@ export const freight_forwarder = {
 
                     var temp_array = []
 
-                    // for(let i = 0; i < companys.data.docs.length; i++){
+                    for(let i = 0; i < companys.data.docs.length; i++){
 
-                    //     var temp_data = companys.data.docs[i]
+                        var temp_data = companys.data.docs[i]
+                        var temp_status = new StatusCompany()
 
-                    //     temp_data['options'] = {}
+                        temp_status.setStatusCompany(temp_data['status'])
+
+                        // structure บาง status ที่ขาด
+                        if ( companys.data.docs[0].status == 1 ) {
+                            temp_data['options'] = {}
+                        } else if ( companys.data.docs[0].status == 2 ) {
+                            temp_data['date'] = {}
+                            temp_data['dockNumber'] = {}
+                            temp_data['numberOfPieces'] = {}
+                            temp_data['options'] = {}
+                            temp_data['pickupTime'] = {}
+                            temp_data['truckNumber'] = {}
+                        } else if ( companys.data.docs[0].status == 3 ) {
+                            temp_data['date'] = {}
+                            temp_data['dockNumber'] = {}
+                            temp_data['numberOfPieces'] = {}
+                            temp_data['options'] = {}
+                            temp_data['pickupTime'] = {}
+                            temp_data['truckNumber'] = {}
+                        }
+
+
         
-                    //     var result = Object.keys(temp_data).reduce(function(r, e) {
-                    //         console.log('r', r)
-                    //         console.log('r', e)
-                    //         if (e == "awbNumber"){
-                    //             r[e] = {}
-                    //             r[e]["href"] = "/forwarder/job-request-view"
-                    //             r[e]["text"] = temp_data['awbNumber']
-                    //             r[e]["type"] = "link"
-                    //         }
+                        var result = Object.keys(temp_data).reduce(function(r, e) {
+                            // console.log('r', r)
+                            // console.log('r', e)
+
+                            // ================= 1
+
+                            if (e == "awbNumber"){
+                                r[e] = {}
+                                r[e]["type"] = "link"
+                                r[e]["text"] = temp_data['awbNumber']
+                                r[e]["href"] = "/forwarder/job-request-view/" + temp_data['_id']
+                            }
         
-                    //         if (e == "customsEntryNumber"){
-                    //             r[e] = {}
-                    //             r[e]["text"] = temp_data['customsEntryNumber']
-                    //         }
+                            if (e == "customsEntryNumber"){
+                                r[e] = {}
+                                r[e]["text"] = temp_data['customsEntryNumber']
+                            }
 
-                    //         if (e == "customsEntryNumberDate"){
-                    //             r[e] = {}
-                    //             r[e]["text"] = moment(String(temp_data['customsEntryNumberDate'])).format('YYYYMMDD')
-                    //         }
+                            if (e == "customsEntryNumberDate"){
+                                r[e] = {}
+                                r[e]["text"] = moment(String(temp_data['customsEntryNumberDate'])).format('YYYYMMDD')
+                            }
 
-                    //         if (e == "flightNumber"){
-                    //             r[e] = {}
-                    //             r[e]["text"] = temp_data['flightNumber']
-                    //         }
+                            if (e == "flightNumber"){
+                                r[e] = {}
+                                r[e]["text"] = temp_data['flightNumber']
+                            }
 
-                    //         if (e == "hwbSerialNumber"){
-                    //             r[e] = {}
-                    //             r[e]["text"] = temp_data['hwbSerialNumber']
-                    //         }
+                            if (e == "hwbSerialNumber"){
+                                r[e] = {}
+                                r[e]["text"] = temp_data['hwbSerialNumber']
+                            }
 
-                    //         if (e == "jobNumber"){
-                    //             r[e] = {}
-                    //             r[e]["text"] = temp_data['jobNumber']
-                    //         }
+                            if (e == "jobNumber"){
+                                r[e] = {}
+                                r[e]["text"] = temp_data['jobNumber']
+                            }
 
-                    //         if (e == "options") {
-                    //             r[e] = {}
-                    //             r[e]["type"] = "options"
-                    //             r[e]["view"] = {}
-                    //             r[e]["view"]["href"] = "/forwarder/job-request-view"
-                    //             r[e]["view"]["type"] = "link"
-                    //         }
+                            if (e == "options") {
+                                r[e] = {}
+                                r[e]["type"] = "options"
+                                r[e]["view"] = {}
+                                r[e]["view"]["href"] = "/forwarder/job-request-view/" + temp_data['_id']
+                                r[e]["view"]["type"] = "link"
+                            }
 
-                    //         if (e == "status") {
-                    //             r[e] = {}
-                    //             r[e]["classer"] = "ss-tag-danger"
-                    //             r[e]["text"] = "รอการ Matching"
-                    //             r[e]["type"] = "tag"
-                    //             r[e]["value"] = temp_data['status']
-                    //         }
-                    //         return r;
-                    //     }, {})
+                            if (e == "status") {
+                                r[e] = {}
+                                r[e]["classer"] = temp_status.classer
+                                r[e]["text"] = temp_status.text
+                                r[e]["type"] = temp_status.type
+                                r[e]["value"] = temp_status.value
+                            }
+
+                            // ================= 2
+
+                            if (e == "date") {
+                                r[e] = {}
+                                r[e]["text"] = moment(String(temp_data['customsEntryNumberDate'])).format('DD MMM YYYY')
+                            }
+
+                            if (e == "dockNumber") {
+                                r[e] = {}
+                                r[e]["text"] = "-" // assume
+                            }
+                            
+                            if (e == "numberOfPieces") {
+                                r[e] = {}
+                                r[e]["text"] = "000" // assume
+                            }
+
+                            if (e == "pickupTime") {
+                                r[e] = {}
+                                r[e]["text"] = "-" // assume
+                            }
+
+                            if (e == "truckNumber") {
+                                r[e] = {}
+                                r[e]["text"] = "-" // assume
+                            }
+
+                            // ================= 3
+
+                            return r;
+                        }, {})
                         
-                    //     console.log('result :', result)
+                        // console.log('result :', result)
 
-                    //     temp_array.push(result)
-                    // }
+                        temp_array.push(result)
+                    }
                     
                     if ( companys.data.docs[0].status == 1 ){
                         commit('update_job_request_1', temp_array);
 
                     } else if (companys.data.docs[0].status == 2 ) {
-                        commit('update_job_request_2', companys.data.docs);
+                        commit('update_job_request_2', temp_array);
                         
                     } else if ( companys.data.docs[0].status == 3 ) {
                         commit('update_job_request_3', companys.data.docs);
@@ -135,9 +172,11 @@ export const freight_forwarder = {
                     } else if ( companys.data.docs[0].status == 5 ) {
                         commit('update_job_request_5', companys.data.docs);
                     }
+
+                    commit('change_status_loading', false)
+                    // console.log('change_status_loading :', false)
                 }
             )
-            commit('change_status_loading', false)
             return ;
         },
         fetchJobDetail({ commit }, id) {
