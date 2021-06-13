@@ -7,10 +7,9 @@
         class="chat" :class="ch.self? 'chat-self': 'chat-other'"
       >
         <div class="profile-container">
-          <div 
-            v-if="ch.avatar" class="profile" 
-            :style="'background-image:url(\''+ch.avatar+'\');'"
-          ></div>
+          <div v-if="ch.avatar" class="img-bg">
+            <img class="img-bg" width="50" height="50" v-bind:src="'data:image/jpeg;base64,' + ch.avatar" />
+          </div>
           <div 
             v-else class="profile" 
             style="background-image:url('/assets/img/misc/profile.jpg');"
@@ -53,6 +52,14 @@
 import moment from 'moment';
 import FormGroup from './FormGroup';
 import Button from './Button';
+import {mapGetters, mapActions} from "vuex"
+
+var socket = io.connect('http://localhost:8081');
+
+// socket.on('recive-message', (data) => {
+//       console.log(data);
+//       // chat.push(data.message)
+//     });
 
 export default {
   name: 'ChatContainer',
@@ -68,11 +75,49 @@ export default {
     return {
       randomId: Math.round(Math.random() * 1000000),
       selfChat: this.chat,
-      message: ''
+      message: '',
+      job_id: ''
     }
   },
   mounted() {
     this.scrollToEnd();
+    console.log(this.getUser)
+  },
+  created() {
+     window.onbeforeunload = () => {
+                socket.emit('leave', this.username);
+            }
+    socket.emit('join', {
+      job_id: '60c4a753346ad76c7277ec4d',
+      user_id: this.getUser.id,
+    });
+  },
+  mounted() {
+    socket.on('recive-message', (data) => {
+      console.log(data);
+        this.chat.push({
+          self: false,
+          message: data.message,
+          avatar: data.avatar,
+          createdAt: data.createdAt
+        })
+    });
+  },
+  watch: {
+    
+  },
+  computed: {
+    ...mapGetters({
+      getUser: 'auth/getUser',
+      getUserDetail: 'auth/getUserDetail',
+      getUserCompany: 'auth/getUserCompany',
+      getSelfUserCompany: 'auth/getSelfUserCompany',
+      getLoginStatus: 'auth/getLoginStatus',
+      getLoadingStatus: 'auth/getLoadingStatus'
+    })
+  },
+  updated() {
+    // this.msg()
   },
   methods: {
     formatDate(value, format='YYYYMMDD') {
@@ -84,6 +129,13 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       var that = this;
+      socket.emit('send-message', { 
+        user_id: that.getUser.id,
+        message: that.message,
+        job_id: '60c4a753346ad76c7277ec4d',
+        createAt : Date.now()
+      });
+
       if(that.withInput){
         that.selfChat.push({
           self: true,
@@ -96,7 +148,12 @@ export default {
           that.scrollToEnd();
         }, 100);
       }
-    }
+    }/*,
+    msg() {
+      socket.on('recive-message',  (data) => 
+        console.log(data)
+      )
+    }*/
   }
 }
 </script>

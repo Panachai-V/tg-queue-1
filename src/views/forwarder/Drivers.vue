@@ -30,8 +30,8 @@
           </div>
         </div>
         <div data-aos="fade-up" data-aos-delay="150">
-          <DataTable 
-            :rows="rows1" 
+          <DataTable v-if="!loadingStatus"
+            :rows="getOverview" 
             :columns="[
               { key: 'avatar', text: 'รูปโปรไฟล์' },
               { key: 'username', text: 'บัญชีผู้ใช้' },
@@ -72,7 +72,8 @@
 <script>
 import Topnav from '../../components/Topnav';
 import DataTable from '../../components/DataTable';
-import CompanyService from '../../services/company.service';
+import UserService from '../../services/user.service';
+import {mapGetters, mapActions} from "vuex"
 
 export default {
   name: 'ForwarderDriversPage',
@@ -103,13 +104,19 @@ export default {
           taxId: ''
         }
       },
-
       rows1: []
     }
   },
+  computed: {
+    ...mapGetters({
+      getOverview: 'driver/getOverview',
+      loadingStatus: 'driver/getLoadingStatus'
+    })
+  },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-    for(var i=0; i<8; i++){
+    this.driverOverview()
+    /*for(var i=0; i<8; i++){
       this.rows1.push({
         avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
         username: { text: 'User000'+i },
@@ -126,7 +133,16 @@ export default {
           edit: { type: 'link', href: '/forwarder/driver-edit' }
         }
       });
-    }
+    }*/
+    console.log('get over: ',this.getOverview)
+  },
+  mounted() {
+    this.rows1 = this.getOverview
+  },
+  methods: {
+    ...mapActions({
+      driverOverview: 'driver/overview'
+    })
   }
 }
 </script>

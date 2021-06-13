@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import {mapGetters, mapActions, mapState} from "vuex"
+
 export default {
   name: 'Tabs01',
   props: {
@@ -18,10 +20,31 @@ export default {
     activeIndex: { type: Number, default: 0 },
     classer: { type: String, default: '' }
   },
+  computed: {
+    ...mapGetters({
+      getUser: 'auth/getUser',
+    })
+  }, 
   methods: {
     onClick(index) {
+
+      // เมื่อ click เลือก tab ของ job requests จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
+      if ( this.getUser.role == 'freight-forwarder'){
+        let condition = {
+          page: '1',
+          limit: '20',
+          sort_by: 'status',
+          order: 'ascending',
+          status: (this.activeIndex + 1).toString()
+        }
+        this.fetchJobRequest(condition);
+      }
+
       return this.$emit('clicked', index);
-    }
+    },
+    ...mapActions({
+      fetchJobRequest: 'freight_forwarder/fetchJobRequest',
+    })
   },
   emits: [ 'clicked' ]
 }

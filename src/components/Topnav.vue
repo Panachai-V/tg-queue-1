@@ -260,7 +260,7 @@
   </div>
 
   <!-- Popup Freight Forwarder -->
-  <div v-if="!isBottom && isFreightForwarder()" class="popup-container" :class="{ 'active': isActivePopupCompany }">
+  <div v-if="!isBottom && isFreightForwarder() && (getLoadingStatus == false)" class="popup-container" :class="{ 'active': isActivePopupCompany }">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupCompany = !isActivePopupCompany"></div>
       <form action="/" method="GET" class="w-full"  @submit.prevent="onSubmitCompany">
@@ -360,12 +360,16 @@ export default {
   },
   created() {
     this.getCompany()
+    console.log('detail: ', this.getUserDetail)
+    console.log('company: ', this.getUserCompany)
+    console.log('loading status: ', this.getLoadingStatus)
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     this.selfUser.detail = { ...this.getUserDetail };
   },
   updated() {
+    console.log('loading status: ', this.getLoadingStatus)
     this.wrongpwd = false
   },
   computed: {
@@ -374,7 +378,8 @@ export default {
       getUserDetail: 'auth/getUserDetail',
       getUserCompany: 'auth/getUserCompany',
       getSelfUserCompany: 'auth/getSelfUserCompany',
-      getLoginStatus: 'auth/getLoginStatus'
+      getLoginStatus: 'auth/getLoginStatus',
+      getLoadingStatus: 'auth/getLoadingStatus'
     })
   },
   methods: {

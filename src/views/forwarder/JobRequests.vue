@@ -37,11 +37,11 @@
             ]" 
           />
         </div>
-        <div v-if="!company_loading_status" class="tab-contents" data-aos="fade-up" data-aos-delay="150">
+        <div class="tab-contents" data-aos="fade-up" data-aos-delay="150">
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable 
-              :rows="company_overview.job_detail_0" 
+              :rows="getJobRequest1" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'hwbSerialNumber', text: 'House Airway Bill' },
@@ -184,6 +184,8 @@
           </div>
         </div>
       </div>
+
+      {{getJobRequest4}}
     </div>
   </section>
 
@@ -205,10 +207,7 @@ export default {
     DataTable
   },
   computed: {
-    ...mapGetters({
-      company_overview: 'company/print_overview',
-      company_loading_status: 'company/get_status'
-    })
+
   },
   data() {
     return {
@@ -245,108 +244,105 @@ export default {
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
 
-    this.func_company_getoverview()
+    for(var i=0; i<4; i++){
+      this.rows1.push({
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view'
+        },
+        hwbSerialNumber: { text: 'MLC10131957' },
+        flightNumber: { text: 'JL0707' },
+        jobNumber: { text: 'A0020640302798' },
+        customsEntryNumber: { text: 'A0020640302798' },
+        customsEntryNumberDate: { text: this.formatDate(new Date()) },
+        status: { type: 'tag', value: 1, text: 'รอการ Matching', classer: 'ss-tag-danger' },
+        options: {
+          type: 'options',
+          view: { type: 'link', href: '/forwarder/job-request-view' }
+        }
+      });
 
-    console.log('job:', this.company_overview.job_detail_0)
+        this.rows2.push({
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view/2'
+        },
+        flightNumber: { text: 'JL0707' },
+        numberOfPieces: { text: this.formatNumber(2400, 0) },
+        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+        dockNumber: { text: '-' },
+        pickupTime: { text: '-' },
+        truckNumber: { text: '-' },
+        status: { type: 'tag', value: 2, text: 'รอคิวการรับ', classer: 'ss-tag-info' },
+        options: {
+          type: 'options',
+          view: { type: 'link', href: '/forwarder/job-request-view/2' }
+        }
+      });
 
-    // for(var i=0; i<4; i++){
-    //   this.rows1.push({
-    //     awbNumber: { 
-    //       type: 'link', text: '131-56591080',
-    //       href: '/forwarder/job-request-view'
-    //     },
-    //     hwbSerialNumber: { text: 'MLC10131957' },
-    //     flightNumber: { text: 'JL0707' },
-    //     jobNumber: { text: 'A0020640302798' },
-    //     customsEntryNumber: { text: 'A0020640302798' },
-    //     customsEntryNumberDate: { text: this.formatDate(new Date()) },
-    //     status: { type: 'tag', value: 1, text: 'รอการ Matching', classer: 'ss-tag-danger' },
-    //     options: {
-    //       type: 'options',
-    //       view: { type: 'link', href: '/forwarder/job-request-view' }
-    //     }
-    //   });
-    // }
-      
-    //   this.rows2.push({
-    //     awbNumber: { 
-    //       type: 'link', text: '131-56591080',
-    //       href: '/forwarder/job-request-view/2'
-    //     },
-    //     flightNumber: { text: 'JL0707' },
-    //     numberOfPieces: { text: this.formatNumber(2400, 0) },
-    //     date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
-    //     dockNumber: { text: '-' },
-    //     pickupTime: { text: '-' },
-    //     truckNumber: { text: '-' },
-    //     status: { type: 'tag', value: 2, text: 'รอคิวการรับ', classer: 'ss-tag-info' },
-    //     options: {
-    //       type: 'options',
-    //       view: { type: 'link', href: '/forwarder/job-request-view/2' }
-    //     }
-    //   });
-      
-    //   this.rows3.push({
-    //     awbNumber: { 
-    //       type: 'link', text: '131-56591080',
-    //       href: '/forwarder/job-request-view/3'
-    //     },
-    //     flightNumber: { text: 'JL0707' },
-    //     numberOfPieces: { text: this.formatNumber(2400, 0) },
-    //     date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
-    //     dockNumber: { text: 'G14' },
-    //     pickupTime: { text: '09.45 น.' },
-    //     truckNumber: { text: '-' },
-    //     status: { type: 'tag', value: 3, text: 'รอยืนยันคิว', classer: 'ss-tag-danger' },
-    //     options: {
-    //       type: 'options',
-    //       view: { type: 'link', href: '/forwarder/job-request-view/3' }
-    //     }
-    //   });
-      
-    //   this.rows4.push({
-    //     awbNumber: { 
-    //       type: 'link', text: '131-56591080',
-    //       href: '/forwarder/job-request-view/4'
-    //     },
-    //     flightNumber: { text: 'JL0707' },
-    //     numberOfPieces: { text: this.formatNumber(2400, 0) },
-    //     date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
-    //     dockNumber: { text: 'G14' },
-    //     pickupTime: { text: '09.45 น.' },
-    //     truckNumber: { text: '5กศ5859' },
-    //     status: i < 2 ?
-    //       { type: 'tag', value: 3, text: 'รอการชำระเงิน', classer: 'ss-tag-danger' } :
-    //       { type: 'tag', value: 3, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
-    //     options: {
-    //       type: 'options',
-    //       view: { type: 'link', href: '/forwarder/job-request-view/4' }
-    //     }
-    //   });
-      
-    //   this.rows5.push({
-    //     awbNumber: { 
-    //       type: 'link', text: '131-56591080',
-    //       href: '/forwarder/job-request-view/5'
-    //     },
-    //     flightNumber: { text: 'JL0707' },
-    //     numberOfPieces: { text: this.formatNumber(2400, 0) },
-    //     date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
-    //     dockNumber: { text: 'G14' },
-    //     pickupTime: { text: '09.45 น.' },
-    //     truckNumber: { text: '5กศ5859' },
-    //     status: i < 2 ? 
-    //       { 
-    //         type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success',
-    //         append: true, icon: '/assets/img/icon/comment-black.svg'
-    //       } :
-    //       { type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success' },
-    //     options: {
-    //       type: 'options',
-    //       view: { type: 'link', href: '/forwarder/job-request-view/5' }
-    //     }
-    //   });
-    // }
+        this.rows3.push({
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view/3'
+        },
+        flightNumber: { text: 'JL0707' },
+        numberOfPieces: { text: this.formatNumber(2400, 0) },
+        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+        dockNumber: { text: 'G14' },
+        pickupTime: { text: '09.45 น.' },
+        truckNumber: { text: '-' },
+        status: { type: 'tag', value: 3, text: 'รอยืนยันคิว', classer: 'ss-tag-danger' },
+        options: {
+          type: 'options',
+          view: { type: 'link', href: '/forwarder/job-request-view/3' }
+        }
+      });
+
+        this.rows4.push({
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view/4'
+        },
+        flightNumber: { text: 'JL0707' },
+        numberOfPieces: { text: this.formatNumber(2400, 0) },
+        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+        dockNumber: { text: 'G14' },
+        pickupTime: { text: '09.45 น.' },
+        truckNumber: { text: '5กศ5859' },
+        status: i < 2 ?
+          { type: 'tag', value: 3, text: 'รอการชำระเงิน', classer: 'ss-tag-danger' } :
+          { type: 'tag', value: 3, text: 'กำลังดำเนินการ', classer: 'ss-tag-warning' },
+        options: {
+          type: 'options',
+          view: { type: 'link', href: '/forwarder/job-request-view/4' }
+        }
+      });
+
+        this.rows5.push({
+        awbNumber: { 
+          type: 'link', text: '131-56591080',
+          href: '/forwarder/job-request-view/5'
+        },
+        flightNumber: { text: 'JL0707' },
+        numberOfPieces: { text: this.formatNumber(2400, 0) },
+        date: { text: this.formatDate(new Date(), 'DD MMM YYYY') },
+        dockNumber: { text: 'G14' },
+        pickupTime: { text: '09.45 น.' },
+        truckNumber: { text: '5กศ5859' },
+        status: i < 2 ? 
+          { 
+            type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success',
+            append: true, icon: '/assets/img/icon/comment-black.svg'
+          } :
+          { type: 'tag', value: 4, text: 'ดำเนินการเสร็จสิ้น', classer: 'ss-tag-success' },
+        options: {
+          type: 'options',
+          view: { type: 'link', href: '/forwarder/job-request-view/5' }
+        }
+      });
+    }
+
+    console.log(this.rows1[0])
   },
   methods: {
     formatNumber(value, digits=2) {
@@ -355,12 +351,28 @@ export default {
     },
     formatDate(value, format='YYYYMMDD') {
       return moment(String(value)).format(format);
-    },    
+    },
     ...mapActions({
-      func_company_getoverview: 'company/get_overview',
+      fetchJobRequest: 'freight_forwarder/fetchJobRequest'
+    })
+  },
+  computed: {
+    ...mapGetters({
+      get_status: 'freight_forwarder/get_status',
+      getJobRequest1: 'freight_forwarder/getJobRequest1',
+      getJobRequest2: 'freight_forwarder/getJobRequest2',
+      getJobRequest3: 'freight_forwarder/getJobRequest3',
+      getJobRequest4: 'freight_forwarder/getJobRequest4',
+      getJobRequest5: 'freight_forwarder/getJobRequest5',
     })
   },
   updated() {
+    console.log('rows1 :', this.rows1[0])
+    // console.log('getJobRequest1 :', this.getJobRequest1)
+    // console.log(this.getJobRequest2)
+    console.log(this.getJobRequest3)
+    // console.log(this.getJobRequest4)
+    // console.log(this.getJobRequest5)
   }
 }
 </script>

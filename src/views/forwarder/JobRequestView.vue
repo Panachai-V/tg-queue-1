@@ -273,6 +273,7 @@ import Step01 from '../../components/Step01';
 import ChatContainer from '../../components/ChatContainer';
 import FormGroupTime from '../../components/FormGroupTime';
 import FormGroupTrucks from '../../components/FormGroupTrucks';
+import {mapGetters, mapActions, mapState} from "vuex"
 
 export default {
   name: 'ForwarderJobRequestViewPage',
@@ -307,7 +308,9 @@ export default {
         }
       },
       jobRequest: {
-        status: this.$route.params.status? Number(this.$route.params.status): 1,
+        id: "60c4a753346ad76c7277ec4d",
+        // status: this.$route.params.status? Number(this.$route.params.status): 1,
+        status: 4,
         awbNumber: '131-56591080',
         hwbSerialNumber: 'MLC10131957',
         flightNumber: 'JL0707',
@@ -366,12 +369,7 @@ export default {
     }
   },
   created() {
-    var socket = io.connect('http://localhost:8081');
-    // socket.on('connected', function (data) {
-    //     console.log("client connected");
-    //     console.log(data);
-    //     socket.emit('test_send', { my: 'data' });
-    // });
+    this.fetchJobDetail("60c4a753346ad76c7277ec4d");
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
@@ -414,7 +412,11 @@ export default {
       this.jobRequestConfirmValid = true;
       this.jobRequest.status = 4;
       this.stepActiveIndex = 2;
-    }
+    },
+    ...mapActions({
+      fetchJobDetail: 'freight_forwarder/fetchJobDetail'
+    }),
+    
   }
 }
 </script>

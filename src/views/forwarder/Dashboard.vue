@@ -23,32 +23,32 @@ y<template>
           <div class="grids grid-mt">
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอการ Matching" :count="status.state_0" unit="งาน" 
+                label="Job Requests รอการ Matching" :count="getOverviewCompany.state_1" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอคิวการรับ" :count="status.state_1" unit="งาน" 
+                label="Job Requests รอคิวการรับ" :count="getOverviewCompany.state_2" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอยืนยันคิว" :count="status.state_2" unit="งาน" 
+                label="Job Requests รอยืนยันคิว" :count="getOverviewCompany.state_3" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="sep"></div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่กำลังดำเนินการ" :count="status.state_3 + status.state_4 + status.state_5 + status.state_6" unit="งาน" 
+                label="Job Requests ที่กำลังดำเนินการ" :count="getOverviewCompany.state_4" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="status.state_7" unit="งาน" 
+                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="getOverviewCompany.state_5" unit="งาน" 
                 classer="no-hover"
               />
             </div>
@@ -66,6 +66,7 @@ import Topnav from '../../components/Topnav';
 import SpecialCard03 from '../../components/SpecialCard03';
 import UserService from '../../services/user.service';
 import CompanyService from '../../services/company.service';
+import {mapGetters, mapActions, mapState} from "vuex"
 
 export default {
   name: 'ForwarderDashboardPage',
@@ -96,22 +97,26 @@ export default {
           zipcode: '',
           taxId: ''
         }
-      },
-      status: null
+      }
     }
   },
-// เดียวกูกลับมาทำ
-
+  computed: {
+    ...mapGetters({
+      getOverviewCompany: 'freight_forwarder/getOverviewComapny',
+    })
+  },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
 
-    this.$store.dispatch('company/get_overview');
-    this.status = this.$store.state.company.overview
+    this.fetchOverview()
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
   },
   methods: {
+    ...mapActions({
+      fetchOverview: 'freight_forwarder/fetchOverview'
+    })
   }
 }
 </script>

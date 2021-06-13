@@ -58,7 +58,7 @@ const routes = [
     component: () => import('../views/forwarder/JobRequestAdd.vue')
   },
   {
-    path: '/forwarder/job-request-view/:status?',
+    path: '/forwarder/job-request-view/:jobID',
     name: 'ForwarderJobRequestViewPage',
     component: () => import('../views/forwarder/JobRequestView.vue')
   },
@@ -75,12 +75,12 @@ const routes = [
     component: () => import('../views/forwarder/DriverAdd.vue')
   },
   {
-    path: '/forwarder/driver-edit',
+    path: '/forwarder/driver-edit/:id',
     name: 'ForwarderDriverEditPage',
     component: () => import('../views/forwarder/DriverEdit.vue')
   },
   {
-    path: '/forwarder/driver-view',
+    path: '/forwarder/driver-view/:id',
     name: 'ForwarderDriverViewPage',
     component: () => import('../views/forwarder/DriverView.vue')
   },
@@ -93,7 +93,7 @@ const routes = [
     component: () => import('../views/driver/MyJobs.vue')
   },
   {
-    path: '/driver/my-job-view/:status?',
+    path: '/driver/my-job-view/:id',
     name: 'DriverMyJobViewPage',
     component: () => import('../views/driver/MyJobView.vue')
   },

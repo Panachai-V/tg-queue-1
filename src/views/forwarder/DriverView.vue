@@ -166,6 +166,7 @@ export default {
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    console.log('params: ',this.$route.query.id)
   }
 }
 </script>

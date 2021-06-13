@@ -197,7 +197,7 @@
           </div>
         </div>
       </div>
-
+      {{getDetailJob}}
     </div>
   </section>
 
@@ -245,7 +245,9 @@ export default {
         }
       },
       jobRequest: {
-        status: this.$route.params.status? Math.max(4, Number(this.$route.params.status)): 4,
+        id: "60c4a753346ad76c7277ec4d",
+        //status: this.$route.params.status? Math.max(4, Number(this.$route.params.status)): 4,
+        status: 4,
         awbNumber: '131-56591080',
         hwbSerialNumber: 'MLC10131957',
         flightNumber: 'JL0707',
@@ -302,6 +304,9 @@ export default {
         }
       ]
     }
+  },
+  created() {
+
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });

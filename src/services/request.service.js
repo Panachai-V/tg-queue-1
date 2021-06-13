@@ -12,9 +12,7 @@ class RequestService {
             customsEntryNumberDate: jobRequest.customsEntryNumberDate
           }, { 
               headers: authHeader() 
-            })
-
-            
+            })            
     }
 }
 

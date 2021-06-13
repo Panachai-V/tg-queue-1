@@ -7,8 +7,8 @@ const userDetail = JSON.parse(localStorage.getItem('userDetail'));
 const userCompany = null
 const selfUserCompany = null
 const initialState = user
-  ? { status: { loggedIn: true }, user, userDetail, userCompany, selfUserCompany}
-  : { status: { loggedIn: false }, user: null, userDetail: null , userCompany: null, selfUserCompany: null};
+  ? { status: { loggedIn: true }, user, userDetail, userCompany, selfUserCompany, loading: false}
+  : { status: { loggedIn: false }, user: null, userDetail: null , userCompany: null, selfUserCompany: null, loading: false};
 
 export const auth = {
   namespaced: true,
@@ -89,10 +89,12 @@ export const auth = {
       });
     },
     getCompany({commit}) {
+      commit('updateLoadingStatus', true)
       return new Promise((resolve, reject) => {
         UserService.getUserCompanyDetail()
           .then(response => {
             commit('fetchCompany', response.data);
+            commit('updateLoadingStatus', false)
             resolve()
           })
           .catch(error => {
@@ -139,6 +141,9 @@ export const auth = {
     fetchCompany(state, company) {
       state.userCompany = company;
       state.selfUserCompany = company;
+    },
+    updateLoadingStatus(state, loadingStatus) {
+      state.loading = loadingStatus
     }
   },
   getters: {
@@ -156,6 +161,9 @@ export const auth = {
     },
     isAuthenticated(state) {
       return state.status.loggedIn
+    },
+    getLoadingStatus(state) {
+      return state.loading
     }
   }
 };
