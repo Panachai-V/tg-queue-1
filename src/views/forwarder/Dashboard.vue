@@ -23,7 +23,13 @@ y<template>
           <div class="grids grid-mt">
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอการ Matching" :count="getOverviewCompany.state_1" unit="งาน" 
+                label="Job Requests รอการ Matching" :count="getOverviewCompany.state_0" unit="งาน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
+                label="Job Requests รอการจ่ายเงิน" :count="getOverviewCompany.state_1" unit="งาน" 
                 classer="no-hover"
               />
             </div>

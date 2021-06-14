@@ -309,8 +309,8 @@ export default {
       },
       jobRequest: {
         id: "60c4a753346ad76c7277ec4d",
-        // status: this.$route.params.status? Number(this.$route.params.status): 1,
-        status: 4,
+        status: this.$route.params.status? Number(this.$route.params.status): 1,
+        // status: 4,
         awbNumber: '131-56591080',
         hwbSerialNumber: 'MLC10131957',
         flightNumber: 'JL0707',

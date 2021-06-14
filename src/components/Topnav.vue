@@ -11,7 +11,7 @@
           <p class="sm fw-400 color-gray">Queue Management</p>
         </div>
       </a>
-
+      
       <!-- Menu - Freight Forwarder -->
       <div v-if="isFreightForwarder()" class="menu-container" :class="{ 'hide-mobile': !isBottom }">
         <div class="menu" :class="{ 'active': activeIndex == 0 }">
@@ -39,6 +39,7 @@
           </a>
         </div>
       </div>
+      
       
       <!-- Menu - TG Admin -->
       <div v-else-if="isTGAdmin()" class="menu-container" :class="{ 'hide-mobile': !isBottom }">
@@ -336,6 +337,7 @@ import FormGroup from './FormGroup';
 import Button from './Button';
 import UserService from '../services/user.service';
 import {mapGetters, mapActions} from "vuex"
+var socket = io.connect('http://localhost:8081');
 
 export default {
   name: 'Topnav',
@@ -363,10 +365,24 @@ export default {
     console.log('detail: ', this.getUserDetail)
     console.log('company: ', this.getUserCompany)
     console.log('loading status: ', this.getLoadingStatus)
+    
+
+  if(this.getAuthenticated == true){
+      console.log("login already");
+      socket.emit('join-with-id', {
+        user_id: this.getUser.id,
+      });
+    }
+    
   },
   mounted() {
+    socket.on('recieve-notify', (data) => {
+        console.log("user :"+ data.user_id);
+        console.log("notify :"+ data.notification);
+        });
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     this.selfUser.detail = { ...this.getUserDetail };
+    
   },
   updated() {
     console.log('loading status: ', this.getLoadingStatus)
@@ -379,11 +395,14 @@ export default {
       getUserCompany: 'auth/getUserCompany',
       getSelfUserCompany: 'auth/getSelfUserCompany',
       getLoginStatus: 'auth/getLoginStatus',
-      getLoadingStatus: 'auth/getLoadingStatus'
+      getLoadingStatus: 'auth/getLoadingStatus',
+      getAuthenticated: 'auth/isAuthenticated',
     })
+    
   },
   methods: {
 
+  
     isFreightForwarder() {
       if(this.getUser && this.getUser.role == 'freight-forwarder'){
         return true;

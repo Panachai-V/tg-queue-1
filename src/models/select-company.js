@@ -9,9 +9,12 @@ export class StatusCompany {
     setStatusCompany(status) {
         this.value = status;
 
-        if (status == 1) {
+        if (status == 0) {
             this.text = "รอการ Matching";
             this.classer = "ss-tag-danger";
+        } else if (status == 1) {
+            this.text = "รอการชำระเงิน";
+            this.classer = "ss-tag-info";
         } else if (status == 2) {
             this.text = "รอคิวการรับ";
             this.classer = "ss-tag-info";

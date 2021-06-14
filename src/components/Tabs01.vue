@@ -29,7 +29,7 @@ export default {
   created() {
     // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
     if ( this.getUser.role == 'freight-forwarder'){
-      let temp_condition = new ConditionSelectViewJob('1', '20', 'status', 'ascending', (this.activeIndex + 1).toString())
+      let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString())
       this.fetchJobRequest(temp_condition);
     }
   },
@@ -38,7 +38,7 @@ export default {
 
       // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
       if ( this.getUser.role == 'freight-forwarder'){
-        let temp_condition = new ConditionSelectViewJob('1', '20', 'status', 'ascending', (this.activeIndex + 1).toString())
+        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString())
         this.fetchJobRequest(temp_condition);
       }
 
