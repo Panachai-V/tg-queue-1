@@ -376,10 +376,13 @@ export default {
     
   },
   mounted() {
-    socket.on('recieve-notify', (data) => {
+    socket.on('receive-notify', (data) => {
         console.log("user :"+ data.user_id);
         console.log("notify :"+ data.notification);
         });
+    socket.on('notify-detail', (data) => {
+      console.log(data);
+    });
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     this.selfUser.detail = { ...this.getUserDetail };
     
