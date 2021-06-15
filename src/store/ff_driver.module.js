@@ -12,6 +12,9 @@ export const ff_driver = {
           lastname: null,
           phone: null,
           email: null,
+          province: null,
+          address: null,
+          zipcode: null,
           status: null
       },
       loading: false
@@ -68,6 +71,7 @@ export const ff_driver = {
             }));
         },
         fetchDriver(state, driver) {
+            console.log('driver is ',driver)
             state.currentDriver.avatar = driver.avatar[0].value
             state.currentDriver.username = driver.username
             state.currentDriver.prefix = driver.user_detail[0].prefix
@@ -75,6 +79,9 @@ export const ff_driver = {
             state.currentDriver.lastname = driver.user_detail[0].lastname
             state.currentDriver.phone = driver.user_detail[0].phone
             state.currentDriver.email = driver.email
+            state.currentDriver.province = driver.user_detail[0].province
+            state.currentDriver.address = driver.user_detail[0].address
+            state.currentDriver.zipcode = driver.user_detail[0].zipcode
             state.currentDriver.status = driver.status
             console.log('driver is ',state.currentDriver)
         },

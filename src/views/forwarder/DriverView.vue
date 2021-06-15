@@ -67,19 +67,19 @@
           
           <div class="grid lg-60 md-80 sm-100">
             <FormGroup 
-              type="plain" label="ที่อยู่" :value="dataset.detail.address"
+              type="plain" label="ที่อยู่" :value="getDetail.address"
             />
           </div>
           <div class="sep"></div>
           
           <div class="grid lg-30 md-40 sm-100">
             <FormGroup 
-              type="plain" label="จังหวัด" :value="dataset.detail.province" 
+              type="plain" label="จังหวัด" :value="getDetail.province" 
             />
           </div>
           <div class="grid lg-30 md-40 sm-100">
             <FormGroup 
-              type="plain" label="รหัสไปรษณีย์" :value="dataset.detail.zipcode" 
+              type="plain" label="รหัสไปรษณีย์" :value="getDetail.zipcode" 
             />
           </div>
         </div>
