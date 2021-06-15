@@ -314,9 +314,13 @@
 </template>
 
 <script>
+import {mapGetters, mapActions, mapState} from "vuex"
+
 export default {
   name: 'DataTable',
   props: {
+    formJobRequest: { type: Boolean, default: false},
+    filterStatus: { type: Object, default: {} },
     columns: { type: Array, default: [] },
     rows: { type: Array, default: [] },
     withOptions: { type: Boolean, default: true },
@@ -360,6 +364,9 @@ export default {
       this.selfRows = this.selfFilteredRows.slice(
         (this.selfPage - 1) * this.pp, this.selfPage * this.pp
       );
+
+      console.log('selfPage :', this.selfPage)
+      console.log('selfRows :', this.selfRows)
     },
     toggleGroup(index) {
       var that = this;
@@ -531,10 +538,19 @@ export default {
       counter.value = result;
     },
   },
+  computed: {
+    ...mapGetters({
+      getUser: 'auth/getUser',
+    })
+  },
   created() {
     this.toggleGroup(-1);
     if(this.orders.length){
       this.doOrder(this.orders[0].key);
+    }
+
+    if ( (this.getUser.role == "freight-forwarder") && (this.formJobRequest == true) ){
+      console.log('filterStatus :', this.filterStatus)
     }
   },
   emits: [ 

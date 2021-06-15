@@ -1,17 +1,18 @@
 import CompanyService from '../services/company.service';
 import Overview from '../models/company-info';
-import {StatusCompany} from '../models/select-company';
+import {StatusCompany, FilterStatus} from '../models/select-company';
 import moment from 'moment';
 
-let temp_variable = new Overview(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+let temp_overview = new Overview(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 export const freight_forwarder = {
     namespaced: true,
     state: {
       message: 'Hello World!',
-      overview: temp_variable,
+      overview: temp_overview,
       detailJob: null,
-      loading: false
+      loading: true,
+      filterStatus: null
     },
     actions: {
         fetchOverview({ commit }) {
@@ -34,8 +35,9 @@ export const freight_forwarder = {
             // console.log('change_status_loading :', true)
             CompanyService.ff_jobRequest(condition).then(
                 companys => {
-                    console.log('companys.data.docs :', companys.data.docs[0]) 
-                    console.log('status data :', companys.data.docs[0].status)  
+                    // console.log('companys.data.docs :', companys.data.docs[0])
+                    // console.log('status data :', companys.data.docs[0].status)
+                    console.log('companys.data.docs :', companys.data)  
 
                     var temp_array = []
 
@@ -46,24 +48,33 @@ export const freight_forwarder = {
 
                         temp_status.setStatusCompany(temp_data['status'])
 
+                        temp_data['date'] = {}
+                        temp_data['options'] = {}
+                        temp_data['pickupTime'] = {}
+
                         // structure บาง status ที่ขาด
-                        if ( companys.data.docs[0].status == 0 ) {
-                            temp_data['options'] = {}
-                        } else if ( companys.data.docs[0].status == 1 ) {
-                            temp_data['date'] = {}
-                            temp_data['dockNumber'] = {}
-                            temp_data['numberOfPieces'] = {}
-                            temp_data['options'] = {}
-                            temp_data['pickupTime'] = {}
-                            temp_data['truckNumber'] = {}
-                        } else if ( companys.data.docs[0].status == 2 ) {
-                            temp_data['date'] = {}
-                            temp_data['dockNumber'] = {}
-                            temp_data['numberOfPieces'] = {}
-                            temp_data['options'] = {}
-                            temp_data['pickupTime'] = {}
-                            temp_data['truckNumber'] = {}
-                        }
+                        // if ( companys.data.docs[0].status == 0 ) {
+                        //     temp_data['options'] = {}
+                        // } else if ( companys.data.docs[0].status == 1 ) {
+                        //     temp_data['options'] = {}
+                        // } else if ( companys.data.docs[0].status == 2 ) {
+                        //     temp_data['date'] = {}
+                        //     temp_data['options'] = {}
+                        //     temp_data['pickupTime'] = {}
+                        // } else if ( companys.data.docs[0].status == 3 ) {
+                        //     temp_data['date'] = {}
+                        //     temp_data['options'] = {}
+                        //     temp_data['pickupTime'] = {}
+                        // } else if ( companys.data.docs[0].status == 4 ) {
+                        //     temp_data['date'] = {}
+                        //     temp_data['options'] = {}
+                        //     temp_data['pickupTime'] = {}
+                        // } else if ( companys.data.docs[0].status == 5 ) {
+                        //     temp_data['date'] = {}
+                        //     temp_data['options'] = {}
+                        //     temp_data['pickupTime'] = {}
+                        // }
+                        
 
                         var result = Object.keys(temp_data).reduce(function(r, e) {
                             // console.log('r', r)
@@ -119,8 +130,6 @@ export const freight_forwarder = {
                                 r[e]["value"] = temp_status.value
                             }
 
-                            // ================= 1
-
                             if (e == "date") {
                                 r[e] = {}
                                 r[e]["text"] = moment(String(temp_data['customsEntryNumberDate'])).format('DD MMM YYYY')
@@ -128,30 +137,28 @@ export const freight_forwarder = {
 
                             if (e == "dockNumber") {
                                 r[e] = {}
-                                r[e]["text"] = "-" // assume
+                                r[e]["text"] = temp_data['dockNumber']
                             }
                             
                             if (e == "numberOfPieces") {
                                 r[e] = {}
-                                r[e]["text"] = "000" // assume
+                                r[e]["text"] = temp_data['dockNumber']
                             }
 
                             if (e == "pickupTime") {
                                 r[e] = {}
-                                r[e]["text"] = "-" // assume
+                                r[e]["text"] = temp_data['pickupTimeHours'] + '.' + temp_data['pickupTimeMinutes']
                             }
 
                             if (e == "truckNumber") {
                                 r[e] = {}
-                                r[e]["text"] = "-" // assume
+                                r[e]["text"] = temp_data['truckNumber']
                             }
-
-                            // ================= 2
 
                             return r;
                         }, {})
                         
-                        console.log('result :', result)
+                        // console.log('result :', result)
 
                         temp_array.push(result)
                     }
@@ -162,7 +169,7 @@ export const freight_forwarder = {
                     } else if (companys.data.docs[0].status == 1 ) {
                         commit('update_job_request_1', temp_array);
                         
-                    } else if (companys.data.docs[0].status == 2 ) {
+                    } else if ( companys.data.docs[0].status == 2 ) {
                         commit('update_job_request_2', temp_array);
                         
                     } else if ( companys.data.docs[0].status == 3 ) {
@@ -175,8 +182,22 @@ export const freight_forwarder = {
                         commit('update_job_request_5', temp_array);
                     }
 
-                    commit('change_status_loading', false)
                     // console.log('change_status_loading :', false)
+
+                    let temp_filterstatus = new FilterStatus(
+                        companys.data.hasNextPage,
+                        companys.data.hasPrevPage,
+                        companys.data.limit,
+                        companys.data.nextPage,
+                        companys.data.page,
+                        companys.data.pagingCounter,
+                        companys.data.prevPage,
+                        companys.data.totalDocs,
+                        companys.data.totalPages,
+                        temp_array.length );
+
+                    commit('change_filterStatus', temp_filterstatus)
+                    commit('change_status_loading', false)
                 }
             )
             return ;
@@ -222,13 +243,16 @@ export const freight_forwarder = {
         },
         update_jobDetail(state, input) {
             state.detailJob = input
+        },
+        change_filterStatus(state, input) {
+            state.filterStatus = input
         }
     },
     getters: {
         getOverviewComapny(state) {
             return state.overview
         },
-        get_status(state) {
+        getLoadingStatus(state) {
             return state.loading
         },
         getJobRequest0(state) {
@@ -251,6 +275,9 @@ export const freight_forwarder = {
         },
         getDetailJob(state) {
             return state.detailJob
+        },
+        getFilterStatus(state) {
+            return state.filterStatus
         }
     }
 }

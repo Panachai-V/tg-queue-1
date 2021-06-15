@@ -37,10 +37,14 @@
             ]" 
           />
         </div>
-        <div v-if="get_status == false" class="tab-contents" data-aos="fade-up" data-aos-delay="150">
+        <div v-if="getLoadingStatus == false" class="tab-contents" data-aos="fade-up" data-aos-delay="150">
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable
+              :formJobRequest="true"
+              :filterStatus="getFilterStatus"
+              :pp="getFilterStatus.limit"
+              :page="getFilterStatus.page"
               :rows="getJobRequest0" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
@@ -68,22 +72,23 @@
           </div>
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
-            <DataTable 
+            <DataTable
+              :formJobRequest="true"
+              :filterStatus="getFilterStatus"
               :rows="getJobRequest1" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
+                { key: 'hwbSerialNumber', text: 'House Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
-                { key: 'numberOfPieces', text: 'จำนวนสินค้า' },
-                { key: 'date', text: 'วันที่เที่ยวบิน' },
-                { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
-                { key: 'pickupTime', text: 'เวลารับสินค้า' },
-                { key: 'truckNumber', text: 'ทะเบียนรถ' },
+                { key: 'jobNumber', text: 'เลขที่งาน' },
+                { key: 'customsEntryNumber', text: 'เลขที่ใบขนสินค้า' },
+                { key: 'customsEntryNumberDate', text: 'วันที่ได้รับเลขที่ใบสินค้า' },
                 { key: 'status', text: 'สถานะ', classer: 'status' },
-                { key: 'options', classer: 'options' },
+                { key: 'options', classer: 'options' }
               ]" 
               :search="[ 
-                'awbNumber', 'hwbSerialNumber', 'flightNumber', 'date',
-                'dockNumber', 'pickupTime'
+                'awbNumber', 'hwbSerialNumber', 'flightNumber', 'jobNumber',
+                'customsEntryNumber', 'customsEntryNumberDate'
               ]" 
               :orders="[
                 { key: 'awbNumber-desc', text: 'Airway Bill (ใหม่สุด)' },
@@ -98,11 +103,106 @@
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 2 }">
             <DataTable 
+              :formJobRequest="true"
+              :filterStatus="getFilterStatus"
               :rows="getJobRequest2" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
+                { key: 'hwbSerialNumber', text: 'House Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
-                { key: 'numberOfPieces', text: 'จำนวนสินค้า' },
+                { key: 'date', text: 'วันที่เที่ยวบิน' },
+                { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
+                { key: 'pickupTime', text: 'เวลารับสินค้า' },
+                { key: 'truckNumber', text: 'ทะเบียนรถ' },
+                { key: 'status', text: 'สถานะ', classer: 'status' },
+                { key: 'options', classer: 'options' }
+              ]" 
+              :search="[ 
+                'awbNumber', 'hwbSerialNumber', 'flightNumber', 'date',
+                'dockNumber', 'pickupTime'
+              ]" 
+              :orders="[
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
+                { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
+                { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
+                { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
+              ]" 
+            />
+          </div>
+
+         <div class="tab-content" :class="{ 'active': tabActiveIndex == 3 }">
+            <DataTable 
+              :formJobRequest="true"
+              :filterStatus="getFilterStatus"
+              :rows="getJobRequest3" 
+              :columns="[
+                { key: 'awbNumber', text: 'Airway Bill' },
+                { key: 'hwbSerialNumber', text: 'House Airway Bill' },
+                { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
+                { key: 'date', text: 'วันที่เที่ยวบิน' },
+                { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
+                { key: 'pickupTime', text: 'เวลารับสินค้า' },
+                { key: 'truckNumber', text: 'ทะเบียนรถ' },
+                { key: 'status', text: 'สถานะ', classer: 'status' },
+                { key: 'options', classer: 'options' }
+              ]" 
+              :search="[ 
+                'awbNumber', 'hwbSerialNumber', 'flightNumber', 'date',
+                'dockNumber', 'pickupTime'
+              ]" 
+              :orders="[
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
+                { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
+                { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
+                { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
+              ]" 
+            />
+          </div>
+
+          <div class="tab-content" :class="{ 'active': tabActiveIndex == 4 }">
+            <DataTable 
+              :formJobRequest="true"
+              :filterStatus="getFilterStatus"
+              :rows="getJobRequest4" 
+              :columns="[
+                { key: 'awbNumber', text: 'Airway Bill' },
+                { key: 'hwbSerialNumber', text: 'House Airway Bill' },
+                { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
+                { key: 'date', text: 'วันที่เที่ยวบิน' },
+                { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
+                { key: 'pickupTime', text: 'เวลารับสินค้า' },
+                { key: 'truckNumber', text: 'ทะเบียนรถ' },
+                { key: 'status', text: 'สถานะ', classer: 'status' },
+                { key: 'options', classer: 'options' }
+              ]" 
+              :search="[ 
+                'awbNumber', 'hwbSerialNumber', 'flightNumber', 'date',
+                'dockNumber', 'pickupTime'
+              ]" 
+              :orders="[
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
+                { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
+                { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
+                { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
+              ]" 
+            />
+          </div>
+
+          <div class="tab-content" :class="{ 'active': tabActiveIndex == 5 }">
+            <DataTable 
+              :formJobRequest="true"
+              :filterStatus="getFilterStatus"
+              :rows="getJobRequest5" 
+              :columns="[
+                { key: 'awbNumber', text: 'Airway Bill' },
+                { key: 'hwbSerialNumber', text: 'House Airway Bill' },
+                { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
                 { key: 'date', text: 'วันที่เที่ยวบิน' },
                 { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
                 { key: 'pickupTime', text: 'เวลารับสินค้า' },
@@ -244,9 +344,9 @@
           -->
         </div>
       </div>
+      {{getFilterStatus}}
     </div>
   </section>
-
   <Topnav :user="user" :activeIndex="topnavActiveIndex" :isBottom="true" />
 </template>
 
@@ -417,24 +517,25 @@ export default {
   },
   computed: {
     ...mapGetters({
-      get_status: 'freight_forwarder/get_status',
+      getLoadingStatus: 'freight_forwarder/getLoadingStatus',
       getJobRequest0: 'freight_forwarder/getJobRequest0',
       getJobRequest1: 'freight_forwarder/getJobRequest1',
       getJobRequest2: 'freight_forwarder/getJobRequest2',
       getJobRequest3: 'freight_forwarder/getJobRequest3',
       getJobRequest4: 'freight_forwarder/getJobRequest4',
       getJobRequest5: 'freight_forwarder/getJobRequest5',
+      getFilterStatus: 'freight_forwarder/getFilterStatus',
     })
   },
   mounted() {
 
   },
   updated() {
-    console.log('rows1 :', this.rows1)
-    console.log('rows2 :', this.rows2)
-    console.log('rows3 :', this.rows3)
-    console.log('rows4 :', this.rows4)
-    console.log('rows5 :', this.rows5)
+    // console.log('rows1 :', this.rows1)
+    // console.log('rows2 :', this.rows2)
+    // console.log('rows3 :', this.rows3)
+    // console.log('rows4 :', this.rows4)
+    // console.log('rows5 :', this.rows5)
 
     // console.log(this.getJobRequest2)
     // console.log(this.getJobRequest3)

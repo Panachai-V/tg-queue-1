@@ -27,10 +27,12 @@ export const auth = {
       );
     },
     async login ({ dispatch, commit }, user) {
+      commit('updateLoadingStatus', true)
       await dispatch('authen', user) // wait for `authen` to finish
       UserService.getUserDetail().then(
         detail => {
           commit('updateDetail', detail)
+          commit('updateLoadingStatus', false)
         },
         error => {
           commit('loginFailure');
@@ -55,9 +57,11 @@ export const auth = {
       );
     },
     editUser({ commit }, formData) {
+      commit('updateLoadingStatus', true)
       return UserService.editUserDetail(formData).then(
         detail => {
           commit('updateDetail', detail.data);
+          commit('updateLoadingStatus', false)
           return Promise.resolve(detail);
         },
         error => {
@@ -66,9 +70,11 @@ export const auth = {
       );
     },
     fetchUser({ commit }) {
+      commit('updateLoadingStatus', true)
       UserService.getUserDetail().then(
         detail => {
           commit('updateDetail', detail)
+          commit('updateLoadingStatus', false)
           return Promise.resolve(detail)
         },
         error => {

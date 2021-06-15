@@ -21,6 +21,10 @@ class CompanyService {
         return axios.get('ff/tdv/overview', { headers: authHeader() })
     }
 
+    ffDriverDetail(id) {
+        return axios.get('ff/tdv/' + id, { headers: authHeader() })
+    }
+
     driver_jobRequest(jobID) {
         return axios.get(`driver/:${jobID}`, { headers: authHeader() })
     }

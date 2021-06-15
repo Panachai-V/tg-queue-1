@@ -130,7 +130,7 @@
   <div class="topnav-spacer"></div>
 
   <!-- Popup Profile -->
-  <div v-if="!isBottom" class="popup-container" :class="{ 'active': isActivePopupProfile }">
+  <div v-if="!isBottom && getLoadingStatus == false" class="popup-container" :class="{ 'active': isActivePopupProfile }">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupProfile = !isActivePopupProfile"></div>
       <form action="/" method="GET" class="w-full"  @submit.prevent="onSubmitProfile">
@@ -353,7 +353,7 @@ export default {
   },
   data() {
     return {
-      selfUser: {...this.user},
+      selfUser: {},
       isActivePopupProfile: false,
       isActivePopupPassword: false,
       isActivePopupCompany: false,

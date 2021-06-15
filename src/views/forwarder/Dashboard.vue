@@ -1,4 +1,4 @@
-y<template>
+<template>
   <Topnav :user="user" :activeIndex="topnavActiveIndex" />
 
   <section class="section-full">

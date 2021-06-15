@@ -1,6 +1,6 @@
 import CompanyService from '../services/company.service';
 
-export const driver = {
+export const ff_driver = {
     namespaced: true,
     state: {
       overview: [],
@@ -14,10 +14,10 @@ export const driver = {
           email: null,
           status: null
       },
-      loading: true
+      loading: false
     },
     actions: {
-        overview({ commit , state }) {
+        overview({ commit }) {
             commit('change_status_loading', true);
             return CompanyService.driverOverview().then(
                 allDriver => {
@@ -31,6 +31,20 @@ export const driver = {
                 }
               );
           },
+          driverDetail({ commit }, id) {
+            commit('change_status_loading', true);
+            return CompanyService.ffDriverDetail(id).then(
+                driver => {
+                    commit('fetchDriver', driver.data);
+                    commit('change_status_loading', false);
+                    return Promise.resolve(driver);
+                },
+                error => {
+                  console.log(error)
+                  return Promise.reject(error);
+                }
+              );
+          }
     },
     mutations: {
         fetchOverview(state, allDriver) {
@@ -53,6 +67,17 @@ export const driver = {
                 }
             }));
         },
+        fetchDriver(state, driver) {
+            state.currentDriver.avatar = driver.avatar[0].value
+            state.currentDriver.username = driver.username
+            state.currentDriver.prefix = driver.user_detail[0].prefix
+            state.currentDriver.firstname = driver.user_detail[0].firstname
+            state.currentDriver.lastname = driver.user_detail[0].lastname
+            state.currentDriver.phone = driver.user_detail[0].phone
+            state.currentDriver.email = driver.email
+            state.currentDriver.status = driver.status
+            console.log('driver is ',state.currentDriver)
+        },
         change_status_loading(state, input) {
             state.loading = input
         }
@@ -60,6 +85,9 @@ export const driver = {
     getters: {
         getOverview(state) {
             return state.overview
+        },
+        getDetail(state) {
+            return state.currentDriver
         },
         get_status(state) {
             return state.loading

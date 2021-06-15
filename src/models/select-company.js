@@ -40,3 +40,18 @@ export class ConditionSelectViewJob {
         this.status = status;
     }
 }
+
+export class FilterStatus {
+    constructor(hasNextPage, hasPrevPage, limit, nextPage, page, pagingCounter, prevPage, totalDocs, totalPages, totalrows) {
+        this.hasNextPage = hasNextPage;
+        this.hasPrevPage = hasPrevPage;
+        this.limit = limit;
+        this.nextPage = nextPage;
+        this.page = page;
+        this.pagingCounter = pagingCounter;
+        this.prevPage = prevPage;
+        this.totalDocs = totalDocs;
+        this.totalPages = totalPages;
+        this.totalrows = totalrows
+    }
+}
