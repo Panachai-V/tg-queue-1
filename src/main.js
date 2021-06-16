@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:8081/apis'
+axios.defaults.baseURL = (process.env.VUE_APP_SERVERURL + '/apis')
 
 const app = createApp(App)
 
