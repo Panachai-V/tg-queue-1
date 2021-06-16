@@ -37,15 +37,11 @@
             ]" 
           />
         </div>
-        <div v-if="getLoadingStatus == false" class="tab-contents" data-aos="fade-up" data-aos-delay="150">
-
+        <div  class="tab-contents" data-aos="fade-up" data-aos-delay="150">
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable
-              :formJobRequest="true"
-              :filterStatus="getFilterStatus"
-              :pp="getFilterStatus.limit"
-              :page="getFilterStatus.page"
-              :rows="getJobRequest0" 
+              :tabActiveIndex="tabActiveIndex"
+              :rows="getJobRequest0"
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'hwbSerialNumber', text: 'House Airway Bill' },
@@ -73,8 +69,7 @@
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
             <DataTable
-              :formJobRequest="true"
-              :filterStatus="getFilterStatus"
+              :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest1" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
@@ -103,8 +98,7 @@
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 2 }">
             <DataTable 
-              :formJobRequest="true"
-              :filterStatus="getFilterStatus"
+              :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest2" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
@@ -134,8 +128,7 @@
 
          <div class="tab-content" :class="{ 'active': tabActiveIndex == 3 }">
             <DataTable 
-              :formJobRequest="true"
-              :filterStatus="getFilterStatus"
+              :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest3" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
@@ -165,8 +158,7 @@
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 4 }">
             <DataTable 
-              :formJobRequest="true"
-              :filterStatus="getFilterStatus"
+              :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest4" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
@@ -196,8 +188,7 @@
 
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 5 }">
             <DataTable 
-              :formJobRequest="true"
-              :filterStatus="getFilterStatus"
+              :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest5" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
@@ -227,7 +218,12 @@
           
           <!--
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
-            <DataTable 
+            <DataTable
+              :formJobRequest="true"
+              :filterStatus="getFilterStatus"
+              :pp="getFilterStatus.limit"
+              :page="getFilterStatus.page"
+
               :rows="rows2" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
@@ -344,7 +340,6 @@
           -->
         </div>
       </div>
-      {{getFilterStatus}}
     </div>
   </section>
   <Topnav :user="user" :activeIndex="topnavActiveIndex" :isBottom="true" />
@@ -354,8 +349,9 @@
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Tabs01 from '../../components/Tabs01';
-import DataTable from '../../components/DataTable';
+import DataTable from '../../components/DataTable-JobRequest';
 import { mapState, mapGetters, mapActions } from 'vuex'
+import {ConditionSelectViewJob} from '../../models/select-company';
 
 export default {
   name: 'ForwarderJobRequestsPage',
@@ -401,6 +397,12 @@ export default {
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+
+    // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
+    if ( this.getUser.role == 'freight-forwarder'){
+      let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex).toString())
+      this.fetchJobRequest(temp_condition);
+    }
 
     for(var i=0; i<4; i++){
       this.rows1.push({
@@ -500,7 +502,7 @@ export default {
       });
     }
 
-    console.log(this.rows1[0])
+    // console.log(this.rows1[0])
   },
   methods: {
     
@@ -516,7 +518,11 @@ export default {
     })
   },
   computed: {
+    ...mapState({
+      testJob: 'freight_forwarder/overview'
+    }),
     ...mapGetters({
+      getUser: 'auth/getUser',
       getLoadingStatus: 'freight_forwarder/getLoadingStatus',
       getJobRequest0: 'freight_forwarder/getJobRequest0',
       getJobRequest1: 'freight_forwarder/getJobRequest1',
@@ -537,6 +543,8 @@ export default {
     // console.log('rows4 :', this.rows4)
     // console.log('rows5 :', this.rows5)
 
+    // console.log('getJobRequest0 :', this.getJobRequest0)
+    // console.log(this.getJobRequest1)
     // console.log(this.getJobRequest2)
     // console.log(this.getJobRequest3)
     // console.log(this.getJobRequest4)

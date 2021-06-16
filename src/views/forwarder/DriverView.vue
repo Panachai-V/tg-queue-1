@@ -147,7 +147,7 @@ export default {
         }
       },
 
-      dataset: {
+      /*dataset: {
         id: null,
         role: 'Driver',
         username: 'Driver0001',
@@ -165,7 +165,7 @@ export default {
         password: '',
         confPassword: '',
         status: 1,
-      }
+      }*/
     }
   },
   computed: {

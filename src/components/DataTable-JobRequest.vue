@@ -50,14 +50,14 @@
       </div>
       <div class="option hide-mobile">
         แสดง 
-        {{Math.min(selfFilteredRows.length, (selfPage - 1) * pp + 1)}} – 
-        {{Math.min(selfFilteredRows.length, selfPage * pp)}} จากทั้งหมด 
-        {{selfFilteredRows.length}} 
+        {{((getFilterStatus.limit * selfPage) - 9)}} – 
+        {{Math.min(getFilterStatus.totalDocs, selfPage * getFilterStatus.limit)}} จากทั้งหมด 
+        {{getFilterStatus.totalDocs}} 
         รายการ
       </div>
       <div class="option pr-2 show-mobile mobile-right">
-        แสดงทั้งหมด
-        {{Math.min(pp, selfFilteredRows.length - (selfPage - 1) * pp)}}
+        {{((getFilterStatus.limit * selfPage) - 9)}} – 
+        {{Math.min(getFilterStatus.totalDocs, selfPage * getFilterStatus.limit)}}
         รายการ
       </div>
       <div class="option pr-0">
@@ -76,7 +76,6 @@
       </div>
     </div>
   </div>
-
   <!-- Table -->
   <form action="/" method="GET" @submit="onSubmit">
     <div class="table-wrapper">
@@ -314,9 +313,13 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from 'vuex'
+import {ConditionSelectViewJob} from '../models/select-company';
+
 export default {
-  name: 'DataTable',
+  name: 'DataTable-JobRequest',
   props: {
+    tabActiveIndex: { type: Number, default: 0 },
     columns: { type: Array, default: [] },
     rows: { type: Array, default: [] },
     withOptions: { type: Boolean, default: true },
@@ -352,6 +355,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      fetchJobRequest: 'freight_forwarder/fetchJobRequest'
+    }),
     changePage(val) {
       this.clearEditing();
       this.selfPage += val;
@@ -360,6 +366,21 @@ export default {
       this.selfRows = this.selfFilteredRows.slice(
         (this.selfPage - 1) * this.pp, this.selfPage * this.pp
       );
+
+      let tempCondition = this.selfOrder.split('-')
+      // console.log(tempCondition[0])
+      // console.log(tempCondition[1])
+
+      if (tempCondition[1] == "asc"){
+        tempCondition[1] = "ascending"
+      } else {
+        tempCondition[1] = "descending"
+      }
+
+      let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString())
+      this.fetchJobRequest(temp_condition);
+
+
     },
     toggleGroup(index) {
       var that = this;
@@ -536,6 +557,45 @@ export default {
     if(this.orders.length){
       this.doOrder(this.orders[0].key);
     }
+  },
+  updated() {
+    this.selfPage = this.getFilterStatus.page
+    this.selfMaxPage = this.getFilterStatus.totalPages
+    if (this.tabActiveIndex == 0) {
+      this.selfRows = this.getJobRequest0
+      this.selfFilteredRows = this.getJobRequest0
+    } else if (this.tabActiveIndex == 1) {
+      this.selfRows = this.getJobRequest1
+      this.selfFilteredRows = this.getJobRequest1
+    } else if (this.tabActiveIndex == 2) {
+      this.selfRows = this.getJobRequest2
+      this.selfFilteredRows = this.getJobRequest2
+    } else if (this.tabActiveIndex == 3) {
+      this.selfRows = this.getJobRequest3
+      this.selfFilteredRows = this.getJobRequest3
+    } else if (this.tabActiveIndex == 4) {
+      this.selfRows = this.getJobRequest4
+      this.selfFilteredRows = this.getJobRequest4
+    } else if (this.tabActiveIndex == 5) {
+      this.selfRows = this.getJobRequest5
+      this.selfFilteredRows = this.getJobRequest5
+    }
+  },
+  computed: {
+    ...mapState({
+      testJob: 'freight_forwarder/overview'
+    }),
+    ...mapGetters({
+      getUser: 'auth/getUser',
+      getLoadingStatus: 'freight_forwarder/getLoadingStatus',
+      getJobRequest0: 'freight_forwarder/getJobRequest0',
+      getJobRequest1: 'freight_forwarder/getJobRequest1',
+      getJobRequest2: 'freight_forwarder/getJobRequest2',
+      getJobRequest3: 'freight_forwarder/getJobRequest3',
+      getJobRequest4: 'freight_forwarder/getJobRequest4',
+      getJobRequest5: 'freight_forwarder/getJobRequest5',
+      getFilterStatus: 'freight_forwarder/getFilterStatus',
+    })
   },
   emits: [ 
     'click-view', 'click-edit', 'click-delete', 

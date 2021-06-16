@@ -4,6 +4,7 @@ import {StatusCompany, FilterStatus} from '../models/select-company';
 import moment from 'moment';
 
 let temp_overview = new Overview(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+let temp_filterstatus = new FilterStatus(false, false, 10, 1, 1, 1, null, 1, 1, 1)
 
 export const freight_forwarder = {
     namespaced: true,
@@ -11,8 +12,8 @@ export const freight_forwarder = {
       message: 'Hello World!',
       overview: temp_overview,
       detailJob: null,
-      loading: true,
-      filterStatus: null
+      loading: false,
+      filterStatus: temp_filterstatus
     },
     actions: {
         fetchOverview({ commit }) {
@@ -30,14 +31,14 @@ export const freight_forwarder = {
               }
             );
         },
-        fetchJobRequest({ commit }, condition ){
-            commit('change_status_loading', true);
+        async fetchJobRequest({ commit }, condition ){
+            await commit('change_status_loading', true);
             // console.log('change_status_loading :', true)
-            CompanyService.ff_jobRequest(condition).then(
+            await CompanyService.ff_jobRequest(condition).then(
                 companys => {
                     // console.log('companys.data.docs :', companys.data.docs[0])
                     // console.log('status data :', companys.data.docs[0].status)
-                    console.log('companys.data.docs :', companys.data)  
+                    // console.log('companys.data.docs :', companys.data)  
 
                     var temp_array = []
 
@@ -198,9 +199,11 @@ export const freight_forwarder = {
 
                     commit('change_filterStatus', temp_filterstatus)
                     commit('change_status_loading', false)
+
+                    return ;
                 }
             )
-            return ;
+            
         },
         fetchJobDetail({ commit }, id) {
             CompanyService.ff_jobDetail(id).then(

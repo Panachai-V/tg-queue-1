@@ -17,6 +17,21 @@ export const ff_driver = {
           zipcode: null,
           status: null
       },
+      selfDriver: {
+        avatar: '',
+        username: '',
+        prefix: '',
+        firstname: '',
+        lastname: '',
+        phone: '',
+        email: '',
+        province: '',
+        address: '',
+        zipcode: '',
+        status: '',
+        password: '',
+        confPassword: ''
+    },
       loading: false
     },
     actions: {
@@ -45,6 +60,67 @@ export const ff_driver = {
                 error => {
                   console.log(error)
                   return Promise.reject(error);
+                }
+              );
+          },
+          editDriver({ state , commit }, id) {           
+            var formData = new FormData();
+            if (state.selfDriver.avatar) {
+                formData.append("avatar", state.selfDriver.avatar);
+            }
+            formData.append("password", state.selfDriver.password);
+            formData.append("status", state.selfDriver.status);
+            formData.append("prefix", state.selfDriver.prefix);
+            formData.append("firstname", state.selfDriver.firstname);
+            formData.append("lastname", state.selfDriver.lastname);
+            formData.append("phone", state.selfDriver.phone);
+            formData.append("address", state.selfDriver.address);
+            formData.append("province", state.selfDriver.province);
+            formData.append("zipcode", state.selfDriver.zipcode);
+            console.log('module id: ', id)
+            console.log('module fomrdata: ', formData)
+            return CompanyService.ffDriverEdit(id, formData).then(
+                respond => {
+                    return Promise.resolve(detail);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+              );
+          },
+          deleteDriver({ commit }, id) {
+              console.log('deleting')
+            return CompanyService.ffDriverDelete(id).then(
+                respond => {
+                    return Promise.resolve(detail);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+              );
+          },
+          createDriver({ state , commit }, formData) {
+            var formData = new FormData();
+            if (state.selfDriver.avatar) {
+                formData.append("avatar", state.selfDriver.avatar);
+            }
+            formData.append("username", state.selfDriver.username);
+            formData.append("email", state.selfDriver.email);
+            formData.append("password", state.selfDriver.password);
+            formData.append("status", state.selfDriver.status);
+            formData.append("prefix", state.selfDriver.prefix);
+            formData.append("firstname", state.selfDriver.firstname);
+            formData.append("lastname", state.selfDriver.lastname);
+            formData.append("phone", state.selfDriver.phone);
+            formData.append("address", state.selfDriver.address);
+            formData.append("province", state.selfDriver.province);
+            formData.append("zipcode", state.selfDriver.zipcode);
+            return CompanyService.ffDriverCreate(formData).then(
+                respond => {
+                    return Promise.resolve(detail);
+                },
+                error => {
+                    return Promise.reject(error);
                 }
               );
           }
@@ -84,6 +160,10 @@ export const ff_driver = {
             state.currentDriver.zipcode = driver.user_detail[0].zipcode
             state.currentDriver.status = driver.status
             console.log('driver is ',state.currentDriver)
+            state.selfDriver = {...state.currentDriver}
+            state.selfDriver.avatar = ''
+            state.selfDriver.password = '',
+            state.selfDriver.confPassword = ''
         },
         change_status_loading(state, input) {
             state.loading = input
@@ -95,6 +175,9 @@ export const ff_driver = {
         },
         getDetail(state) {
             return state.currentDriver
+        },
+        getSelfDriver(state) {
+            return state.selfDriver
         },
         get_status(state) {
             return state.loading
