@@ -54,7 +54,7 @@ import FormGroup from './FormGroup';
 import Button from './Button';
 import {mapGetters, mapActions} from "vuex"
 
-var socket = io.connect('http://localhost:8081');
+var socket = io.connect(process.env.VUE_APP_SERVERURL);
 
 // socket.on('recive-message', (data) => {
 //       console.log(data);
