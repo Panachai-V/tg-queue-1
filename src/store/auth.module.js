@@ -168,6 +168,18 @@ export const auth = {
     isAuthenticated(state) {
       return state.status.loggedIn
     },
+    isForwarder(state) {
+      return (state.user.role == "freight-forwarder")
+    },
+    isDriver(state) {
+      return (state.user.role == "driver")
+    },
+    isTgAdmin(state) {
+      return (state.user.role == "tg-admin")
+    },
+    isAdmin(state) {
+      return (state.user.role == "tg-admin")
+    },
     getLoadingStatus(state) {
       return state.loading
     }

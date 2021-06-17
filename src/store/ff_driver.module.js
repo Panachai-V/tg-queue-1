@@ -143,7 +143,8 @@ export const ff_driver = {
                   type: 'options',
                   view: { type: 'link', href: '/forwarder/driver-view/'+ driver._id },
                   edit: { type: 'link', href: '/forwarder/driver-edit/'+ driver._id }
-                }
+                },
+                id: driver._id
             }));
         },
         fetchDriver(state, driver) {
@@ -172,6 +173,15 @@ export const ff_driver = {
     getters: {
         getOverview(state) {
             return state.overview
+        },
+        getDriverList(state) {
+            var driverList = []
+            state.overview.forEach(driver => driverList.push({
+                value: driver.id, 
+                text: driver.prefix.text + driver.firstname.text + ' ' + driver.lastname.text
+            }))
+            console.log('driver list: ', driverList)
+            return driverList
         },
         getDetail(state) {
             return state.currentDriver

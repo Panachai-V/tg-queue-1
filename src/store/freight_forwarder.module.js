@@ -38,11 +38,12 @@ export const freight_forwarder = {
                 companys => {
                     // console.log('companys.data.docs :', companys.data.docs[0])
                     // console.log('status data :', companys.data.docs[0].status)
-                    // console.log('companys.data.docs :', companys.data)  
+                    //console.log('companys.data :', companys.data)  
 
                     var temp_array = []
 
                     for(let i = 0; i < companys.data.docs.length; i++){
+                        //console.log('companys.data.docs :', companys.data.docs[i])
 
                         var temp_data = companys.data.docs[i]
                         var temp_status = new StatusCompany()
@@ -205,11 +206,13 @@ export const freight_forwarder = {
             )
             
         },
-        fetchJobDetail({ commit }, id) {
+        fetchJobDetail({ state , commit }, id) {            
+            commit('change_status_loading', true)
             CompanyService.ff_jobDetail(id).then(
                 company => {
-                    commit('update_jobDetail', company)
-                    console.log(company)
+                    commit('update_jobDetail', company.data)
+                    commit('change_status_loading', false);
+                    console.log('job detail fetched',company.data)
                 }
             );
         }
