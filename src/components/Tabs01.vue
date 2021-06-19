@@ -27,11 +27,7 @@ export default {
     })
   },
   created() {
-    // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
-    if ( this.getUser.role == 'freight-forwarder'){
-      let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString())
-      this.fetchJobRequest(temp_condition);
-    }
+    
   },
   methods: {
     onClick(index) {
@@ -39,13 +35,21 @@ export default {
       // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
       if ( this.getUser.role == 'freight-forwarder'){
         let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString())
-        this.fetchJobRequest(temp_condition);
+        this.fetchJobRequest_FF(temp_condition);
+      }
+
+      if ( this.getUser.role == 'tg-admin'){
+        console.log('this.activeIndex :', this.activeIndex)
+        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString())
+        this.fetchJobRequest_Tg(temp_condition);
+        console.log('tabs01')
       }
 
       return this.$emit('clicked', index);
     },
     ...mapActions({
-      fetchJobRequest: 'freight_forwarder/fetchJobRequest',
+      fetchJobRequest_FF: 'freight_forwarder/fetchJobRequest',
+      fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest'
     })
   },
   emits: [ 'clicked' ]

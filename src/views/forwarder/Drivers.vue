@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <div data-aos="fade-up" data-aos-delay="150">
+        <div v-if="loadingStatus == false" data-aos="fade-up" data-aos-delay="150">
           <DataTable v-if="!loadingStatus"
             :rows="getOverview" 
             :columns="[
@@ -73,7 +73,7 @@
 import Topnav from '../../components/Topnav';
 import DataTable from '../../components/DataTable';
 import UserService from '../../services/user.service';
-import {mapGetters, mapActions} from "vuex"
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ForwarderDriversPage',
@@ -109,8 +109,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getOverview: 'driver/getOverview',
-      loadingStatus: 'driver/getLoadingStatus'
+      getOverview: 'ff_driver/getOverview',
+      loadingStatus: 'ff_driver/get_status'
     })
   },
   created() {
@@ -141,7 +141,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      driverOverview: 'driver/overview'
+      driverOverview: 'ff_driver/overview'
     })
   }
 }

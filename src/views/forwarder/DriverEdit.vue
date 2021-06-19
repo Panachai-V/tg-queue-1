@@ -3,7 +3,7 @@
 
   <section class="section-full">
     <div class="container">
-      <form action="/forwarder/drivers" method="GET" @submit="onSubmit">
+      <form action="/forwarder/drivers" v-if="loadingStatus == false" method="GET" @submit="onSubmit">
 
         <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
           <div class="btns mt-0">
@@ -50,7 +50,7 @@
             <div class="grid xl-10 lg-15 md-20 sm-30 xs-50">
               <FormGroup 
                 type="select" label="คำนำหน้า *" :required="true" 
-                :value="dataset.detail.prefix" @input="dataset.detail.prefix = $event" 
+                :value="getSelfDriver.prefix" @input="getSelfDriver.prefix = $event" 
                 :options="[
                   { value: 'นาย', text: 'นาย' },
                   { value: 'นาง', text: 'นาง' },
@@ -62,14 +62,14 @@
               <FormGroup 
                 type="text" label="ชื่อ *" placeholder="โปรดระบุ" 
                 :maxlength="64" :required="true" 
-                :value="dataset.detail.firstname" @input="dataset.detail.firstname = $event" 
+                :value="getSelfDriver.firstname" @input="getSelfDriver.firstname = $event" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="text" label="นามสกุล *" placeholder="โปรดระบุ" 
                 :maxlength="64" :required="true" 
-                :value="dataset.detail.lastname" @input="dataset.detail.lastname = $event" 
+                :value="getSelfDriver.lastname" @input="getSelfDriver.lastname = $event" 
               />
             </div>
             <div class="sep"></div>
@@ -78,12 +78,12 @@
               <FormGroup 
                 type="text" label="เบอร์โทรศัพท์ *" placeholder="โปรดระบุ" 
                 :maxlength="10" :required="true" 
-                :value="dataset.detail.phone" @input="dataset.detail.phone = $event" 
+                :value="getSelfDriver.phone" @input="getSelfDriver.phone = $event" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
-                type="file-image" label="รูปโปรไฟล์" 
+                type="file-image" label="รูปโปรไฟล์" name="avatar" @change="onFileSelected"
               />
             </div>
             <div class="sep"></div>
@@ -92,7 +92,7 @@
               <FormGroup 
                 type="textarea" label="ที่อยู่ *" placeholder="โปรดระบุ" 
                 :rows="3" :maxlength="128" :required="true" 
-                :value="dataset.detail.address" @input="dataset.detail.address = $event" 
+                :value="getSelfDriver.address" @input="getSelfDriver.address = $event" 
               />
             </div>
             <div class="sep"></div>
@@ -100,20 +100,17 @@
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="select" label="จังหวัด *" :required="true" placeholder="โปรดเลือก" 
-                :value="dataset.detail.province" 
-                @input="dataset.detail.province = $event" 
-                :options="[
-                  { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
-                  { value: 'สมุทรปราการ', text: 'สมุทรปราการ' }
-                ]"
+                :value="getSelfDriver.province" 
+                @input="getSelfDriver.province = $event" 
+                :options="provinces"
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="text" label="รหัสไปรษณีย์ *" :required="true" 
                 placeholder="โปรดระบุ" :minlength="5" :maxlength="5" 
-                :value="dataset.detail.zipcode" 
-                @input="dataset.detail.zipcode = $event" 
+                :value="getSelfDriver.zipcode" 
+                @input="getSelfDriver.zipcode = $event" 
               />
             </div>
           </div>
@@ -127,22 +124,22 @@
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="text" label="ชื่อผู้ใช้ *" placeholder="โปรดระบุ" :required="true" 
-                :value="dataset.username" @input="dataset.username = $event" 
+                :value="getSelfDriver.username" @input="getSelfDriver.username = $event" :disabled="true" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="email" label="อีเมล *" placeholder="โปรดระบุ" :required="true" 
-                :value="dataset.email" @input="dataset.email = $event" 
+                :value="getSelfDriver.email" @input="getSelfDriver.email = $event" :disabled="true" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="select" label="สถานะ *" placeholder="โปรดเลือก" 
-                :value="dataset.status" @input="dataset.status = $event" 
+                :value="getSelfDriver.status" @input="getSelfDriver.status = $event" 
                 :options="[
-                  { value: 1, text: 'เปิดใช้งาน' },
-                  { value: 0, text: 'ปิดใช้งาน' }
+                  { value: true, text: 'เปิดใช้งาน' },
+                  { value: false, text: 'ปิดใช้งาน' }
                 ]"
               />
             </div>
@@ -151,13 +148,13 @@
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="password" label="รหัสผ่าน *" placeholder="โปรดระบุ" 
-                :value="dataset.password" @input="dataset.password = $event" 
+                :value="getSelfDriver.password" @input="getSelfDriver.password = $event" 
               />
             </div>
             <div class="grid lg-30 md-40 sm-100">
               <FormGroup 
                 type="password" label="ยืนยันรหัสผ่าน *" placeholder="โปรดระบุ" 
-                :value="dataset.confPassword" @input="dataset.confPassword = $event" 
+                :value="getSelfDriver.confPassword" @input="getSelfDriver.confPassword = $event" 
               />
             </div>
           </div>
@@ -171,7 +168,7 @@
   <div class="popup-container" :class="{ 'active': isActivePopupDelete }">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupDelete = !isActivePopupDelete"></div>
-      <form action="/forwarder/drivers" method="GET" class="w-full">
+      <form action="/forwarder/drivers" method="GET" class="w-full" @submit="onSubmitDelete">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
@@ -221,6 +218,8 @@
 
 <script>
 import Topnav from '../../components/Topnav';
+import axios from 'axios';
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ForwarderDriverEditPage',
@@ -251,7 +250,7 @@ export default {
         }
       },
 
-      dataset: {
+      /*dataset: {
         id: null,
         role: 'Driver',
         username: 'Driver0001',
@@ -269,13 +268,67 @@ export default {
         password: '',
         confPassword: '',
         status: 1,
-      },
-
-      isActivePopupDelete: false
+      },*/
+      /*dataset: {
+        password: '',
+        confPassword: ''
+      },*/
+      isActivePopupDelete: false,
+      provinces: []
     }
+  },
+  computed: {
+    ...mapGetters({
+      getDetail: 'ff_driver/getDetail',
+      getSelfDriver: 'ff_driver/getSelfDriver',
+      loadingStatus: 'ff_driver/get_status'
+    })
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+    this.driverDetail(this.$route.params.id)
+    const response = axios.get('master-module/province').then(response => {
+      console.log('province: ', response.data)
+      for(let i in response.data){
+        this.provinces.push({ value: response.data[i].PROVINCE_NAME, text: response.data[i].PROVINCE_NAME })
+      }
+    });
+  },
+  methods: {
+    ...mapActions({
+      driverDetail: 'ff_driver/driverDetail',
+      editDriver: 'ff_driver/editDriver',
+      deleteDriver: 'ff_driver/deleteDriver',
+      loadingStatus: 'ff_driver/get_status'
+    }),
+    onFileSelected(event) {
+      this.getSelfDriver.avatar = event.target.files[0]
+    }, 
+    async onSubmit() {
+      console.log('before edit: ',this.getSelfDriver)
+      await this.editDriver(this.$route.params.id).then(
+        response => {
+          console.log('yes')
+        }, error => {
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      )
+    },
+    onSubmitDelete() {
+      this.deleteDriver(this.$route.params.id).then(
+        response => {
+
+        }, error => {
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      )
+    }
   }
 }
 </script>

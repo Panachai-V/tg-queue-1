@@ -130,7 +130,7 @@
   <div class="topnav-spacer"></div>
 
   <!-- Popup Profile -->
-  <div v-if="!isBottom" class="popup-container" :class="{ 'active': isActivePopupProfile }">
+  <div v-if="!isBottom && getLoadingStatus == false" class="popup-container" :class="{ 'active': isActivePopupProfile }">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupProfile = !isActivePopupProfile"></div>
       <form action="/" method="GET" class="w-full"  @submit.prevent="onSubmitProfile">
@@ -301,10 +301,7 @@
                   type="select" label="จังหวัด *" :required="true" placeholder="โปรดเลือก" 
                   :value="getSelfUserCompany.province" 
                   @input="getSelfUserCompany.province = $event" 
-                  :options="[
-                    { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
-                    { value: 'สมุทรปราการ', text: 'สมุทรปราการ' }
-                  ]"
+                  :options="provinces"
                 />
               </div>
               <div class="grid sm-50">
@@ -336,8 +333,9 @@
 import FormGroup from './FormGroup';
 import Button from './Button';
 import UserService from '../services/user.service';
+import axios from 'axios';
 import {mapGetters, mapActions} from "vuex"
-var socket = io.connect('http://localhost:8081');
+var socket = io.connect(process.env.VUE_APP_SERVERURL);
 
 export default {
   name: 'Topnav',
@@ -353,26 +351,39 @@ export default {
   },
   data() {
     return {
-      selfUser: {...this.user},
+      selfUser: {},
       isActivePopupProfile: false,
       isActivePopupPassword: false,
       isActivePopupCompany: false,
+      provinces: [],
       worngpwd: false
     }
   },
   created() {
-    this.getCompany()
-    console.log('detail: ', this.getUserDetail)
-    console.log('company: ', this.getUserCompany)
-    console.log('loading status: ', this.getLoadingStatus)
-    
-
-  if(this.getAuthenticated == true){
-      console.log("login already");
-      socket.emit('join-with-id', {
-        user_id: this.getUser.id,
-      });
+    if (this.isFreightForwarder() || this.isDriver() ) {
+      this.getCompany()
     }
+    this.selfUser.detail = { ...this.getUserDetail };
+
+    console.log('GetCompany :', this.isFreightForwarder() || this.isDriver() )
+    
+    console.log('detail: ', this.getUserDetail)
+    // console.log('company: ', this.getUserCompany)
+    console.log('loading status: ', this.getLoadingStatus)    
+
+    if(this.getAuthenticated == true){
+        console.log("login already");
+        socket.emit('join-with-id', {
+          user_id: this.getUser.id,
+        });
+      }
+      
+    const response = axios.get('master-module/province').then(response => {
+      // console.log('province: ', response.data)
+      for(let i in response.data){
+        this.provinces.push({ value: response.data[i].PROVINCE_NAME, text: response.data[i].PROVINCE_NAME })
+      }
+    });
     
   },
   mounted() {
@@ -385,7 +396,7 @@ export default {
     });
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     this.selfUser.detail = { ...this.getUserDetail };
-    
+    this.selfUser.avatar = ''
   },
   updated() {
     console.log('loading status: ', this.getLoadingStatus)
@@ -421,7 +432,7 @@ export default {
       }
     },
     isTGAdmin() {
-      if(this.getUser && this.getUser.role == 'TG Admin'){
+      if(this.getUser && this.getUser.role == 'tg-admin'){
         return true;
       }else{
         return false;

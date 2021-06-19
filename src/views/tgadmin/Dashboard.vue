@@ -23,31 +23,43 @@
           <div class="grids grid-mt">
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอคิวการรับ" :count="6" unit="งาน" 
+                label="Job Requests รอการ Matching" :count="getOverviewCompany.state_0" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอยืนยันคิว" :count="7" unit="งาน" 
+                label="Job Requests รอการจ่ายเงิน" :count="getOverviewCompany.state_1" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่กำลังดำเนินการ" :count="4" unit="งาน" 
+                label="Job Requests รอคิวการรับ" :count="getOverviewCompany.state_2" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="34" unit="งาน" 
+                label="Job Requests รอยืนยันคิว" :count="getOverviewCompany.state_3" unit="งาน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="sep"></div>
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
+                label="Job Requests ที่กำลังดำเนินการ" :count="getOverviewCompany.state_4" unit="งาน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
+                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="getOverviewCompany.state_5" unit="งาน" 
                 classer="no-hover"
               />
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -58,6 +70,7 @@
 <script>
 import Topnav from '../../components/Topnav';
 import SpecialCard03 from '../../components/SpecialCard03';
+import {mapGetters, mapActions, mapState} from "vuex"
 
 export default {
   name: 'TGAdminDashboardPage',
@@ -84,9 +97,22 @@ export default {
       }
     }
   },
+  created() {
+    this.fetchOverview()
+  },
+  computed: {
+    ...mapGetters({
+      getOverviewCompany: 'tgAdmin/getOverviewComapny',
+    })
+  },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     document.getElementById('color_style').href = '/assets/css/color-company.css';
+  },
+  methods: {
+    ...mapActions({
+      fetchOverview: 'tgAdmin/fetchOverview'
+    })
   }
 }
 </script>
