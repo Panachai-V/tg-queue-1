@@ -115,6 +115,9 @@ export default {
               if (this.getUser.role == "freight-forwarder") {
                 this.$router.push('/forwarder/dashboard');
               }
+              if (this.getUser.role == "tg-admin") {
+                this.$router.push('/tgadmin/dashboard');
+              }
             },
             error => {
               this.message =
