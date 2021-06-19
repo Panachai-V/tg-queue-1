@@ -81,7 +81,7 @@ export const ff_driver = {
             console.log('module fomrdata: ', formData)
             return CompanyService.ffDriverEdit(id, formData).then(
                 respond => {
-                    return Promise.resolve(detail);
+                    return Promise.resolve(respond);
                 },
                 error => {
                     return Promise.reject(error);

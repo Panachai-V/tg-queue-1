@@ -3,6 +3,7 @@
 
   <section class="section-full">
     <div class="container">
+      <!--<form v-if="loadingStatus == false" @submit="onSubmit">-->
       <form action="/forwarder/drivers" v-if="loadingStatus == false" method="GET" @submit="onSubmit">
 
         <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
@@ -304,11 +305,11 @@ export default {
     onFileSelected(event) {
       this.getSelfDriver.avatar = event.target.files[0]
     }, 
-    async onSubmit() {
+    onSubmit(e) {
       console.log('before edit: ',this.getSelfDriver)
-      await this.editDriver(this.$route.params.id).then(
+      this.editDriver(this.$route.params.id).then(
         response => {
-          console.log('yes')
+          console.log(response)
         }, error => {
           this.message =
             (error.response && error.response.data) ||
