@@ -50,14 +50,14 @@
       </div>
       <div class="option hide-mobile">
         แสดง 
-        {{((getFilterStatus.limit * selfPage) - 9)}} – 
-        {{Math.min(getFilterStatus.totalDocs, selfPage * getFilterStatus.limit)}} จากทั้งหมด 
-        {{getFilterStatus.totalDocs}} 
+        {{((selfFilterFromEachRole.limit * selfPage) - 9)}} – 
+        {{Math.min(selfFilterFromEachRole.totalDocs, selfPage * selfFilterFromEachRole.limit)}} จากทั้งหมด 
+        {{selfFilterFromEachRole.totalDocs}} 
         รายการ
       </div>
       <div class="option pr-2 show-mobile mobile-right">
-        {{((getFilterStatus.limit * selfPage) - 9)}} – 
-        {{Math.min(getFilterStatus.totalDocs, selfPage * getFilterStatus.limit)}}
+        {{((selfFilterFromEachRole.limit * selfPage) - 9)}} – 
+        {{Math.min(selfFilterFromEachRole.totalDocs, selfPage * selfFilterFromEachRole.limit)}}
         รายการ
       </div>
       <div class="option pr-0">
@@ -77,6 +77,8 @@
     </div>
   </div>
   <!-- Table -->
+
+  {{getJobRequest0_Tg}}
   <form action="/" method="GET" @submit="onSubmit">
     <div class="table-wrapper">
       <table class="table-section">
@@ -315,6 +317,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import {ConditionSelectViewJob} from '../models/select-company';
+import {StatusCompany, FilterStatus} from '../models/select-company';
 
 export default {
   name: 'DataTable-JobRequest',
@@ -351,12 +354,15 @@ export default {
 
       editing: false,
       editingIndex: null,
-      editData: {}
+      editData: {},
+
+      selfFilterFromEachRole: new FilterStatus(false, false, 10, 1, 1, 1, null, 1, 1, 1)
     }
   },
   methods: {
     ...mapActions({
-      fetchJobRequest: 'freight_forwarder/fetchJobRequest'
+      fetchJobRequest_FF: 'freight_forwarder/fetchJobRequest',
+      fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest'
     }),
     changePage(val) {
       this.clearEditing();
@@ -377,8 +383,13 @@ export default {
         tempCondition[1] = "descending"
       }
 
-      let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString())
-      this.fetchJobRequest(temp_condition);
+      if (this.isFreightForwarder()){
+        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString())
+        this.fetchJobRequest_FF(temp_condition);
+      } else if (this.isTGAdmin()){
+        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString())
+        this.fetchJobRequest_Tg(temp_condition);
+      }
 
 
     },
@@ -551,6 +562,34 @@ export default {
       }
       counter.value = result;
     },
+    isFreightForwarder() {
+      if(this.getUser && this.getUser.role == 'freight-forwarder'){
+        return true;
+      }else{
+        return false;
+      }
+    },
+    isDriver() {
+      if(this.getUser && this.getUser.role == 'driven'){
+        return true;
+      }else{
+        return false;
+      }
+    },
+    isTGAdmin() {
+      if(this.getUser && this.getUser.role == 'tg-admin'){
+        return true;
+      }else{
+        return false;
+      }
+    },
+    isAdmin() {
+      if(this.getUser && this.getUser.role == 'admin'){
+        return true;
+      }else{
+        return false;
+      }
+    },
   },
   created() {
     this.toggleGroup(-1);
@@ -559,42 +598,74 @@ export default {
     }
   },
   updated() {
-    this.selfPage = this.getFilterStatus.page
-    this.selfMaxPage = this.getFilterStatus.totalPages
-    if (this.tabActiveIndex == 0) {
-      this.selfRows = this.getJobRequest0
-      this.selfFilteredRows = this.getJobRequest0
-    } else if (this.tabActiveIndex == 1) {
-      this.selfRows = this.getJobRequest1
-      this.selfFilteredRows = this.getJobRequest1
-    } else if (this.tabActiveIndex == 2) {
-      this.selfRows = this.getJobRequest2
-      this.selfFilteredRows = this.getJobRequest2
-    } else if (this.tabActiveIndex == 3) {
-      this.selfRows = this.getJobRequest3
-      this.selfFilteredRows = this.getJobRequest3
-    } else if (this.tabActiveIndex == 4) {
-      this.selfRows = this.getJobRequest4
-      this.selfFilteredRows = this.getJobRequest4
-    } else if (this.tabActiveIndex == 5) {
-      this.selfRows = this.getJobRequest5
-      this.selfFilteredRows = this.getJobRequest5
+    if(this.isFreightForwarder()) {
+      this.selfFilterFromEachRole = this.getFilterStatus_FF
+      this.selfPage = this.getFilterStatus_FF.page
+      this.selfMaxPage = this.getFilterStatus_FF.totalPages
+      if (this.tabActiveIndex == 0) {
+        this.selfRows = this.getJobRequest0_FF
+        this.selfFilteredRows = this.getJobRequest0_FF
+      } else if (this.tabActiveIndex == 1) {
+        this.selfRows = this.getJobRequest1_FF
+        this.selfFilteredRows = this.getJobRequest1_FF
+      } else if (this.tabActiveIndex == 2) {
+        this.selfRows = this.getJobRequest2_FF
+        this.selfFilteredRows = this.getJobRequest2_FF
+      } else if (this.tabActiveIndex == 3) {
+        this.selfRows = this.getJobRequest3_FF
+        this.selfFilteredRows = this.getJobRequest3_FF
+      } else if (this.tabActiveIndex == 4) {
+        this.selfRows = this.getJobRequest4_FF
+        this.selfFilteredRows = this.getJobRequest4_FF
+      } else if (this.tabActiveIndex == 5) {
+        this.selfRows = this.getJobRequest5_FF
+        this.selfFilteredRows = this.getJobRequest5_FF
+      }
     }
+    if (this.isTGAdmin()) {
+      this.selfFilterFromEachRole = this.getFilterStatus_Tg
+      this.selfPage = this.getFilterStatus_Tg.page
+      this.selfMaxPage = this.getFilterStatus_Tg.totalPages
+      if (this.tabActiveIndex == 0) {
+        this.selfRows = this.getJobRequest0_Tg
+        this.selfFilteredRows = this.getJobRequest0_Tg
+      } else if (this.tabActiveIndex == 1) {
+        this.selfRows = this.getJobRequest0_Tg
+        this.selfFilteredRows = this.getJobRequest0_Tg
+      } else if (this.tabActiveIndex == 2) {
+        this.selfRows = this.getJobRequest2_Tg
+        this.selfFilteredRows = this.getJobRequest2_Tg
+      } else if (this.tabActiveIndex == 3) {
+        this.selfRows = this.getJobRequest3_Tg
+        this.selfFilteredRows = this.getJobRequest3_Tg
+      } else if (this.tabActiveIndex == 4) {
+        this.selfRows = this.getJobRequest4_Tg
+        this.selfFilteredRows = this.getJobRequest4_Tg
+      } else if (this.tabActiveIndex == 5) {
+        this.selfRows = this.getJobRequest5_Tg
+        this.selfFilteredRows = this.getJobRequest5_Tg
+      }
+    }
+    
   },
   computed: {
-    ...mapState({
-      testJob: 'freight_forwarder/overview'
-    }),
     ...mapGetters({
       getUser: 'auth/getUser',
-      getLoadingStatus: 'freight_forwarder/getLoadingStatus',
-      getJobRequest0: 'freight_forwarder/getJobRequest0',
-      getJobRequest1: 'freight_forwarder/getJobRequest1',
-      getJobRequest2: 'freight_forwarder/getJobRequest2',
-      getJobRequest3: 'freight_forwarder/getJobRequest3',
-      getJobRequest4: 'freight_forwarder/getJobRequest4',
-      getJobRequest5: 'freight_forwarder/getJobRequest5',
-      getFilterStatus: 'freight_forwarder/getFilterStatus',
+      getJobRequest0_FF: 'freight_forwarder/getJobRequest0',
+      getJobRequest1_FF: 'freight_forwarder/getJobRequest1',
+      getJobRequest2_FF: 'freight_forwarder/getJobRequest2',
+      getJobRequest3_FF: 'freight_forwarder/getJobRequest3',
+      getJobRequest4_FF: 'freight_forwarder/getJobRequest4',
+      getJobRequest5_FF: 'freight_forwarder/getJobRequest5',
+      getFilterStatus_FF: 'freight_forwarder/getFilterStatus',
+
+      getJobRequest0_Tg: 'tgAdmin/getJobRequest0',
+      getJobRequest1_Tg: 'tgAdmin/getJobRequest1',
+      getJobRequest2_Tg: 'tgAdmin/getJobRequest2',
+      getJobRequest3_Tg: 'tgAdmin/getJobRequest3',
+      getJobRequest4_Tg: 'tgAdmin/getJobRequest4',
+      getJobRequest5_Tg: 'tgAdmin/getJobRequest5',
+      getFilterStatus_Tg: 'tgAdmin/getFilterStatus',
     })
   },
   emits: [ 

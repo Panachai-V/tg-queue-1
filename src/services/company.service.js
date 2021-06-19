@@ -42,6 +42,16 @@ class CompanyService {
     driver_jobRequest(jobID) {
         return axios.get(`driver/:${jobID}`, { headers: authHeader() })
     }
+
+    tgadmin_Dashboard() {
+        return axios.get('tgadmin/overview', { headers: authHeader() })
+    }
+
+    tgadmin_jobRequest(condition) {
+        // console.log('getting count each job...')
+        console.log('search filter :', condition)
+        return axios.get(`tgadmin/all/?page=${condition.page}&limit=${condition.limit}&sort_by=${condition.sort_by}&order=${condition.order}&status=${condition.status}`, { headers: authHeader() })
+    }
 }
 
 export default new CompanyService();

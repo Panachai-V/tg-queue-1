@@ -6,11 +6,10 @@ import moment from 'moment';
 let temp_overview = new Overview(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 let temp_filterstatus = new FilterStatus(false, false, 10, 1, 1, 1, null, 1, 1, 1)
 
-export const freight_forwarder = {
+export const tgAdmin = {
     namespaced: true,
     state: {
-      message: 'Hello World!',
-      overview: temp_overview,
+        overview: temp_overview,
       detailJob: null,
       loading: false,
       filterStatus: temp_filterstatus
@@ -18,9 +17,10 @@ export const freight_forwarder = {
     actions: {
         fetchOverview({ commit }) {
             commit('change_status_loading', true);
-            CompanyService.ff_Dashboard().then(
+            CompanyService.tgadmin_Dashboard().then(
               companys => {
                 commit('update_overview', companys)
+                console.log(companys)
                 commit('change_status_loading', false)
                 return ;
               },
@@ -34,7 +34,7 @@ export const freight_forwarder = {
         async fetchJobRequest({ commit }, condition ){
             await commit('change_status_loading', true);
             // console.log('change_status_loading :', true)
-            await CompanyService.ff_jobRequest(condition).then(
+            await CompanyService.tgadmin_jobRequest(condition).then(
                 companys => {
                     // console.log('companys.data.docs :', companys.data.docs[0])
                     // console.log('status data :', companys.data.docs[0].status)
@@ -136,7 +136,7 @@ export const freight_forwarder = {
                             return r;
                         }, {})
                         
-                        // console.log('result :', result)
+                        console.log('result :', result)
 
                         temp_array.push(result)
                     }
@@ -182,84 +182,74 @@ export const freight_forwarder = {
             )
             
         },
-        fetchJobDetail({ state , commit }, id) {            
-            commit('change_status_loading', true)
-            CompanyService.ff_jobDetail(id).then(
-                company => {
-                    commit('update_jobDetail', company.data)
-                    commit('change_status_loading', false);
-                    console.log('job detail fetched',company.data)
-                }
-            );
-        }
     },
     mutations: {
-        update_overview(state, data_detail){
-            state.overview.state_0 = data_detail.data.status0
-            state.overview.state_1 = data_detail.data.status1
-            state.overview.state_2 = data_detail.data.status2
-            state.overview.state_3 = data_detail.data.status3
-            state.overview.state_4 = data_detail.data.status4
-            state.overview.state_5 = data_detail.data.status5
-        },
-        change_status_loading(state, input) {
-            state.loading = input
-        },
-        update_job_request_0(state, input) {
-            state.overview.job_detail_0 = input
-        },
-        update_job_request_1(state, input) {
-            state.overview.job_detail_1 = input
-        },
-        update_job_request_2(state, input) {
-            state.overview.job_detail_2 = input
-        },
-        update_job_request_3(state, input) {
-            state.overview.job_detail_3 = input
-        },
-        update_job_request_4(state, input) {
-            state.overview.job_detail_4 = input
-        },
-        update_job_request_5(state, input) {
-            state.overview.job_detail_5 = input
-        },
-        update_jobDetail(state, input) {
-            state.detailJob = input
-        },
-        change_filterStatus(state, input) {
-            state.filterStatus = input
-        }
+      update_overview(state, data_detail){
+        state.overview.state_0 = data_detail.data.status0
+        state.overview.state_1 = data_detail.data.status1
+        state.overview.state_2 = data_detail.data.status2
+        state.overview.state_3 = data_detail.data.status3
+        state.overview.state_4 = data_detail.data.status4
+        state.overview.state_5 = data_detail.data.status5
+      },
+      change_status_loading(state, input) {
+          state.loading = input
+      },
+      update_job_request_0(state, input) {
+          state.overview.job_detail_0 = input
+      },
+      update_job_request_1(state, input) {
+          state.overview.job_detail_1 = input
+      },
+      update_job_request_2(state, input) {
+          state.overview.job_detail_2 = input
+      },
+      update_job_request_3(state, input) {
+          state.overview.job_detail_3 = input
+      },
+      update_job_request_4(state, input) {
+          state.overview.job_detail_4 = input
+      },
+      update_job_request_5(state, input) {
+          state.overview.job_detail_5 = input
+      },
+      update_jobDetail(state, input) {
+          state.detailJob = input
+      },
+      change_filterStatus(state, input) {
+          state.filterStatus = input
+      }
     },
     getters: {
-        getOverviewComapny(state) {
-            return state.overview
-        },
-        getLoadingStatus(state) {
-            return state.loading
-        },
-        getJobRequest0(state) {
-            return state.overview.job_detail_0
-        },
-        getJobRequest1(state) {
-            return state.overview.job_detail_1
-        },
-        getJobRequest2(state) {
-            return state.overview.job_detail_2
-        },
-        getJobRequest3(state) {
-            return state.overview.job_detail_3
-        },
-        getJobRequest4(state) {
-            return state.overview.job_detail_4
-        },
-        getJobRequest5(state) {
-            return state.overview.job_detail_5
-        },
-        getDetailJob(state) {
-            return state.detailJob
-        },
-        getFilterStatus(state) {
-            return state.filterStatus
-        }
+      getOverviewComapny(state) {
+        return state.overview
+      },
+      getLoadingStatus(state) {
+          return state.loading
+      },
+      getJobRequest0(state) {
+          return state.overview.job_detail_0
+      },
+      getJobRequest1(state) {
+          return state.overview.job_detail_1
+      },
+      getJobRequest2(state) {
+          return state.overview.job_detail_2
+      },
+      getJobRequest3(state) {
+          return state.overview.job_detail_3
+      },
+      getJobRequest4(state) {
+          return state.overview.job_detail_4
+      },
+      getJobRequest5(state) {
+          return state.overview.job_detail_5
+      },
+      getDetailJob(state) {
+          return state.detailJob
+      },
+      getFilterStatus(state) {
+          return state.filterStatus
+      }
     }
 }

@@ -360,9 +360,15 @@ export default {
     }
   },
   created() {
-    this.getCompany()
+    if (this.isFreightForwarder() || this.isDriver() ) {
+      this.getCompany()
+    }
+    this.selfUser.detail = { ...this.getUserDetail };
+
+    console.log('GetCompany :', this.isFreightForwarder() || this.isDriver() )
+    
     console.log('detail: ', this.getUserDetail)
-    console.log('company: ', this.getUserCompany)
+    // console.log('company: ', this.getUserCompany)
     console.log('loading status: ', this.getLoadingStatus)    
 
     if(this.getAuthenticated == true){
@@ -373,7 +379,7 @@ export default {
       }
       
     const response = axios.get('master-module/province').then(response => {
-      console.log('province: ', response.data)
+      // console.log('province: ', response.data)
       for(let i in response.data){
         this.provinces.push({ value: response.data[i].PROVINCE_NAME, text: response.data[i].PROVINCE_NAME })
       }
@@ -391,7 +397,6 @@ export default {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     this.selfUser.detail = { ...this.getUserDetail };
     this.selfUser.avatar = ''
-    
   },
   updated() {
     console.log('loading status: ', this.getLoadingStatus)
@@ -427,7 +432,7 @@ export default {
       }
     },
     isTGAdmin() {
-      if(this.getUser && this.getUser.role == 'TG Admin'){
+      if(this.getUser && this.getUser.role == 'tg-admin'){
         return true;
       }else{
         return false;
