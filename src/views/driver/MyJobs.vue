@@ -92,7 +92,7 @@
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Tabs01 from '../../components/Tabs01';
-import DataTable from '../../components/DataTable-JobRequest';
+import DataTable from '../../components/DataTable-JobRequest-ff';
 import UserService from '../../services/user.service';
 import { mapState, mapGetters, mapActions } from 'vuex'
 import {ConditionSelectViewJob} from '../../models/select-company';
@@ -138,12 +138,6 @@ export default {
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
-
-    // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
-    if ( this.getUser.role == 'freight-forwarder'){
-      let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex).toString())
-      this.fetchJobRequest(temp_condition);
-    }
     document.getElementById('color_style').href = '/assets/css/color-driver.css';
     for(var i=0; i<4; i++){
       this.rows1.push({
@@ -187,6 +181,10 @@ export default {
         }
       });
     }
+    
+    // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
+    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex).toString())
+    this.fetchJobRequest(temp_condition);
   },
   methods: {
     formatNumber(value, digits=2) {
@@ -195,7 +193,10 @@ export default {
     },
     formatDate(value, format='YYYYMMDD') {
       return moment(String(value)).format(format);
-    }
+    },
+    ...mapActions({
+      fetchJobRequest: 'driver/fetchJobRequest'
+    })
   }
 }
 </script>

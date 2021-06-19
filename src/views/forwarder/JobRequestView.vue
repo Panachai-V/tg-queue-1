@@ -100,8 +100,18 @@
               </div>
               <div class="grid xl-25 lg-30 sm-50">
                 <FormGroupTrucks
-                  :required="true" :value="getDetailJob.truckNumber" 
-                  @input="getDetailJob.truckNumber = $event" 
+                  :required="true" :value="[
+                  { 
+                    number: getDetailJob.truckNumber, 
+                    numberOfPieces: getDetailJob.numberOfPieces 
+                  }
+                ]" 
+                  @input="[
+                  { 
+                    number: getDetailJob.truckNumber, 
+                    numberOfPieces: getDetailJob.numberOfPieces 
+                  }
+                ] = $event" 
                 />
               </div>
               <div class="grid xl-20 lg-25 sm-50">
@@ -131,7 +141,12 @@
             </div>
             <div class="grid xl-25 lg-30 sm-50">
               <FormGroupTrucks
-                type="plain" :value="getDetailJob.truckNumber" 
+                type="plain" :value="[
+                  { 
+                    number: getDetailJob.truckNumber, 
+                    numberOfPieces: getDetailJob.numberOfPieces 
+                  }
+                ]" 
               />
             </div>
             <div class="grid xl-20 lg-25 sm-50">
