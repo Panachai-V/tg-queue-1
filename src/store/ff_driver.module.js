@@ -128,24 +128,28 @@ export const ff_driver = {
     mutations: {
         fetchOverview(state, allDriver) {
             console.log('allDriver',allDriver)
-            allDriver.forEach(driver => state.overview.push({
-                avatar: { type: 'avatar', text: 'data:image/png;base64,' + driver.avatar[0].value },
-                username: { text: driver.username },
-                prefix: { text: driver.user_detail[0].prefix },
-                firstname: { text: driver.user_detail[0].firstname },
-                lastname: { text: driver.user_detail[0].lastname },
-                phone: { text: driver.user_detail[0].phone },
-                email: { text: driver.email },
-                status: driver.status ? 
-                    { type: 'tag', value: 1, text: 'เปิดใช้งาน', classer: 'ss-tag-success' } :
-                    { type: 'tag', value: 0, text: 'ปิดใช้งาน', classer: 'ss-tag-danger' },
-                options: {
-                  type: 'options',
-                  view: { type: 'link', href: '/forwarder/driver-view/'+ driver._id },
-                  edit: { type: 'link', href: '/forwarder/driver-edit/'+ driver._id }
-                },
-                id: driver._id
-            }));
+            allDriver.forEach(driver => 
+                {if (driver.avatar[0]) {
+                    state.overview.push({
+                        avatar: { type: 'avatar', text: 'data:image/png;base64,' + driver.avatar[0].value },
+                        username: { text: driver.username },
+                        prefix: { text: driver.user_detail[0].prefix },
+                        firstname: { text: driver.user_detail[0].firstname },
+                        lastname: { text: driver.user_detail[0].lastname },
+                        phone: { text: driver.user_detail[0].phone },
+                        email: { text: driver.email },
+                        status: driver.status ? 
+                            { type: 'tag', value: 1, text: 'เปิดใช้งาน', classer: 'ss-tag-success' } :
+                            { type: 'tag', value: 0, text: 'ปิดใช้งาน', classer: 'ss-tag-danger' },
+                        options: {
+                        type: 'options',
+                        view: { type: 'link', href: '/forwarder/driver-view/'+ driver._id },
+                        edit: { type: 'link', href: '/forwarder/driver-edit/'+ driver._id }
+                        },
+                        id: driver._id
+                    })
+                }}
+            );
         },
         fetchDriver(state, driver) {
             console.log('driver is ',driver)

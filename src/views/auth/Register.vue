@@ -307,9 +307,7 @@ export default {
     },
     onSubmitStep() {
       console.log(this.datasetCompany.taxId)
-      const response = axios.post('auth/companydetail_ifexist' , {
-          taxid: this.datasetCompany.taxId,
-        }, {
+      const response = axios.get('auth/companydetail_ifexist/' + this.datasetCompany.taxId , {
           headers: {
             'Access-Control-Allow-Origin' : '*',
             "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
@@ -377,7 +375,8 @@ export default {
         if (this.dataset.username && this.dataset.email && this.dataset.password && this.dataset.confPassword) {
           this.$store.dispatch('auth/register', regisUser).then(
             () => {
-              this.$router.push('/auth/signin');
+              console.log('signed up')
+              //this.$router.push('/auth/signin');
             },
             error => {
               this.message =
