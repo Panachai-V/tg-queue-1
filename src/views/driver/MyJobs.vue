@@ -22,11 +22,12 @@
             :tabs="[ 'กำลังดำเนินการ', 'ดำเนินการเสร็จสิ้น' ]" 
           />
         </div>
-        <div class="tab-contents" data-aos="fade-up" data-aos-delay="150">
+        <div class="tab-contents" v-if="getLoadingStatus == false" data-aos="fade-up" data-aos-delay="150">
           
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable 
-              :rows="rows1" 
+              :tabActiveIndex="tabActiveIndex"
+              :rows="getJobRequest4" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
@@ -53,9 +54,10 @@
             />
           </div>
           
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
+          <div class="tab-content" v-if="getLoadingStatus == false" :class="{ 'active': tabActiveIndex == 1 }">
             <DataTable 
-              :rows="rows2" 
+              :tabActiveIndex="tabActiveIndex"
+              :rows="getJobRequest5" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
@@ -133,6 +135,15 @@ export default {
       rows2: []
     }
   },
+  computed: {
+    ...mapGetters({
+      getOverview: 'driver/getOverviewComapny',
+      getLoadingStatus: 'driver/getLoadingStatus',
+      getJobRequest4: 'driver/getJobRequest4',
+      getJobRequest5: 'driver/getJobRequest5',
+      getFilterStatus: 'driver/getFilterStatus'
+    })
+  },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
   },
@@ -183,8 +194,10 @@ export default {
     }
     
     // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
-    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex).toString())
+    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex + 4).toString())
     this.fetchJobRequest(temp_condition);
+    console.log('over: ',this.getOverview)
+    console.log('getJobRequest4: ', this.getJobRequest4)
   },
   methods: {
     formatNumber(value, digits=2) {

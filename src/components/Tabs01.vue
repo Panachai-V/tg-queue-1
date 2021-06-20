@@ -45,11 +45,19 @@ export default {
         console.log('tabs01')
       }
 
+      if ( this.getUser.role == 'driver'){
+        console.log('this.activeIndex :', this.activeIndex)
+        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex+4).toString())
+        this.fetchJobRequest_driver(temp_condition);
+        console.log('tabs01')
+      }
+
       return this.$emit('clicked', index);
     },
     ...mapActions({
       fetchJobRequest_FF: 'freight_forwarder/fetchJobRequest',
-      fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest'
+      fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest',
+      fetchJobRequest_driver: 'driver/fetchJobRequest'
     })
   },
   emits: [ 'clicked' ]

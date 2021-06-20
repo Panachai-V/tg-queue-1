@@ -49,7 +49,7 @@ export const driver = {
                                 r[e] = {}
                                 r[e]["type"] = "link"
                                 r[e]["text"] = temp_data['awbNumber']
-                                r[e]["href"] = "/forwarder/job-request-view/" + temp_data['_id']
+                                r[e]["href"] = "/driver/my-job-view/" + temp_data['_id']
                             }
         
                             if (e == "customsEntryNumber"){
@@ -81,7 +81,7 @@ export const driver = {
                                 r[e] = {}
                                 r[e]["type"] = "options"
                                 r[e]["view"] = {}
-                                r[e]["view"]["href"] = "/forwarder/job-request-view/" + temp_data['_id']
+                                r[e]["view"]["href"] = "/driver/my-job-view/" + temp_data['_id']
                                 r[e]["view"]["type"] = "link"
                             }
 
@@ -125,7 +125,7 @@ export const driver = {
 
                         temp_array.push(result)
                     }
-                    
+                    console.log('companys.data.docs[0]: ',companys)
                     if ( companys.data.docs[0].status == 0 ){
                         commit('update_job_request_0', temp_array);
 
@@ -166,6 +166,29 @@ export const driver = {
                 }
             )
             
+        },
+        fetchJobDetail({ state , commit }, id) {            
+            commit('change_status_loading', true)
+            DriverService.jobDetail(id).then(
+                company => {
+                    var data = company.data
+                    if (data.pickupTimeHours.length < 2 && data.pickupTimeHours != '-') {
+                        data.pickupTimeHours = '0' + data.pickupTimeHours
+                    }
+                    if (data.pickupTimeMinutes.length < 2 && data.pickupTimeMinutes != '-') {
+                        data.pickupTimeMinutes = '0' + data.pickupTimeMinutes
+                    }
+                    if (data.confPickupTimeHours.length < 2 && data.confPickupTimeHours != '-') {
+                        data.confPickupTimeHours = '0' + data.confPickupTimeHours
+                    }
+                    if (data.confPickupTimeMinutes.length < 2 && data.confPickupTimeMinutes != '-') {
+                        data.confPickupTimeMinutes = '0' + data.confPickupTimeMinutes
+                    }
+                    commit('update_jobDetail', data)
+                    commit('change_status_loading', false);
+                    console.log('job detail fetched',data)
+                }
+            );
         }
     },
     mutations: {
@@ -213,21 +236,27 @@ export const driver = {
             return state.loading
         },
         getJobRequest0(state) {
+            console.log('getting job_0')
             return state.overview.job_detail_0
         },
         getJobRequest1(state) {
+            console.log('getting job_1')
             return state.overview.job_detail_1
         },
         getJobRequest2(state) {
+            console.log('getting job_2')
             return state.overview.job_detail_2
         },
         getJobRequest3(state) {
+            console.log('getting job_3')
             return state.overview.job_detail_3
         },
         getJobRequest4(state) {
+            console.log('getting job_4')
             return state.overview.job_detail_4
         },
         getJobRequest5(state) {
+            console.log('getting job_5')
             return state.overview.job_detail_5
         },
         getDetailJob(state) {
