@@ -78,7 +78,7 @@
   </div>
   <!-- Table -->
 
-  {{getJobRequest0_Tg}}
+  <!-- {{getJobRequest0_driver}} -->
   <form action="/" method="GET" @submit="onSubmit">
     <div class="table-wrapper">
       <table class="table-section">
@@ -362,9 +362,11 @@ export default {
   methods: {
     ...mapActions({
       fetchJobRequest_FF: 'freight_forwarder/fetchJobRequest',
+      fetchJobRequest_driver: 'driver/fetchJobRequest',
       fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest'
     }),
     changePage(val) {
+      console.log('page change')
       this.clearEditing();
       this.selfPage += val;
       this.selfPage = Math.max(1, this.selfPage);
@@ -389,6 +391,9 @@ export default {
       } else if (this.isTGAdmin()){
         let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString())
         this.fetchJobRequest_Tg(temp_condition);
+      } else if (this.isDriver()){
+        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex+4).toString())
+        this.fetchJobRequest_driver(temp_condition);
       }
 
 
@@ -570,7 +575,8 @@ export default {
       }
     },
     isDriver() {
-      if(this.getUser && this.getUser.role == 'driven'){
+      if(this.getUser && this.getUser.role == 'driver'){
+        console.log('i am driver')
         return true;
       }else{
         return false;
@@ -590,12 +596,40 @@ export default {
         return false;
       }
     },
+    getDriverFilter() {
+      if (this.isDriver()) {
+        console.log('getFilterStatus_driver: ', this.getFilterStatus_driver)
+        this.selfFilterFromEachRole = this.getFilterStatus_driver
+        this.selfPage = this.getFilterStatus_driver.page
+        this.selfMaxPage = this.getFilterStatus_driver.totalPages
+        if (this.tabActiveIndex + 4 == 0) {
+          this.selfRows = this.getJobRequest0_driver
+          this.selfFilteredRows = this.getJobRequest0_driver
+        } else if (this.tabActiveIndex + 4 == 1) {
+          this.selfRows = this.getJobRequest0_driver
+          this.selfFilteredRows = this.getJobRequest0_driver
+        } else if (this.tabActiveIndex + 4 == 2) {
+          this.selfRows = this.getJobRequest2_driver
+          this.selfFilteredRows = this.getJobRequest2_driver
+        } else if (this.tabActiveIndex + 4 == 3) {
+          this.selfRows = this.getJobRequest3_driver
+          this.selfFilteredRows = this.getJobRequest3_driver
+        } else if (this.tabActiveIndex + 4 == 4) {
+          this.selfRows = this.getJobRequest4_driver
+          this.selfFilteredRows = this.getJobRequest4_driver
+        } else if (this.tabActiveIndex == 5) {
+          this.selfRows = this.getJobRequest5_driver
+          this.selfFilteredRows = this.getJobRequest5_driver
+        }
+      }
+    }
   },
   created() {
     this.toggleGroup(-1);
     if(this.orders.length){
       this.doOrder(this.orders[0].key);
     }
+    this.getDriverFilter()
   },
   updated() {
     if(this.isFreightForwarder()) {
@@ -646,7 +680,8 @@ export default {
         this.selfFilteredRows = this.getJobRequest5_Tg
       }
     }
-    
+
+    this.getDriverFilter()
   },
   computed: {
     ...mapGetters({
@@ -666,6 +701,14 @@ export default {
       getJobRequest4_Tg: 'tgAdmin/getJobRequest4',
       getJobRequest5_Tg: 'tgAdmin/getJobRequest5',
       getFilterStatus_Tg: 'tgAdmin/getFilterStatus',
+
+      getJobRequest0_driver: 'driver/getJobRequest0',
+      getJobRequest1_driver: 'driver/getJobRequest1',
+      getJobRequest2_driver: 'driver/getJobRequest2',
+      getJobRequest3_driver: 'driver/getJobRequest3',
+      getJobRequest4_driver: 'driver/getJobRequest4',
+      getJobRequest5_driver: 'driver/getJobRequest5',
+      getFilterStatus_driver: 'driver/getFilterStatus',
     })
   },
   emits: [ 
