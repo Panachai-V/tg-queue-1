@@ -171,9 +171,22 @@ export const driver = {
             commit('change_status_loading', true)
             DriverService.jobDetail(id).then(
                 company => {
-                    commit('update_jobDetail', company.data)
+                    var data = company.data
+                    if (data.pickupTimeHours.length < 2 && data.pickupTimeHours != '-') {
+                        data.pickupTimeHours = '0' + data.pickupTimeHours
+                    }
+                    if (data.pickupTimeMinutes.length < 2 && data.pickupTimeMinutes != '-') {
+                        data.pickupTimeMinutes = '0' + data.pickupTimeMinutes
+                    }
+                    if (data.confPickupTimeHours.length < 2 && data.confPickupTimeHours != '-') {
+                        data.confPickupTimeHours = '0' + data.confPickupTimeHours
+                    }
+                    if (data.confPickupTimeMinutes.length < 2 && data.confPickupTimeMinutes != '-') {
+                        data.confPickupTimeMinutes = '0' + data.confPickupTimeMinutes
+                    }
+                    commit('update_jobDetail', data)
                     commit('change_status_loading', false);
-                    console.log('job detail fetched',company.data)
+                    console.log('job detail fetched',data)
                 }
             );
         }
