@@ -84,6 +84,9 @@ export default {
       if (this.getUser.role == "tg-admin") {
         this.$router.push('/tgadmin/dashboard');
       }
+      if (this.getUser.role == "admin") {
+        this.$router.push('/admin');
+      }
     }
   },
   data() {
@@ -117,6 +120,9 @@ export default {
               }
               if (this.getUser.role == "tg-admin") {
                 this.$router.push('/tgadmin/dashboard');
+              }
+              if (this.getUser.role == "admin") {
+                this.$router.push('/admin');
               }
             },
             error => {

@@ -2,7 +2,7 @@
   <Topnav :user="user" :activeIndex="topnavActiveIndex" />
 
   <section class="section-full">
-    <div class="container">
+    <div class="container" v-if="getLoadingStatus == false">
 
       <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
@@ -42,10 +42,10 @@
         <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
           <div class="grids">
             <div class="grid md-1-3 sm-50 xs-50">
-              <FormGroup  type="plain" label="ระดับความพอใจ" :value="jobRequest.rating" />
+              <FormGroup  type="plain" label="ระดับความพอใจ" :value="getDetailJob.rating" />
             </div>
             <div class="grid md-2-3 sm-100">
-              <FormGroup  type="plain" label="คำแนะนำ" :value="jobRequest.comment" />
+              <FormGroup  type="plain" label="คำแนะนำ" :value="getDetailJob.comment" />
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@
           <div class="grids">
             <div class="grid xl-30 lg-1-3 sm-50">
               <FormGroup 
-                type="plain" label="ผู้ขับรถ" :value="getDetailJob.driver[0].username"
+                type="plain" label="ผู้ขับรถ" :value="getDetailJob.driver[0].user_detail[0].prefix + getDetailJob.driver[0].user_detail[0].firstname + ' ' + getDetailJob.driver[0].user_detail[0].lastname"
               />
             </div>
             <div class="grid xl-25 lg-30 sm-50">
@@ -78,19 +78,15 @@
                   ? getDetailJob.confPickupTimeHours+'.'+getDetailJob.confPickupTimeMinutes+' น.': ''"
               />
             </div>
-            <div v-if="getDetailJob.status < 5" class="grid sm-100">
+            <!-- <div v-if="getDetailJob.status < 5" class="grid sm-100">
               <div class="btns d-flex mt-0">
-                <!-- <Button 
-                  v-if="stepActiveIndex > 3" text="ย้อนกลับ" href="javascript:" 
-                  classer="btn-color-11" @click="stepActiveIndex -= 1"
-                /> -->
                 <Button 
                   :text="'รับสินค้าแล้ว'" 
                   href="javascript:" 
                   classer="btn-color-01 ml-auto" 
                   @click="onSubmit"
                 />
-                <!-- <Button 
+                <Button 
                   :text="
                     stepActiveIndex == 2 ?
                       'ชำระเงินแล้ว' :
@@ -101,9 +97,9 @@
                             'จัดส่งสินค้าแล้ว'
                   " href="javascript:" 
                   classer="btn-color-01 ml-auto" @click="stepActiveIndex += 1"
-                /> -->
+                />
               </div>
-            </div>
+            </div> -->
           </div>
           <!-- <div class="mt-6">
             <Step01 

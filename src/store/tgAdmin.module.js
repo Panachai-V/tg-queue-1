@@ -64,7 +64,7 @@ export const tgAdmin = {
                                 r[e] = {}
                                 r[e]["type"] = "link"
                                 r[e]["text"] = temp_data['awbNumber']
-                                r[e]["href"] = "/forwarder/job-request-view/" + temp_data['_id']
+                                r[e]["href"] = "job-request-view/" + temp_data['_id']
                             }
         
                             if (e == "customsEntryNumber"){
@@ -96,7 +96,7 @@ export const tgAdmin = {
                                 r[e] = {}
                                 r[e]["type"] = "options"
                                 r[e]["view"] = {}
-                                r[e]["view"]["href"] = "/forwarder/job-request-view/" + temp_data['_id']
+                                r[e]["view"]["href"] = "job-request-view/" + temp_data['_id']
                                 r[e]["view"]["type"] = "link"
                             }
 
@@ -125,7 +125,15 @@ export const tgAdmin = {
 
                             if (e == "pickupTime") {
                                 r[e] = {}
-                                r[e]["text"] = temp_data['pickupTimeHours'] + '.' + temp_data['pickupTimeMinutes']
+                                // r[e]["text"] = temp_data['pickupTimeHours'] + '.' + temp_data['pickupTimeMinutes']
+                                if (String(temp_data['pickupTimeHours']).length == 1) {
+                                    temp_data['pickupTimeHours'] = '0' + temp_data['pickupTimeHours']
+                                }
+
+                                if (String(temp_data['pickupTimeMinutes']).length == 1) {
+                                    temp_data['pickupTimeMinutes'] = '0' + temp_data['pickupTimeMinutes']
+                                }
+                                r[e]["text"] = moment(String(temp_data['pickupTimeHours']) + String(temp_data['pickupTimeMinutes']), "hhmm").format("HH:mm")
                             }
 
                             if (e == "truckNumber") {
@@ -182,6 +190,29 @@ export const tgAdmin = {
             )
             
         },
+        fetchJobDetail({ state , commit }, id) {            
+            commit('change_status_loading', true)
+            DriverService.jobDetail(id).then(
+                company => {
+                    var data = company.data
+                    if (data.pickupTimeHours.length < 2 && data.pickupTimeHours != '-') {
+                        data.pickupTimeHours = '0' + data.pickupTimeHours
+                    }
+                    if (data.pickupTimeMinutes.length < 2 && data.pickupTimeMinutes != '-') {
+                        data.pickupTimeMinutes = '0' + data.pickupTimeMinutes
+                    }
+                    if (data.confPickupTimeHours.length < 2 && data.confPickupTimeHours != '-') {
+                        data.confPickupTimeHours = '0' + data.confPickupTimeHours
+                    }
+                    if (data.confPickupTimeMinutes.length < 2 && data.confPickupTimeMinutes != '-') {
+                        data.confPickupTimeMinutes = '0' + data.confPickupTimeMinutes
+                    }
+                    commit('update_jobDetail', data)
+                    commit('change_status_loading', false);
+                    console.log('job detail fetched',data)
+                }
+            );
+        }
     },
     mutations: {
       update_overview(state, data_detail){

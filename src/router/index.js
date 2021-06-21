@@ -132,7 +132,7 @@ const routes = [
     beforeEnter: requireAuth
   },
   {
-    path: '/tgadmin/job-request-view/:status?',
+    path: '/tgadmin/job-request-view/:id?',
     name: 'TGAdminJobRequestViewPage',
     component: () => import('../views/tgadmin/JobRequestView.vue'),
     beforeEnter: requireAuth
@@ -181,13 +181,13 @@ const routes = [
     beforeEnter: requireAuth
   },
   {
-    path: '/admin/forwarder-edit',
+    path: '/admin/forwarder-edit/:tax_id',
     name: 'AdminForwarderEditPage',
     component: () => import('../views/admin/ForwarderEdit.vue'),
     beforeEnter: requireAuth
   },
   {
-    path: '/admin/forwarder-view',
+    path: '/admin/forwarder-view/:tax_id',
     name: 'AdminForwarderViewPage',
     component: () => import('../views/admin/ForwarderView.vue'),
     beforeEnter: requireAuth

@@ -21,16 +21,26 @@
             <span v-else-if="getDetailJob.status==4" class="ss-tag ss-tag-warning">กำลังดำเนินการ</span>
             <span v-else-if="getDetailJob.status==5" class="ss-tag ss-tag-warning">ดำเนินการเสร็จสิ้น</span>
           </div>
-          <div class="btns hide-mobile">
+          <div class="btns hide-mobile">          
+            <Button 
+              v-if="getDetailJob.status == 4"
+              type="submit" text="ได้รับสินค้าแล้ว" 
+              classer="btn-color-01" :prepend="true" icon="check-white.svg" 
+            />
             <Button 
               text="ย้อนกลับ" :href="'/forwarder/job-requests/'+(getDetailJob.status+1)" 
-              classer="btn-color-08"
+              classer="btn-color-08 ml-2"
             />
           </div>
-          <div class="btns show-mobile">
+          <div class="btns show-mobile">         
+            <Button 
+              v-if="getDetailJob.status == 4"
+              type="submit" text="ได้รับสินค้าแล้ว" 
+              classer="btn-color-01 btn-sm" :prepend="true" icon="check-white.svg" 
+            />
             <Button 
               text="ย้อนกลับ" :href="'/forwarder/job-requests/'+(getDetailJob.status+1)" 
-              classer="btn-color-08 btn-sm" 
+              classer="btn-color-08 btn-sm ml-1" 
             />
           </div>
         </div>
@@ -54,15 +64,15 @@
                     { value: 2, text: '2 - ไม่พอใจ' },
                     { value: 1, text: '1 - ไม่พอใจมาก' }
                   ]" 
-                  :value="jobRequest.rating" 
-                  @input="jobRequest.rating = $event" 
+                  :value="getDetailJob.rating" 
+                  @input="getDetailJob.rating = $event" 
                 />
               </div>
               <div class="grid md-2-3 sm-100 mt-4">
                 <FormGroup 
                   type="textarea" label="คำแนะนำ" placeholder="คำแนะนำ" :rows="1" 
-                  :value="jobRequest.comment" 
-                  @input="jobRequest.comment = $event" 
+                  :value="getDetailJob.comment" 
+                  @input="getDetailJob.comment = $event" 
                 />
               </div>
             </div>
@@ -75,10 +85,10 @@
           </form>
           <div v-else class="grids">
             <div class="grid md-1-3 sm-50 xs-50">
-              <FormGroup  type="plain" label="ระดับความพอใจ" :value="jobRequest.rating" />
+              <FormGroup  type="plain" label="ระดับความพอใจ" :value="getDetailJob.rating" />
             </div>
             <div class="grid md-2-3 sm-100">
-              <FormGroup  type="plain" label="คำแนะนำ" :value="jobRequest.comment" />
+              <FormGroup  type="plain" label="คำแนะนำ" :value="getDetailJob.comment" />
             </div>
           </div>
         </div>

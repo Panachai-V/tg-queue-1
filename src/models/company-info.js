@@ -57,5 +57,19 @@ export default class Overview {
         this.job_detail_5.push(tempObject)
     }
 
-    
+    // initialvariable(status) {
+    //     if (status == "0") {
+    //         this.job_detail_0 = []
+    //     } else if (state == "1") {
+    //         this.job_detail_1 = []
+    //     } else if (state == "2") {
+    //         this.job_detail_2 = []
+    //     } else if (state == "3") {
+    //         this.job_detail_3 = []
+    //     } else if (state == "4") {
+    //         this.job_detail_4 = []
+    //     } else if (state == "5") {
+    //         this.job_detail_5 = []
+    //     }
+    // }
 }
