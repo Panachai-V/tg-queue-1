@@ -11,7 +11,11 @@ class AdminService {
     }
 
     fetchAllJob(condition) {
-        return axios.get(`admin/all_Job/?page=${condition.page}&limit=${condition.limit}&sort_by=${condition.sort_by}&order=${condition.order}&status=${condition.status}`, { headers: authHeader() })
+        return axios.get(`admin/all_Job/?page=${condition.page}&limit=${condition.limit}&sort_by=${condition.sort_by}&order=${condition.order}&status=${condition.status}&search=${condition.search}`, { headers: authHeader() })
+    }
+
+    freightForwardersDetail(company_id) {
+        return axios.get(`admin/company/${company_id}`, { headers: authHeader() })
     }
 }
 

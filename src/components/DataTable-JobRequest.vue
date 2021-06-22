@@ -89,7 +89,7 @@
             </th>
           </tr>
         </thead>
-        <tbody v-if="selfRows.length">
+        <tbody v-if="selfRows.length ">
 
           <tr v-for="(row, index) in selfRows" :key="index">
 
@@ -363,7 +363,8 @@ export default {
     ...mapActions({
       fetchJobRequest_FF: 'freight_forwarder/fetchJobRequest',
       fetchJobRequest_driver: 'driver/fetchJobRequest',
-      fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest'
+      fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest',
+      fetchJobRequest_Admin: 'freight_forwarder/fetchJobRequest'
     }),
     changePage(val) {
       console.log('page change')
@@ -386,22 +387,23 @@ export default {
       }
 
       if (this.isFreightForwarder()){
-        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
+        let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
         this.fetchJobRequest_FF(temp_condition);
       } else if (this.isTGAdmin()){
-        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex + 1).toString())
+        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex + 1).toString(), this.selfSearch)
         this.fetchJobRequest_Tg(temp_condition);
       } else if (this.isDriver()){
         let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex+4).toString())
         this.fetchJobRequest_driver(temp_condition);
-      } else if (this.fetchAllJob()) {
-        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex+4).toString())
-        this.fetchAllJob(temp_condition);
+      } else if (this.isAdmin()) {
+        let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
+        this.fetchJobRequest_Admin(temp_condition);
       }
-
 
     },
     toggleGroup(index) {
+      console.log('toggleGroup')
+
       var that = this;
       that.clearEditing();
       if(Object.keys(that.selfGroups).length){
@@ -416,25 +418,35 @@ export default {
       that.doSearch(that.selfSearch);
     },
     doSearch(val) {
-
+      console.log('selfSearch before :', this.selfSearch)
       this.clearEditing();
-
       // Search
       this.selfSearch = val;
-      if(val){
-        let tempCondition = this.selfOrder.split('-')
 
-        if (tempCondition[1] == "asc"){
-          tempCondition[1] = "ascending"
-        } else {
-          tempCondition[1] = "descending"
-        }
+      let tempCondition = this.selfOrder.split('-')
+
+      if (tempCondition[1] == "asc"){
+        tempCondition[1] = "ascending"
+      } else {
+        tempCondition[1] = "descending"
+      }
+      
+      if (this.isFreightForwarder()){
+        let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
+        this.fetchJobRequest_FF(temp_condition);
+      } else if (this.isTGAdmin()){
+        let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex + 1).toString(), this.selfSearch)
+        this.fetchJobRequest_Admin(temp_condition);
+      } else if (this.isAdmin()) {
+        let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
+        this.fetchJobRequest_Admin(temp_condition);
+      }
+
+      console.log('selfSearch after :', this.selfSearch)
+
+      console.log('datatable job doSearch')
         
-        if (this.isFreightForwarder()){
-          let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
-          this.fetchJobRequest_FF(temp_condition);
-        }
-
+      if(val){
         var search = this.search;
         this.selfFilteredRows = this.rows.filter(function(item){
           var valid = false;
@@ -468,6 +480,8 @@ export default {
       return true;
     },
     doOrder(val) {
+      console.log('doOrder')
+
       this.clearEditing();
       this.selfOrder = val;
       if(val.indexOf('-desc') > -1){
@@ -496,6 +510,7 @@ export default {
     },
 
     highlight(key, text) {
+
       if(key != 'options' && this.search.indexOf(key) > -1 && this.selfSearch){
         return text.replace(
           new RegExp(this.selfSearch, 'ig'), 
@@ -507,6 +522,8 @@ export default {
     },
 
     toggleAdding() {
+      console.log('toggleAdding')
+
       var that = this;
       that.clearEditing();
       that.adding = !this.adding;
@@ -519,11 +536,15 @@ export default {
     },
 
     clearEditing() {
+      console.log('clearEditing')
+
       this.editing = false;
       this.editingIndex = null;
       this.editData = {};
     },
     toggleEditing(index, id, row) {
+      console.log('toggleEditing')
+
       var that = this;
       that.adding = false;
       that.editing = !that.editing;
@@ -690,7 +711,7 @@ export default {
       }
     },
     getAdminFilter() {
-      if (this.isAdmin()) {
+      if (this.isAdmin() || this.isTGAdmin()) {
         this.selfFilterFromEachRole = this.getFilterStatus_admin
         this.selfPage = this.getFilterStatus_admin.page
         this.selfMaxPage = this.getFilterStatus_admin.totalPages
@@ -722,10 +743,13 @@ export default {
       this.doOrder(this.orders[0].key);
     }
     this.getDriverFilter()
+    this.getFreightForwarderFilter()
+    this.getTgAdminFilter()
     console.log('Data-table jobRequest created')
   },
   updated() {
-    // this.getFreightForwarderFilter()
+    console.log('data table updated')
+    this.getFreightForwarderFilter()
     this.getDriverFilter()
     this.getTgAdminFilter()
     this.getAdminFilter()
@@ -733,6 +757,7 @@ export default {
   computed: {
     ...mapGetters({
       getUser: 'auth/getUser',
+      getLoadingStatus: 'freight_forwarder/getLoadingStatus',
       getJobRequest0_FF: 'freight_forwarder/getJobRequest0',
       getJobRequest1_FF: 'freight_forwarder/getJobRequest1',
       getJobRequest2_FF: 'freight_forwarder/getJobRequest2',

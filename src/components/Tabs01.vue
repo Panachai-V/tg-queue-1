@@ -40,7 +40,7 @@ export default {
 
       if ( this.getUser.role == 'tg-admin'){
         console.log('this.activeIndex :', this.activeIndex)
-        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex + 1).toString())
+        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex + 1).toString(), "")
         this.fetchJobRequest_Tg(temp_condition);
         console.log('tabs01')
       }
@@ -53,8 +53,8 @@ export default {
       }
 
       if ( this.getUser.role == 'admin'){
-        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString())
-        this.fetchAllJob(temp_condition);
+        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString(), "")
+        this.fetchJobReques_Admin(temp_condition);
       }
 
       return this.$emit('clicked', index);
@@ -63,7 +63,7 @@ export default {
       fetchJobRequest_FF: 'freight_forwarder/fetchJobRequest',
       fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest',
       fetchJobRequest_driver: 'driver/fetchJobRequest',
-      fetchAllJob: 'admin/fetchAllJob'
+      fetchJobReques_Admin: 'admin/fetchAllJob'
     })
   },
   emits: [ 'clicked' ]

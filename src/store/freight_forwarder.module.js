@@ -38,7 +38,7 @@ export const freight_forwarder = {
                 companys => {
                     // console.log('companys.data.docs :', companys.data.docs[0])
                     // console.log('status data :', companys.data.docs[0].status)
-                    //console.log('companys.data :', companys.data)  
+                    console.log('companys.data :', companys.data)  
 
                     var temp_array = []
 
@@ -89,6 +89,11 @@ export const freight_forwarder = {
                                 r[e]["text"] = temp_data['flightNumber']
                             }
 
+                            if (e== "flightDate") {
+                                r[e] = {}
+                                r[e]["text"] = temp_data['flightDate']
+                            }
+
                             if (e == "hwbSerialNumber"){
                                 r[e] = {}
                                 r[e]["text"] = temp_data['hwbSerialNumber']
@@ -113,6 +118,11 @@ export const freight_forwarder = {
                                 r[e]["text"] = temp_status.text
                                 r[e]["type"] = temp_status.type
                                 r[e]["value"] = temp_status.value
+                            }
+
+                            if (e == "customsEntryNumberDate") {
+                                r[e] = {}
+                                r[e]["text"] = moment(String(temp_data['customsEntryNumberDate'])).format('DD MMM YYYY')
                             }
 
                             if (e == "date") {

@@ -10,9 +10,9 @@ export const tgAdmin = {
     namespaced: true,
     state: {
         overview: temp_overview,
-      detailJob: null,
-      loading: false,
-      filterStatus: temp_filterstatus
+        detailJob: null,
+        loading: false,
+        filterStatus: temp_filterstatus
     },
     actions: {
         fetchOverview({ commit }) {
@@ -31,14 +31,15 @@ export const tgAdmin = {
               }
             );
         },
-        async fetchJobRequest({ commit }, condition ){
-            await commit('change_status_loading', true);
+        async fetchJobRequest({ commit, state }, condition ){
+            // await commit('change_status_loading', true);
+            state.loading = true
             // console.log('change_status_loading :', true)
             await CompanyService.tgadmin_jobRequest(condition).then(
                 companys => {
                     // console.log('companys.data.docs :', companys.data.docs[0])
                     // console.log('status data :', companys.data.docs[0].status)
-                    //console.log('companys.data :', companys.data)  
+                    console.log('companys.data :', companys.data)  
 
                     var temp_array = []
 
@@ -183,7 +184,8 @@ export const tgAdmin = {
                         temp_array.length );
 
                     commit('change_filterStatus', temp_filterstatus)
-                    commit('change_status_loading', false)
+                    // commit('change_status_loading', false)
+                    state.loading = false
 
                     return ;
                 }

@@ -6,6 +6,7 @@ import moment from 'moment';
 let temp_overview = new Overview(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 let temp_filterstatus = new FilterStatus(false, false, 10, 1, 1, 1, null, 1, 1, 1)
 let temp_condition = new ConditionSelectViewJob('1', '10', 'company_name', 'ascending', '0', '')
+let temp2_condition = new ConditionSelectViewJob('1', '10', 'company_name', 'ascending', 'all', '')
 
 export const admin = {
     namespaced: true,
@@ -14,7 +15,10 @@ export const admin = {
       filterStatus: temp_filterstatus,
       overview: temp_overview,
       forwarders: [],
-      condition: temp_condition
+      forwardersDetail: null,
+      forwardersFF: [],
+      forwardersDriver: [],
+      condition: temp2_condition
     },
     actions: {
       async forwardersOverview({ commit , state }) {
@@ -36,8 +40,8 @@ export const admin = {
                   { type: 'tag', value: 0, text: 'ปิดใช้งาน', classer: 'ss-tag-danger' },
                 options: {
                   type: 'options',
-                  view: { type: 'link', href: `/admin/forwarder-view/${company.tax_id}` },
-                  edit: { type: 'link', href: `/admin/forwarder-edit/${company.tax_id}` }
+                  view: { type: 'link', href: `/admin/forwarder-view/${company._id}` },
+                  edit: { type: 'link', href: `/admin/forwarder-edit/${company._id}` }
                 }
               })
             });            
@@ -50,6 +54,20 @@ export const admin = {
         )
         await commit('change_status_loading', false)
       },
+      async freightForwardersDetail({ commit }, company_id) {
+        await commit('change_status_loading', true);
+        await AdminService.freightForwardersDetail(company_id).then(
+          company => {
+            console.log('freightForwardersDetail',company.data)
+            commit('fetchFreightForwardersDetail', company.data)
+            commit('fetchFreightForwardersUser', company.data.user_detail)      
+          },
+          error => {
+            console.log('getForwarder detail error')
+          }          
+        )
+        await commit('change_status_loading', false);
+      },
       async fetchOverview({ commit }) {
         await commit('change_status_loading', true);
         await AdminService.fetchOverview().then(
@@ -60,11 +78,18 @@ export const admin = {
         )
         await commit('change_status_loading', false);
       },
-      async fetchAllJob({ commit }, condition) {
+      async fetchAllJob({ commit, state }, condition) {
         await commit('change_status_loading', true);
         await AdminService.fetchAllJob(condition).then(
           companys => {
             var temp_array = []
+
+            state.overview.job_detail_0 = []
+            state.overview.job_detail_1 = []
+            state.overview.job_detail_2 = []
+            state.overview.job_detail_3 = []
+            state.overview.job_detail_4 = []
+            state.overview.job_detail_5 = []
 
             for(let i = 0; i < companys.data.docs.length; i++){
                 //console.log('companys.data.docs :', companys.data.docs[i])
@@ -106,6 +131,11 @@ export const admin = {
                         r[e]["text"] = temp_data['flightNumber']
                     }
 
+                    if (e== "flightDate") {
+                      r[e] = {}
+                      r[e]["text"] = temp_data['flightDate']
+                    }
+
                     if (e == "hwbSerialNumber"){
                         r[e] = {}
                         r[e]["text"] = temp_data['hwbSerialNumber']
@@ -130,6 +160,11 @@ export const admin = {
                         r[e]["text"] = temp_status.text
                         r[e]["type"] = temp_status.type
                         r[e]["value"] = temp_status.value
+                    }
+
+                    if (e == "customsEntryNumberDate") {
+                      r[e] = {}
+                      r[e]["text"] = moment(String(temp_data['customsEntryNumberDate'])).format('DD MMM YYYY')
                     }
 
                     if (e == "date") {
@@ -207,6 +242,7 @@ export const admin = {
               temp_array.length );
 
             commit('change_filterStatus', temp_filterstatus)
+            commit('fetchPage', companys.data.page)
             commit('change_status_loading', false)
 
             return ;
@@ -219,7 +255,13 @@ export const admin = {
         commit('fetchPage', page)
       },
       changeOrder({ commit }, order) {
-        commit('fetchorder', order)
+        commit('fetchOrder', order)
+      },
+      changeSearch({ commit }, keyword) {
+        commit('fetchSearch', keyword)
+      },
+      changeStatus({ commit }, status) {
+        commit('fetchStatus', status)
       }
     },
     mutations: {
@@ -228,6 +270,60 @@ export const admin = {
       },
       fetchFreightForwarders(state, input) {
         state.forwarders = input
+      },
+      fetchFreightForwardersDetail(state, input) {
+        state.forwardersDetail = {
+          company_name: input.company_detail.company_name,
+          address: input.company_detail.company_detail[0].address,
+          province: input.company_detail.company_detail[0].company_province,
+          postal: input.company_detail.company_detail[0].company_postal,
+          tax_id: input.company_detail.tax_id,
+          status: input.company_detail.status
+        }
+      },
+      fetchFreightForwardersUser(state, input) {
+        input.forEach((user) => {
+          if (user.role[0].name == "freight-forwarder") {
+            state.forwardersFF.push({
+              avatar: { type: 'avatar', text: 'data:image/png;base64,' + user.avatar[0].value },
+              username: { text: user.username },
+              firstname: { text: user.user_detail[0].firstname },
+              lastname: { text: user.user_detail[0].lastname },
+              email: { text: user.email },
+              phone: { text: user.user_detail[0].phone },
+              status: user.status ? 
+                { type: 'tag', value: 1, text: 'เปิดใช้งาน', classer: 'ss-tag-success' } :
+                { type: 'tag', value: 0, text: 'ปิดใช้งาน', classer: 'ss-tag-danger' },
+              options: {
+                type: 'options',
+                view: { type: 'emit', id: user._id },
+                edit: { type: 'emit', id: user._id },
+                delete: { type: 'emit', id: user._id }
+              }
+            })
+          } else {
+            state.forwardersDriver.push({
+              avatar: { type: 'avatar', text: 'data:image/png;base64,' + user.avatar[0].value },
+              username: { text: user.username },
+              firstname: { text: user.user_detail[0].firstname },
+              lastname: { text: user.user_detail[0].lastname },
+              email: { text: user.email },
+              phone: { text: user.user_detail[0].phone },
+              status: user.status ? 
+                { type: 'tag', value: 1, text: 'เปิดใช้งาน', classer: 'ss-tag-success' } :
+                { type: 'tag', value: 0, text: 'ปิดใช้งาน', classer: 'ss-tag-danger' },
+              options: {
+                type: 'options',
+                view: { type: 'emit', id: user._id },
+                edit: { type: 'emit', id: user._id },
+                delete: { type: 'emit', id: user._id }
+              }
+            })
+          }
+        })
+        console.log('fetchFreightForwardersFF: ',state.forwardersFF)
+        console.log('fetchFreightForwardersDriver: ',state.forwardersDriver)
+        //state.forwardersUser
       },
       fetchDashboardOverview(state, input) {
         state.overview.company_count = input.data.company_count
@@ -241,11 +337,11 @@ export const admin = {
         state.overview.state_5 = input.data.status5
       },
       fetchFilterStatus(state, input) {
+        console.log('fetchFilterStatus: ', input)
         state.filterStatus.hasNextPage = input.hasNextPage
         state.filterStatus.hasPrevPage = input.hasPrevPage
         state.filterStatus.limit = input.limit
         state.filterStatus.nextPage = input.nextPage
-        state.filterStatus.page = input.page
         state.filterStatus.pagingCounter = input.pagingCounter
         state.filterStatus.prevPage = input.prevPage
         state.filterStatus.totalDocs = input.totalDocs
@@ -273,12 +369,28 @@ export const admin = {
         state.filterStatus = input
       },
       fetchPage(state, input) {
+        console.log('fetchPage: ', input)
         state.condition.page = input
+        state.filterStatus.page = input
       },
-      fetchorder(state, order) {
+      fetchOrder(state, order) {
+        console.log('fetch order')
         state.condition.sort_by = order.sort_by
         state.condition.order = order.order
         state.condition.page = '1'
+        state.filterStatus.page = '1'
+      },
+      fetchSearch(state, keyword) {
+        console.log('fetchSearch')
+        state.condition.search = keyword
+        state.condition.page = '1'
+        state.filterStatus.page = '1'
+      },
+      fetchStatus(state, status) {
+        console.log('fetchStatus')
+        state.condition.status = status
+        state.condition.page = '1'
+        state.filterStatus.page = '1'
       }
     },
     getters: {
@@ -296,6 +408,15 @@ export const admin = {
       },
       getForwarders(state) {
         return state.forwarders
+      },
+      getForwardersDetail(state) {
+        return state.forwardersDetail
+      },
+      getforwardersFF(state) {
+        return state.forwardersFF
+      },
+      getforwardersDriver(state) {
+        return state.forwardersDriver
       },
       getJobRequest0(state) {
         return state.overview.job_detail_0

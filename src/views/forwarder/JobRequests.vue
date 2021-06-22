@@ -38,7 +38,7 @@
           />
         </div>
         <div  class="tab-contents" data-aos="fade-up" data-aos-delay="150">
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
+          <div v-if="tabActiveIndex == 0" class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest0"
@@ -61,13 +61,13 @@
                 { key: 'awbNumber-asc', text: 'Airway Bill (เก่าสุด)' },
                 { key: 'hwbSerialNumber-desc', text: 'House Airway Bill (ใหม่สุด)' },
                 { key: 'hwbSerialNumber-asc', text: 'House Airway Bill (เก่าสุด)' },
-                { key: 'customsEntryNumberDate-desc', text: 'วันที่ได้รับเลขที่ใบสินค้า (ใหม่สุด)' },
-                { key: 'customsEntryNumberDate-asc', text: 'วันที่ได้รับเลขที่ใบสินค้า (เก่าสุด)' }
+                { key: 'customsEntryNumber-desc', text: 'วันที่ได้รับเลขที่ใบสินค้า (ใหม่สุด)' },
+                { key: 'customsEntryNumber-asc', text: 'วันที่ได้รับเลขที่ใบสินค้า (เก่าสุด)' }
               ]" 
             />
           </div>
 
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
+          <div v-if="tabActiveIndex == 1" class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
             <DataTable
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest1" 
@@ -96,7 +96,7 @@
             />
           </div>
 
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 2 }">
+          <div v-if="tabActiveIndex == 2" class="tab-content" :class="{ 'active': tabActiveIndex == 2 }">
             <DataTable 
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest2" 
@@ -104,7 +104,7 @@
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'hwbSerialNumber', text: 'House Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
-                { key: 'date', text: 'วันที่เที่ยวบิน' },
+                { key: 'flightDate', text: 'วันที่เที่ยวบิน' },
                 { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
                 { key: 'pickupTime', text: 'เวลารับสินค้า' },
                 { key: 'truckNumber', text: 'ทะเบียนรถ' },
@@ -116,17 +116,17 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'flightDate-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'flightDate-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
             />
           </div>
 
-         <div class="tab-content" :class="{ 'active': tabActiveIndex == 3 }">
+         <div v-if="tabActiveIndex == 3" class="tab-content" :class="{ 'active': tabActiveIndex == 3 }">
             <DataTable 
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest3" 
@@ -146,17 +146,17 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
-                { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
+              { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
             />
           </div>
 
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 4 }">
+          <div v-if="tabActiveIndex == 4" class="tab-content" :class="{ 'active': tabActiveIndex == 4 }">
             <DataTable 
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest4" 
@@ -176,17 +176,17 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
             />
           </div>
 
-          <div class="tab-content" :class="{ 'active': tabActiveIndex == 5 }">
+          <div v-if="tabActiveIndex == 5" class="tab-content" :class="{ 'active': tabActiveIndex == 5 }">
             <DataTable 
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest5" 
@@ -206,10 +206,10 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
@@ -217,7 +217,6 @@
           </div>
         </div>
       </div>
-      {{getJobRequest0}}
     </div>
   </section>
   <Topnav :user="user" :activeIndex="topnavActiveIndex" :isBottom="true" />

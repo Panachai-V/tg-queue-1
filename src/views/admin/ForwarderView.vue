@@ -32,39 +32,39 @@
       <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
         <p class="fw-400">ข้อมูลบริษัท</p>
       </div>
-      <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+      <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150" v-if="!getLoadingStatus">
         <div class="grids">
           <div class="grid xl-60 lg-70 sm-100">
             <FormGroup 
-              type="plain" label="ชื่อบรืษัท" :value="datasetCompany.name" 
+              type="plain" label="ชื่อบรืษัท" :value="getForwardersDetail.company_name" 
             />
           </div>
           <div class="sep"></div>
           <div class="grid xl-60 lg-70 sm-100">
             <FormGroup 
-              type="plain" label="ที่อยู่บริษัท" :value="datasetCompany.address" 
+              type="plain" label="ที่อยู่บริษัท" :value="getForwardersDetail.address" 
             />
           </div>
           <div class="sep"></div>
           <div class="grid xl-30 lg-35">
             <FormGroup 
-              type="plain" label="จังหวัด" :value="datasetCompany.province" 
+              type="plain" label="จังหวัด" :value="getForwardersDetail.province" 
             />
           </div>
           <div class="grid xl-30 lg-35">
             <FormGroup 
-              type="plain" label="รหัสไปรษณีย์" :value="datasetCompany.zipcode" 
+              type="plain" label="รหัสไปรษณีย์" :value="getForwardersDetail.postal" 
             />
           </div>
           <div class="sep"></div>
           <div class="grid xl-30 lg-35">
             <FormGroup 
-              type="plain" label="เลขประจำตัวผู้เสียภาษี" :value="datasetCompany.taxId" 
+              type="plain" label="เลขประจำตัวผู้เสียภาษี" :value="getForwardersDetail.tax_id" 
             />
           </div>
           <div class="grid xl-30 lg-35">
             <FormGroup 
-              type="plain" label="สถานะ" :value="datasetCompany.status? 'เปิดใช้งาน': 'ปิดใช้งาน'" 
+              type="plain" label="สถานะ" :value="getForwardersDetail.status? 'เปิดใช้งาน': 'ปิดใช้งาน'" 
             />
           </div>
         </div>
@@ -79,9 +79,9 @@
           />
         </d>
       </div>
-      <div class="pb-2" data-aos="fade-up" data-aos-delay="150">
+      <div class="pb-2" data-aos="fade-up" data-aos-delay="150" v-if="!getLoadingStatus">
         <DataTable 
-          :rows="rows1" 
+          :rows="getforwardersFF" 
           :columns="[
             { key: 'avatar', text: 'รูปโปรไฟล์' },
             { key: 'username', text: 'บัญชีผู้ใช้' },
@@ -125,9 +125,9 @@
           />
         </d>
       </div>
-      <div class="pb-2" data-aos="fade-up" data-aos-delay="150">
+      <div class="pb-2" data-aos="fade-up" data-aos-delay="150" v-if="!getLoadingStatus">
         <DataTable 
-          :rows="rows2" 
+          :rows="getforwardersDriver" 
           :columns="[
             { key: 'avatar', text: 'รูปโปรไฟล์' },
             { key: 'username', text: 'บัญชีผู้ใช้' },
@@ -536,6 +536,7 @@
 import Topnav from '../../components/Topnav';
 import Sidenav from '../../components/Sidenav';
 import DataTable from '../../components/DataTable';
+import {mapGetters, mapActions, mapState} from "vuex";
 
 export default {
   name: 'AdminForwarderViewPage',
@@ -594,6 +595,15 @@ export default {
       rows2: []
     }
   },
+  computed: {
+    ...mapGetters({
+      getUser: 'auth/getUser',
+      getLoadingStatus: 'admin/getLoadingStatus',
+      getForwardersDetail: 'admin/getForwardersDetail',
+      getforwardersFF: 'admin/getforwardersFF',
+      getforwardersDriver: 'admin/getforwardersDriver'
+    })
+  },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     document.getElementById('color_style').href = '/assets/css/color-admin.css';
@@ -631,8 +641,13 @@ export default {
         }
       });
     }
+    console.log('this.$route.params.tax_id: ', this.$route.params.tax_id)
+    this.freightForwardersDetail(this.$route.params.tax_id)
   },
   methods: {
+    ...mapActions({
+      freightForwardersDetail: 'admin/freightForwardersDetail'
+    }),
     openAccountView(id) {
       this.isActivePopupAccountView = !this.isActivePopupAccountView;
     },
