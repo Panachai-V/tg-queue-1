@@ -217,6 +217,7 @@
           </div>
         </div>
       </div>
+      {{getJobRequest0}}
     </div>
   </section>
   <Topnav :user="user" :activeIndex="topnavActiveIndex" :isBottom="true" />
@@ -226,7 +227,7 @@
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Tabs01 from '../../components/Tabs01';
-import DataTable from '../../components/DataTable-JobRequest-ff';
+import DataTable from '../../components/DataTable-JobRequest';
 import { mapState, mapGetters, mapActions } from 'vuex'
 import {ConditionSelectViewJob} from '../../models/select-company';
 
@@ -276,10 +277,10 @@ export default {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
 
     // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
-    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex).toString())
+    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex).toString(), '')
     this.fetchJobRequest(temp_condition);
 
-    // console.log(this.rows1[0])
+    console.log('job request created')
   },
   methods: {
     

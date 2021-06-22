@@ -26,7 +26,7 @@
           
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable
-              :tabActiveIndex="getJobRequest0.status"
+              :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest1" 
               :columns="[
                 { key: 'awbNumber', text: 'Airway Bill' },
@@ -174,7 +174,6 @@
           </div>
 
         </div>
-        {{getJobRequest0}}
       </div>
     </div>
   </section>
@@ -186,7 +185,7 @@
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Tabs01 from '../../components/Tabs01';
-import DataTable from '../../components/DataTable';
+import DataTable from '../../components/DataTable-JobRequest';
 import {ConditionSelectViewJob} from '../../models/select-company';
 import { mapState, mapGetters, mapActions } from 'vuex'
 
@@ -215,7 +214,7 @@ export default {
         }
       },
 
-      tabActiveIndex: this.$route.params.tab? Math.max(1, Number(this.$route.params.tab)-2): 0,
+      tabActiveIndex: 0,
       rows2: [],
       rows3: [],
       rows4: [],
@@ -227,7 +226,7 @@ export default {
     document.getElementById('color_style').href = '/assets/css/color-company.css';
     console.log('tabActiveIndex :', this.tabActiveIndex)
     // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
-    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex).toString())
+    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex + 1).toString())
     this.fetchJobRequest(temp_condition);
   },
   methods: {

@@ -24,32 +24,38 @@
           <div class="grids grid-mt">
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอการ Matching" :count="3" unit="งาน" 
+                label="Job Requests รอการ Matching" :count="getDashboardOverview.state_0" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอคิวการรับ" :count="2" unit="งาน" 
+                label="Job Requests รอการชำระเงิน" :count="getDashboardOverview.state_1" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests รอยืนยันคิว" :count="2" unit="งาน" 
+                label="Job Requests รอคิวการรับ" :count="getDashboardOverview.state_2" unit="งาน" 
+                classer="no-hover"
+              />
+            </div>
+            <div class="grid xl-25 lg-1-3">
+              <SpecialCard03 
+                label="Job Requests รอยืนยันคิว" :count="getDashboardOverview.state_3" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="sep"></div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่กำลังดำเนินการ" :count="4" unit="งาน" 
+                label="Job Requests ที่กำลังดำเนินการ" :count="getDashboardOverview.state_4" unit="งาน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="34" unit="งาน" 
+                label="Job Requests ที่ดำเนินการเสร็จสิ้น" :count="getDashboardOverview.state_5" unit="งาน" 
                 classer="no-hover"
               />
             </div>
@@ -57,25 +63,24 @@
             
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Total Freight Forwarders" :count="24" unit="คน" 
+                label="Total Freight Forwarders" :count="getDashboardOverview.company_count" unit="บริษัท" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Total Freight Forwarder Accounts" :count="36" unit="คน" 
+                label="Total Freight Forwarder Accounts" :count="getDashboardOverview.ff_count" unit="คน" 
                 classer="no-hover"
               />
             </div>
             <div class="grid xl-25 lg-1-3">
               <SpecialCard03 
-                label="Total Truck Drivers" :count="124" unit="คน" 
+                label="Total Truck Drivers" :count="getDashboardOverview.driver_count" unit="คน" 
                 classer="no-hover"
               />
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -85,6 +90,7 @@
 import Topnav from '../../components/Topnav';
 import Sidenav from '../../components/Sidenav';
 import SpecialCard03 from '../../components/SpecialCard03';
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'AdminDashboardPage',
@@ -111,9 +117,21 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      getDashboardOverview: 'admin/getDashboardOverview',
+    })
+  },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     document.getElementById('color_style').href = '/assets/css/color-admin.css';
+
+    this.fetchOverview()
+  },
+  methods: {
+    ...mapActions({
+      fetchOverview: 'admin/fetchOverview'
+    })
   }
 }
 </script>

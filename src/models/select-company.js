@@ -32,12 +32,13 @@ export class StatusCompany {
 }
 
 export class ConditionSelectViewJob {
-    constructor(page, limit, sort_by, order, status) {
+    constructor(page, limit, sort_by, order, status, search) {
         this.page = page;
         this.limit = limit;
         this.sort_by = sort_by;
         this.order = order;
         this.status = status;
+        this.search = search;
     }
 }
 

@@ -34,13 +34,13 @@ export default {
 
       // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
       if ( this.getUser.role == 'freight-forwarder'){
-        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString())
+        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString(), "")
         this.fetchJobRequest_FF(temp_condition);
       }
 
       if ( this.getUser.role == 'tg-admin'){
         console.log('this.activeIndex :', this.activeIndex)
-        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString())
+        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex + 1).toString())
         this.fetchJobRequest_Tg(temp_condition);
         console.log('tabs01')
       }
@@ -52,12 +52,18 @@ export default {
         console.log('tabs01')
       }
 
+      if ( this.getUser.role == 'admin'){
+        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex).toString())
+        this.fetchAllJob(temp_condition);
+      }
+
       return this.$emit('clicked', index);
     },
     ...mapActions({
       fetchJobRequest_FF: 'freight_forwarder/fetchJobRequest',
       fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest',
-      fetchJobRequest_driver: 'driver/fetchJobRequest'
+      fetchJobRequest_driver: 'driver/fetchJobRequest',
+      fetchAllJob: 'admin/fetchAllJob'
     })
   },
   emits: [ 'clicked' ]

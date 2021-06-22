@@ -31,7 +31,7 @@ export const freight_forwarder = {
               }
             );
         },
-        async fetchJobRequest({ commit }, condition ){
+        async fetchJobRequest({ commit, state }, condition ){
             await commit('change_status_loading', true);
             // console.log('change_status_loading :', true)
             await CompanyService.ff_jobRequest(condition).then(
@@ -41,6 +41,13 @@ export const freight_forwarder = {
                     //console.log('companys.data :', companys.data)  
 
                     var temp_array = []
+
+                    state.overview.job_detail_0 = []
+                    state.overview.job_detail_1 = []
+                    state.overview.job_detail_2 = []
+                    state.overview.job_detail_3 = []
+                    state.overview.job_detail_4 = []
+                    state.overview.job_detail_5 = []
 
                     for(let i = 0; i < companys.data.docs.length; i++){
                         //console.log('companys.data.docs :', companys.data.docs[i])
@@ -125,7 +132,15 @@ export const freight_forwarder = {
 
                             if (e == "pickupTime") {
                                 r[e] = {}
-                                r[e]["text"] = temp_data['pickupTimeHours'] + '.' + temp_data['pickupTimeMinutes']
+                                // r[e]["text"] = temp_data['pickupTimeHours'] + '.' + temp_data['pickupTimeMinutes']
+                                if (String(temp_data['pickupTimeHours']).length == 1) {
+                                    temp_data['pickupTimeHours'] = '0' + temp_data['pickupTimeHours']
+                                }
+
+                                if (String(temp_data['pickupTimeMinutes']).length == 1) {
+                                    temp_data['pickupTimeMinutes'] = '0' + temp_data['pickupTimeMinutes']
+                                }
+                                r[e]["text"] = moment(String(temp_data['pickupTimeHours']) + String(temp_data['pickupTimeMinutes']), "hhmm").format("HH:mm")
                             }
 
                             if (e == "truckNumber") {

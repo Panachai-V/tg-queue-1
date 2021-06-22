@@ -94,7 +94,7 @@
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Tabs01 from '../../components/Tabs01';
-import DataTable from '../../components/DataTable-JobRequest-ff';
+import DataTable from '../../components/DataTable-JobRequest';
 import UserService from '../../services/user.service';
 import { mapState, mapGetters, mapActions } from 'vuex'
 import {ConditionSelectViewJob} from '../../models/select-company';

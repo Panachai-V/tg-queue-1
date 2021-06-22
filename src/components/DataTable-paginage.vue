@@ -1,4 +1,7 @@
 <template>
+  <div v-if="getLoadingStatus == false">
+      {{getFilterStatus}}
+  </div>
 
   <!-- Table Options -->
   <div v-if="withOptions" class="table-options">
@@ -8,7 +11,7 @@
         <select class="xs no-border color-01" @input="(event)=>doOrder(event.target.value)">
           <option 
             v-for="(order, index) in orders" :key="order.key" :value="order.key" 
-            :selected="index == 0"
+            :selected="order.key == getCondition.sort_by + '-' + getCondition.order"
           >
             {{order.text}}
           </option>
@@ -48,23 +51,24 @@
           </div>
         </div>
       </div>
-      <div class="option hide-mobile">
+      <div class="option hide-mobile" v-if="getLoadingStatus == false">
         แสดง 
-        {{((selfFilterFromEachRole.limit * selfPage) - 9)}} – 
-        {{Math.min(selfFilterFromEachRole.totalDocs, selfPage * selfFilterFromEachRole.limit)}} จากทั้งหมด 
-        {{selfFilterFromEachRole.totalDocs}} 
+        {{getFilterStatus.pagingCounter}} – 
+        {{Math.min(getFilterStatus.totalDocs, getFilterStatus.pagingCounter + getFilterStatus.limit)}} จากทั้งหมด 
+        {{getFilterStatus.totalDocs}} 
         รายการ
       </div>
-      <div class="option pr-2 show-mobile mobile-right">
-        {{((selfFilterFromEachRole.limit * selfPage) - 9)}} – 
-        {{Math.min(selfFilterFromEachRole.totalDocs, selfPage * selfFilterFromEachRole.limit)}}
+      <div class="option pr-2 show-mobile mobile-right" v-if="getLoadingStatus == false">
+        แสดงทั้งหมด
+        {{getFilterStatus.pagingCounter}} – 
+        {{Math.min(getFilterStatus.totalDocs, getFilterStatus.pagingCounter + getFilterStatus.limit)}}
         รายการ
       </div>
       <div class="option pr-0">
-        <a href="javascript:" @click="changePage(-1)" class="btn-chev" :class="{ 'disabled': selfPage == 1 }">
+        <a href="javascript:" @click="changePage(getFilterStatus.prevPage)" class="btn-chev" :class="{ 'disabled': !getFilterStatus.hasPrevPage }">
           <img src="/assets/img/icon/caret-left.svg" alt="Image Icon" />
         </a>
-        <a href="javascript:" @click="changePage(1)" class="btn-chev" :class="{ 'disabled': selfPage == selfMaxPage }">
+        <a href="javascript:" @click="changePage(getFilterStatus.nextPage)" class="btn-chev" :class="{ 'disabled': !getFilterStatus.hasNextPage }">
           <img src="/assets/img/icon/caret-right.svg" alt="Image Icon" />
         </a>
       </div>
@@ -76,9 +80,8 @@
       </div>
     </div>
   </div>
-  <!-- Table -->
 
-  <!-- {{getJobRequest0_driver}} -->
+  <!-- Table -->
   <form action="/" method="GET" @submit="onSubmit">
     <div class="table-wrapper">
       <table class="table-section">
@@ -316,13 +319,10 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import {ConditionSelectViewJob} from '../models/select-company';
-import {StatusCompany, FilterStatus} from '../models/select-company';
 
 export default {
-  name: 'DataTable-JobRequest',
+  name: 'DataTable',
   props: {
-    tabActiveIndex: { type: Number, default: 0 },
     columns: { type: Array, default: [] },
     rows: { type: Array, default: [] },
     withOptions: { type: Boolean, default: true },
@@ -336,6 +336,7 @@ export default {
     addOptions: { type: Object, default: {} },
     allowDownload: { type: Boolean, default: false },
     downloadUrl: { type: String, default: '' },
+    store: { type: String, default: '' },
   },
   data() {
     return {
@@ -354,49 +355,26 @@ export default {
 
       editing: false,
       editingIndex: null,
-      editData: {},
-
-      selfFilterFromEachRole: new FilterStatus(false, false, 10, 1, 1, 1, null, 1, 1, 1)
+      editData: {}
     }
   },
   methods: {
     ...mapActions({
-      fetchJobRequest_FF: 'freight_forwarder/fetchJobRequest',
-      fetchJobRequest_driver: 'driver/fetchJobRequest',
-      fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest'
+      forwardersOverview: 'admin/forwardersOverview',
+      storeChangePage: 'admin/changePage',
+      changeOrder: 'admin/changeOrder',
     }),
     changePage(val) {
-      console.log('page change')
       this.clearEditing();
-      this.selfPage += val;
-      this.selfPage = Math.max(1, this.selfPage);
-      this.selfPage = Math.min(this.selfMaxPage, this.selfPage);
+      this.storeChangePage(val)
+      this.forwardersOverview()
+
+      /*this.getFilterStatus.page += val;
+      this.getFilterStatus.page = Math.max(1, this.getFilterStatus.page);
+      this.getFilterStatus.page = Math.min(this.getFilterStatus.totalPages, this.getFilterStatus.page);
       this.selfRows = this.selfFilteredRows.slice(
-        (this.selfPage - 1) * this.pp, this.selfPage * this.pp
-      );
-
-      let tempCondition = this.selfOrder.split('-')
-      // console.log(tempCondition[0])
-      // console.log(tempCondition[1])
-
-      if (tempCondition[1] == "asc"){
-        tempCondition[1] = "ascending"
-      } else {
-        tempCondition[1] = "descending"
-      }
-
-      if (this.isFreightForwarder()){
-        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString())
-        this.fetchJobRequest_FF(temp_condition);
-      } else if (this.isTGAdmin()){
-        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString())
-        this.fetchJobRequest_Tg(temp_condition);
-      } else if (this.isDriver()){
-        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex+4).toString())
-        this.fetchJobRequest_driver(temp_condition);
-      }
-
-
+        (this.getFilterStatus.page - 1) * this.pp, this.getFilterStatus.page * this.pp
+      );*/
     },
     toggleGroup(index) {
       var that = this;
@@ -442,40 +420,25 @@ export default {
         });
       }
 
-      this.selfPage = 1;
-      this.selfMaxPage = Math.ceil(this.selfFilteredRows.length / this.pp);
+      this.getFilterStatus.page = 1;
+      this.getFilterStatus.totalPages = Math.ceil(this.selfFilteredRows.length / this.pp);
       this.selfRows = this.selfFilteredRows.slice(
-        (this.selfPage - 1) * this.pp, this.selfPage * this.pp
+        (this.getFilterStatus.page - 1) * this.pp, this.getFilterStatus.page * this.pp
       );
-      this.doOrder(this.selfOrder);
+      //this.doOrder(this.selfOrder);
       return true;
     },
     doOrder(val) {
+      console.log('order: ', val)
       this.clearEditing();
-      this.selfOrder = val;
-      if(val.indexOf('-desc') > -1){
-        val = val.replace('-desc', '');
-        this.selfFilteredRows.sort(function(a, b){
-          if(!a[val] || !b[val]){
-            return false;
-          }else{
-            return (a[val].text > b[val].text)? -1: ((b[val].text > a[val].text)? 1: 0);
-          }
-        });
-      }else if(val.indexOf('-asc') > -1){
-        val = val.replace('-asc', '');
-        this.selfFilteredRows.sort(function(a, b){
-          if(!a[val] || !b[val]){
-            return false;
-          }else{
-            return (a[val].text > b[val].text)? 1: ((b[val].text > a[val].text)? -1: 0);
-          }
-        });
+      if(val.indexOf('-descending') > -1){
+        val = val.replace('-descending', '');
+        this.changeOrder({sort_by: val, order: 'descending'});
+      }else if(val.indexOf('-ascending') > -1){
+        val = val.replace('-ascending', '');
+        this.changeOrder({sort_by: val, order: 'ascending'});
       }
-      this.selfRows = this.selfFilteredRows.slice(
-        (this.selfPage - 1) * this.pp, this.selfPage * this.pp
-      );
-      return true;
+      this.forwardersOverview()      
     },
 
     highlight(key, text) {
@@ -521,6 +484,7 @@ export default {
           }
         });
       }
+      this.forwardersOverview()
     },
 
     onSubmit(e) {
@@ -567,148 +531,22 @@ export default {
       }
       counter.value = result;
     },
-    isFreightForwarder() {
-      if(this.getUser && this.getUser.role == 'freight-forwarder'){
-        return true;
-      }else{
-        return false;
-      }
-    },
-    isDriver() {
-      if(this.getUser && this.getUser.role == 'driver'){
-        console.log('i am driver')
-        return true;
-      }else{
-        return false;
-      }
-    },
-    isTGAdmin() {
-      if(this.getUser && this.getUser.role == 'tg-admin'){
-        return true;
-      }else{
-        return false;
-      }
-    },
-    isAdmin() {
-      if(this.getUser && this.getUser.role == 'admin'){
-        return true;
-      }else{
-        return false;
-      }
-    },
-    getDriverFilter() {
-      if (this.isDriver()) {
-        console.log('getFilterStatus_driver: ', this.getFilterStatus_driver)
-        this.selfFilterFromEachRole = this.getFilterStatus_driver
-        this.selfPage = this.getFilterStatus_driver.page
-        this.selfMaxPage = this.getFilterStatus_driver.totalPages
-        if (this.tabActiveIndex + 4 == 0) {
-          this.selfRows = this.getJobRequest0_driver
-          this.selfFilteredRows = this.getJobRequest0_driver
-        } else if (this.tabActiveIndex + 4 == 1) {
-          this.selfRows = this.getJobRequest0_driver
-          this.selfFilteredRows = this.getJobRequest0_driver
-        } else if (this.tabActiveIndex + 4 == 2) {
-          this.selfRows = this.getJobRequest2_driver
-          this.selfFilteredRows = this.getJobRequest2_driver
-        } else if (this.tabActiveIndex + 4 == 3) {
-          this.selfRows = this.getJobRequest3_driver
-          this.selfFilteredRows = this.getJobRequest3_driver
-        } else if (this.tabActiveIndex + 4 == 4) {
-          this.selfRows = this.getJobRequest4_driver
-          this.selfFilteredRows = this.getJobRequest4_driver
-        } else if (this.tabActiveIndex == 5) {
-          this.selfRows = this.getJobRequest5_driver
-          this.selfFilteredRows = this.getJobRequest5_driver
-        }
-      }
-    }
   },
   created() {
     this.toggleGroup(-1);
-    if(this.orders.length){
+    /*if(this.orders.length){
       this.doOrder(this.orders[0].key);
-    }
-    this.getDriverFilter()
+    }*/
   },
-  updated() {
-    if(this.isFreightForwarder()) {
-      this.selfFilterFromEachRole = this.getFilterStatus_FF
-      this.selfPage = this.getFilterStatus_FF.page
-      this.selfMaxPage = this.getFilterStatus_FF.totalPages
-      if (this.tabActiveIndex == 0) {
-        this.selfRows = this.getJobRequest0_FF
-        this.selfFilteredRows = this.getJobRequest0_FF
-      } else if (this.tabActiveIndex == 1) {
-        this.selfRows = this.getJobRequest1_FF
-        this.selfFilteredRows = this.getJobRequest1_FF
-      } else if (this.tabActiveIndex == 2) {
-        this.selfRows = this.getJobRequest2_FF
-        this.selfFilteredRows = this.getJobRequest2_FF
-      } else if (this.tabActiveIndex == 3) {
-        this.selfRows = this.getJobRequest3_FF
-        this.selfFilteredRows = this.getJobRequest3_FF
-      } else if (this.tabActiveIndex == 4) {
-        this.selfRows = this.getJobRequest4_FF
-        this.selfFilteredRows = this.getJobRequest4_FF
-      } else if (this.tabActiveIndex == 5) {
-        this.selfRows = this.getJobRequest5_FF
-        this.selfFilteredRows = this.getJobRequest5_FF
-      }
-    }
-    if (this.isTGAdmin()) {
-      this.selfFilterFromEachRole = this.getFilterStatus_Tg
-      this.selfPage = this.getFilterStatus_Tg.page
-      this.selfMaxPage = this.getFilterStatus_Tg.totalPages
-      if (this.tabActiveIndex == 0) {
-        this.selfRows = this.getJobRequest0_Tg
-        this.selfFilteredRows = this.getJobRequest0_Tg
-      } else if (this.tabActiveIndex == 1) {
-        this.selfRows = this.getJobRequest0_Tg
-        this.selfFilteredRows = this.getJobRequest0_Tg
-      } else if (this.tabActiveIndex == 2) {
-        this.selfRows = this.getJobRequest2_Tg
-        this.selfFilteredRows = this.getJobRequest2_Tg
-      } else if (this.tabActiveIndex == 3) {
-        this.selfRows = this.getJobRequest3_Tg
-        this.selfFilteredRows = this.getJobRequest3_Tg
-      } else if (this.tabActiveIndex == 4) {
-        this.selfRows = this.getJobRequest4_Tg
-        this.selfFilteredRows = this.getJobRequest4_Tg
-      } else if (this.tabActiveIndex == 5) {
-        this.selfRows = this.getJobRequest5_Tg
-        this.selfFilteredRows = this.getJobRequest5_Tg
-      }
-    }
-
-    this.getDriverFilter()
+  mounted() {
+    console.log('filter: ',this.getFilterStatus)
   },
   computed: {
     ...mapGetters({
       getUser: 'auth/getUser',
-      getJobRequest0_FF: 'freight_forwarder/getJobRequest0',
-      getJobRequest1_FF: 'freight_forwarder/getJobRequest1',
-      getJobRequest2_FF: 'freight_forwarder/getJobRequest2',
-      getJobRequest3_FF: 'freight_forwarder/getJobRequest3',
-      getJobRequest4_FF: 'freight_forwarder/getJobRequest4',
-      getJobRequest5_FF: 'freight_forwarder/getJobRequest5',
-      getFilterStatus_FF: 'freight_forwarder/getFilterStatus',
-
-      getJobRequest0_Tg: 'tgAdmin/getJobRequest0',
-      getJobRequest1_Tg: 'tgAdmin/getJobRequest1',
-      getJobRequest2_Tg: 'tgAdmin/getJobRequest2',
-      getJobRequest3_Tg: 'tgAdmin/getJobRequest3',
-      getJobRequest4_Tg: 'tgAdmin/getJobRequest4',
-      getJobRequest5_Tg: 'tgAdmin/getJobRequest5',
-      getFilterStatus_Tg: 'tgAdmin/getFilterStatus',
-
-      getJobRequest0_driver: 'driver/getJobRequest0',
-      getJobRequest1_driver: 'driver/getJobRequest1',
-      getJobRequest2_driver: 'driver/getJobRequest2',
-      getJobRequest3_driver: 'driver/getJobRequest3',
-      getJobRequest4_driver: 'driver/getJobRequest4',
-      getJobRequest5_driver: 'driver/getJobRequest5',
-      getFilterStatus_driver: 'driver/getFilterStatus',
+      getFilterStatus: 'admin/getFilterStatus',
+      getLoadingStatus: 'admin/getLoadingStatus',
+      getCondition: 'admin/getCondition'
     })
   },
   emits: [ 

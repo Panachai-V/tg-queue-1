@@ -7,6 +7,7 @@ import { freight_forwarder } from './freight_forwarder.module';
 import { driver } from './driver.module';
 import { ff_driver } from './ff_driver.module';
 import { tgAdmin } from './tgAdmin.module';
+import { admin } from './admin.module';
 
 const store = createStore({
   modules: {
@@ -15,7 +16,8 @@ const store = createStore({
     freight_forwarder,
     ff_driver,
     driver,
-    tgAdmin
+    tgAdmin,
+    admin
   }
 })
 

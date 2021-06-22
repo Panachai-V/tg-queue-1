@@ -30,28 +30,28 @@
             </div>
           </div>
         </div>
-        <div data-aos="fade-up" data-aos-delay="150">
+        <div data-aos="fade-up" data-aos-delay="150" v-if="getLoadingStatus == false">
           <DataTable 
-            :rows="rows1" 
+            :rows="getForwarders" 
             :columns="[
-              { key: 'name', text: 'ชื่อบริษัท' },
+              { key: 'company_name', text: 'ชื่อบริษัท' },
               { key: 'province', text: 'จังหวัด' },
               { key: 'zipcode', text: 'รหัสไปรษณีย์' },
               { key: 'totalDrivers', text: 'จำนวนคนขับรถ' },
-              { key: 'totalJobRequests', text: 'จำนวนงานที่เสร็จ' },
+              { key: 'job_count', text: 'จำนวนงานที่เสร็จ' },
               { key: 'status', text: 'สถานะ' },
               { key: 'options', classer: 'options' }
             ]" 
             :search="[ 'username', 'firstname', 'lastname', 'email' ]" 
             :orders="[
-              { key: 'name-asc', text: 'ชื่อบริษัท (ใหม่สุด)' },
-              { key: 'name-desc', text: 'ชื่อบริษัท (เก่าสุด)' },
-              { key: 'status-desc', text: 'สถานะ (ใหม่สุด)' },
-              { key: 'status-asc', text: 'สถานะ (เก่าสุด)' },
-              { key: 'province-desc', text: 'จังหวัด (ใหม่สุด)' },
-              { key: 'province-asc', text: 'จังหวัด (เก่าสุด)' },
-              { key: 'totalJobRequests-desc', text: 'totalJobRequests (ใหม่สุด)' },
-              { key: 'totalJobRequests-asc', text: 'totalJobRequests (เก่าสุด)' }
+              { key: 'company_name-ascending', text: 'ชื่อบริษัท (ใหม่สุด)' },
+              { key: 'company_name-descending', text: 'ชื่อบริษัท (เก่าสุด)' },
+              { key: 'status-descending', text: 'สถานะ (ใหม่สุด)' },
+              { key: 'status-ascending', text: 'สถานะ (เก่าสุด)' },
+              { key: 'province-descending', text: 'จังหวัด (ใหม่สุด)' },
+              { key: 'province-ascending', text: 'จังหวัด (เก่าสุด)' },
+              { key: 'job_count-descending', text: 'totalJobRequests (ใหม่สุด)' },
+              { key: 'job_count-ascending', text: 'totalJobRequests (เก่าสุด)' }
             ]" 
             :groups="{
               filter: 'status',
@@ -59,7 +59,8 @@
                 { text: 'เปิดใช้งาน', value: 1, checked: true },
                 { text: 'ปิดใช้งาน', value: 0, checked: true }
               ]
-            }" 
+            }"
+            :store="store" 
           />
         </div>
       </div>
@@ -70,7 +71,8 @@
 <script>
 import Topnav from '../../components/Topnav';
 import Sidenav from '../../components/Sidenav';
-import DataTable from '../../components/DataTable';
+import DataTable from '../../components/DataTable-paginage';
+import {mapGetters, mapActions, mapState} from "vuex";
 
 export default {
   name: 'AdminForwardersPage',
@@ -95,8 +97,16 @@ export default {
           phone: '0811123456'
         }
       },
-      rows1: []
+      rows1: [],
+      store: 'admin'
     }
+  },
+  computed: {
+    ...mapGetters({
+      getUser: 'auth/getUser',
+      getLoadingStatus: 'admin/getLoadingStatus',
+      getForwarders: 'admin/getForwarders'
+    })
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
@@ -118,6 +128,12 @@ export default {
         }
       });
     }
+    this.forwardersOverview()
+  },
+  methods: {
+    ...mapActions({
+      forwardersOverview: 'admin/forwardersOverview'
+    })
   }
 }
 </script>
