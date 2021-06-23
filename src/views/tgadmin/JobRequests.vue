@@ -73,10 +73,10 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
@@ -103,10 +103,10 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
@@ -133,10 +133,10 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },             
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
@@ -163,10 +163,10 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
@@ -226,7 +226,7 @@ export default {
     document.getElementById('color_style').href = '/assets/css/color-company.css';
     console.log('tabActiveIndex :', this.tabActiveIndex)
     // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
-    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex).toString(), "")
+    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex + 1).toString(), "")
     this.fetchJobRequest(temp_condition);
   },
   methods: {

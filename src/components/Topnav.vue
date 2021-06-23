@@ -335,7 +335,11 @@ import Button from './Button';
 import UserService from '../services/user.service';
 import axios from 'axios';
 import {mapGetters, mapActions} from "vuex"
-var socket = io.connect(process.env.VUE_APP_SERVERURL);
+
+var socket = io.connect(process.env.VUE_APP_SERVERURL ,{
+  withCredentials: false,
+  transports : ['websocket']
+});
 
 export default {
   name: 'Topnav',

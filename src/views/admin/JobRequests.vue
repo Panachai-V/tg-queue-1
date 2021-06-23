@@ -107,7 +107,7 @@
                 { key: 'awbNumber', text: 'Airway Bill' },
                 { key: 'hwbSerialNumber', text: 'House Airway Bill' },
                 { key: 'flightNumber', text: 'รหัสเที่ยวบิน' },
-                { key: 'flightDate', text: 'วันที่เที่ยวบิน' },
+                { key: 'date', text: 'วันที่เที่ยวบิน' },
                 { key: 'dockNumber', text: 'หมายเลขช่องจอด' },
                 { key: 'pickupTime', text: 'เวลารับสินค้า' },
                 { key: 'truckNumber', text: 'ทะเบียนรถ' },
@@ -121,8 +121,8 @@
               :orders="[
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
-                { key: 'flightDate-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'flightDate-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
@@ -149,7 +149,7 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-              { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
+                { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
                 { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
                 { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
@@ -212,7 +212,7 @@
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
                 { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },                
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 

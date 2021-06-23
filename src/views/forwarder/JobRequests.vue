@@ -278,8 +278,6 @@ export default {
     // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
     let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex).toString(), '')
     this.fetchJobRequest(temp_condition);
-
-    console.log('job request created')
   },
   methods: {
     
@@ -311,18 +309,7 @@ export default {
 
   },
   updated() {
-    // console.log('rows1 :', this.rows1)
-    // console.log('rows2 :', this.rows2)
-    // console.log('rows3 :', this.rows3)
-    // console.log('rows4 :', this.rows4)
-    // console.log('rows5 :', this.rows5)
 
-    // console.log('getJobRequest0 :', this.getJobRequest0)
-    // console.log(this.getJobRequest1)
-    // console.log(this.getJobRequest2)
-    // console.log(this.getJobRequest3)
-    // console.log(this.getJobRequest4)
-    // console.log(this.getJobRequest5)
   }
 }
 </script>

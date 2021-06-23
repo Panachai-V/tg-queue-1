@@ -1,4 +1,5 @@
 import AdminService from '../services/admin.service';
+import CompanyService from '../services/company.service';
 import Overview from '../models/company-info';
 import {StatusCompany, FilterStatus, ConditionSelectViewJob} from '../models/select-company';
 import moment from 'moment';
@@ -14,10 +15,13 @@ export const admin = {
       loading: false,
       filterStatus: temp_filterstatus,
       overview: temp_overview,
+      detailJob: null,
       forwarders: [],
       forwardersDetail: null,
       forwardersFF: [],
       forwardersDriver: [],
+      forwardersCurrentUser: null,
+      forwardersEditUser: null,
       condition: temp2_condition
     },
     actions: {
@@ -68,6 +72,9 @@ export const admin = {
         )
         await commit('change_status_loading', false);
       },
+      freightForwardersSelectUser({ commit }, condition) {
+        commit('fetchFreightForwardersCurrentUser', condition);
+      },
       async fetchOverview({ commit }) {
         await commit('change_status_loading', true);
         await AdminService.fetchOverview().then(
@@ -84,15 +91,10 @@ export const admin = {
           companys => {
             var temp_array = []
 
-            state.overview.job_detail_0 = []
-            state.overview.job_detail_1 = []
-            state.overview.job_detail_2 = []
-            state.overview.job_detail_3 = []
-            state.overview.job_detail_4 = []
-            state.overview.job_detail_5 = []
+            commit('clear_job_requests')
 
             for(let i = 0; i < companys.data.docs.length; i++){
-                //console.log('companys.data.docs :', companys.data.docs[i])
+                console.log('companys.data.docs :', companys.data.docs[i])
 
                 var temp_data = companys.data.docs[i]
                 var temp_status = new StatusCompany()
@@ -113,7 +115,7 @@ export const admin = {
                         r[e] = {}
                         r[e]["type"] = "link"
                         r[e]["text"] = temp_data['awbNumber']
-                        r[e]["href"] = "/tgadmin/job-request-view/" + temp_data['_id']
+                        r[e]["href"] = "/admin/job-request-view/" + temp_data['_id']
                     }
 
                     if (e == "customsEntryNumber"){
@@ -150,7 +152,7 @@ export const admin = {
                         r[e] = {}
                         r[e]["type"] = "options"
                         r[e]["view"] = {}
-                        r[e]["view"]["href"] = "/tgadmin/job-request-view/" + temp_data['_id']
+                        r[e]["view"]["href"] = "/admin/job-request-view/" + temp_data['_id']
                         r[e]["view"]["type"] = "link"
                     }
 
@@ -208,23 +210,25 @@ export const admin = {
                 temp_array.push(result)
             }
             
-            if ( companys.data.docs[0].status == 0 ){
-                commit('update_job_request_0', temp_array);
+            if (companys.data.docs.length != 0) {
+              if ( companys.data.docs[0].status == 0 ){
+                  commit('update_job_request_0', temp_array);
 
-            } else if (companys.data.docs[0].status == 1 ) {
-                commit('update_job_request_1', temp_array);
-                
-            } else if ( companys.data.docs[0].status == 2 ) {
-                commit('update_job_request_2', temp_array);
-                
-            } else if ( companys.data.docs[0].status == 3 ) {
-                commit('update_job_request_3', temp_array);
-                
-            } else if ( companys.data.docs[0].status == 4 ) {
-                commit('update_job_request_4', temp_array); 
-                
-            } else if ( companys.data.docs[0].status == 5 ) {
-                commit('update_job_request_5', temp_array);
+              } else if (companys.data.docs[0].status == 1 ) {
+                  commit('update_job_request_1', temp_array);
+                  
+              } else if ( companys.data.docs[0].status == 2 ) {
+                  commit('update_job_request_2', temp_array);
+                  
+              } else if ( companys.data.docs[0].status == 3 ) {
+                  commit('update_job_request_3', temp_array);
+                  
+              } else if ( companys.data.docs[0].status == 4 ) {
+                  commit('update_job_request_4', temp_array); 
+                  
+              } else if ( companys.data.docs[0].status == 5 ) {
+                  commit('update_job_request_5', temp_array);
+              }
             }
 
             // console.log('change_status_loading :', false)
@@ -249,6 +253,29 @@ export const admin = {
           }
         )
         await commit('change_status_loading', false);
+      },
+      fetchJobDetail({ state , commit }, id) {            
+          commit('change_status_loading', true)
+          CompanyService.tgadmin_jobDetail(id).then(
+              company => {
+                  var data = company.data
+                  if (data.pickupTimeHours.length < 2 && data.pickupTimeHours != '-') {
+                      data.pickupTimeHours = '0' + data.pickupTimeHours
+                  }
+                  if (data.pickupTimeMinutes.length < 2 && data.pickupTimeMinutes != '-') {
+                      data.pickupTimeMinutes = '0' + data.pickupTimeMinutes
+                  }
+                  if (data.confPickupTimeHours.length < 2 && data.confPickupTimeHours != '-') {
+                      data.confPickupTimeHours = '0' + data.confPickupTimeHours
+                  }
+                  if (data.confPickupTimeMinutes.length < 2 && data.confPickupTimeMinutes != '-') {
+                      data.confPickupTimeMinutes = '0' + data.confPickupTimeMinutes
+                  }
+                  commit('update_jobDetail', data)
+                  commit('change_status_loading', false);
+                  console.log('job detail fetched',data)
+              }
+          );
       },
       changePage({ commit }, page) {
         console.log('change to page: ', page)
@@ -287,6 +314,7 @@ export const admin = {
             state.forwardersFF.push({
               avatar: { type: 'avatar', text: 'data:image/png;base64,' + user.avatar[0].value },
               username: { text: user.username },
+              prefix: { text: user.user_detail[0].prefix },
               firstname: { text: user.user_detail[0].firstname },
               lastname: { text: user.user_detail[0].lastname },
               email: { text: user.email },
@@ -296,15 +324,26 @@ export const admin = {
                 { type: 'tag', value: 0, text: 'ปิดใช้งาน', classer: 'ss-tag-danger' },
               options: {
                 type: 'options',
-                view: { type: 'emit', id: user._id },
-                edit: { type: 'emit', id: user._id },
-                delete: { type: 'emit', id: user._id }
-              }
+                view: { type: 'emit', id: { 
+                  role: "freight-forwarder", 
+                  id: user._id 
+                }},
+                edit: { type: 'emit', id: { 
+                  role: "freight-forwarder", 
+                  id: user._id 
+                }},
+                delete: { type: 'emit', id: { 
+                  role: "freight-forwarder", 
+                  id: user._id 
+                }}
+              },
+              _id: user._id
             })
           } else {
             state.forwardersDriver.push({
               avatar: { type: 'avatar', text: 'data:image/png;base64,' + user.avatar[0].value },
               username: { text: user.username },
+              prefix: { text: user.user_detail[0].prefix },
               firstname: { text: user.user_detail[0].firstname },
               lastname: { text: user.user_detail[0].lastname },
               email: { text: user.email },
@@ -314,16 +353,38 @@ export const admin = {
                 { type: 'tag', value: 0, text: 'ปิดใช้งาน', classer: 'ss-tag-danger' },
               options: {
                 type: 'options',
-                view: { type: 'emit', id: user._id },
-                edit: { type: 'emit', id: user._id },
-                delete: { type: 'emit', id: user._id }
-              }
+                view: { type: 'emit', id: { 
+                  role: "driver", 
+                  id: user._id 
+                }},
+                edit: { type: 'emit', id: { 
+                  role: "driver", 
+                  id: user._id 
+                }},
+                delete: { type: 'emit', id: { 
+                  role: "driver", 
+                  id: user._id 
+                }}
+              },
+              _id: user._id
             })
           }
         })
         console.log('fetchFreightForwardersFF: ',state.forwardersFF)
         console.log('fetchFreightForwardersDriver: ',state.forwardersDriver)
         //state.forwardersUser
+      },
+      fetchFreightForwardersCurrentUser(state, condition) {
+        state.forwardersCurrentUser = condition.role == 'driver' ? 
+                                        state.forwardersDriver.find(user => user._id == condition.id) : 
+                                        state.forwardersFF.find(user => user._id == condition.id)
+        state.forwardersEditUser = {...state.forwardersCurrentUser}
+        state.forwardersEditUser.avatar = null
+        state.forwardersEditUser.password = ''
+        state.forwardersEditUser.confpassword = ''
+        /*state.forwardersEditUser.avatar != null ? state.forwardersEditUser.avatar = null : state.forwardersEditUser['avatar'] = null
+        state.forwardersEditUser.password != '' ? state.forwardersEditUser.password = '' : state.forwardersEditUser['password'] = ''
+        state.forwardersEditUser.confpassword != '' ? state.forwardersEditUser.confpassword = '' : state.forwardersEditUser['confpassword'] = ''*/
       },
       fetchDashboardOverview(state, input) {
         state.overview.company_count = input.data.company_count
@@ -365,8 +426,19 @@ export const admin = {
       update_job_request_5(state, input) {
           state.overview.job_detail_5 = input
       },
+      update_jobDetail(state, input) {
+          state.detailJob = input
+      },
       change_filterStatus(state, input) {
         state.filterStatus = input
+      },
+      clear_job_requests(state) {
+        state.overview.job_detail_0 = []
+        state.overview.job_detail_1 = []
+        state.overview.job_detail_2 = []
+        state.overview.job_detail_3 = []
+        state.overview.job_detail_4 = []
+        state.overview.job_detail_5 = []
       },
       fetchPage(state, input) {
         console.log('fetchPage: ', input)
@@ -418,6 +490,12 @@ export const admin = {
       getforwardersDriver(state) {
         return state.forwardersDriver
       },
+      getFreightForwardersCurrentUser(state) {
+        return state.forwardersCurrentUser
+      },
+      getFreightForwardersEditUser(state) {
+        return state.forwardersEditUser
+      },
       getJobRequest0(state) {
         return state.overview.job_detail_0
       },
@@ -435,6 +513,9 @@ export const admin = {
       },
       getJobRequest5(state) {
         return state.overview.job_detail_5
+      },
+      getDetailJob(state) {
+          return state.detailJob
       },
     }
 }

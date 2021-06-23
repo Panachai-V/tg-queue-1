@@ -42,9 +42,10 @@ export const tgAdmin = {
                     console.log('companys.data :', companys.data)  
 
                     var temp_array = []
+                    commit('clear_job_requests')
 
                     for(let i = 0; i < companys.data.docs.length; i++){
-                        //console.log('companys.data.docs :', companys.data.docs[i])
+                        console.log('companys.data.docs :', companys.data.docs[i])
 
                         var temp_data = companys.data.docs[i]
                         var temp_status = new StatusCompany()
@@ -65,7 +66,7 @@ export const tgAdmin = {
                                 r[e] = {}
                                 r[e]["type"] = "link"
                                 r[e]["text"] = temp_data['awbNumber']
-                                r[e]["href"] = "job-request-view/" + temp_data['_id']
+                                r[e]["href"] = "/tgadmin/job-request-view/" + temp_data['_id']
                             }
         
                             if (e == "customsEntryNumber"){
@@ -97,7 +98,7 @@ export const tgAdmin = {
                                 r[e] = {}
                                 r[e]["type"] = "options"
                                 r[e]["view"] = {}
-                                r[e]["view"]["href"] = "job-request-view/" + temp_data['_id']
+                                r[e]["view"]["href"] = "/tgadmin/job-request-view/" + temp_data['_id']
                                 r[e]["view"]["type"] = "link"
                             }
 
@@ -149,24 +150,25 @@ export const tgAdmin = {
 
                         temp_array.push(result)
                     }
-                    
-                    if ( companys.data.docs[0].status == 0 ){
-                        commit('update_job_request_0', temp_array);
+                    if (companys.data.docs.length != 0) {
+                        if ( companys.data.docs[0].status == 0 ){
+                            commit('update_job_request_0', temp_array);
 
-                    } else if (companys.data.docs[0].status == 1 ) {
-                        commit('update_job_request_1', temp_array);
-                        
-                    } else if ( companys.data.docs[0].status == 2 ) {
-                        commit('update_job_request_2', temp_array);
-                        
-                    } else if ( companys.data.docs[0].status == 3 ) {
-                        commit('update_job_request_3', temp_array);
-                        
-                    } else if ( companys.data.docs[0].status == 4 ) {
-                        commit('update_job_request_4', temp_array); 
-                        
-                    } else if ( companys.data.docs[0].status == 5 ) {
-                        commit('update_job_request_5', temp_array);
+                        } else if (companys.data.docs[0].status == 1 ) {
+                            commit('update_job_request_1', temp_array);
+                            
+                        } else if ( companys.data.docs[0].status == 2 ) {
+                            commit('update_job_request_2', temp_array);
+                            
+                        } else if ( companys.data.docs[0].status == 3 ) {
+                            commit('update_job_request_3', temp_array);
+                            
+                        } else if ( companys.data.docs[0].status == 4 ) {
+                            commit('update_job_request_4', temp_array); 
+                            
+                        } else if ( companys.data.docs[0].status == 5 ) {
+                            commit('update_job_request_5', temp_array);
+                        }
                     }
 
                     // console.log('change_status_loading :', false)
@@ -194,7 +196,7 @@ export const tgAdmin = {
         },
         fetchJobDetail({ state , commit }, id) {            
             commit('change_status_loading', true)
-            DriverService.jobDetail(id).then(
+            CompanyService.tgadmin_jobDetail(id).then(
                 company => {
                     var data = company.data
                     if (data.pickupTimeHours.length < 2 && data.pickupTimeHours != '-') {
@@ -251,7 +253,15 @@ export const tgAdmin = {
       },
       change_filterStatus(state, input) {
           state.filterStatus = input
-      }
+      },
+      clear_job_requests(state) {
+        state.overview.job_detail_0 = []
+        state.overview.job_detail_1 = []
+        state.overview.job_detail_2 = []
+        state.overview.job_detail_3 = []
+        state.overview.job_detail_4 = []
+        state.overview.job_detail_5 = []
+    }
     },
     getters: {
       getOverviewComapny(state) {

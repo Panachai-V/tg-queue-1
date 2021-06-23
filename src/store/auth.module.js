@@ -44,14 +44,25 @@ export const auth = {
       AuthService.logout();
       commit('logout');
     },
-    register({ commit }, user) {
-      return AuthService.register(user).then(
+    register({ commit }, regisuser) {
+      return AuthService.register(regisuser).then(
         response => {
           commit('registerSuccess');
           return Promise.resolve(response.data);
         },
         error => {
+          console.log(error.response.data.message)
           commit('registerFailure');
+          return Promise.reject(error);
+        }
+      );
+    },
+    createCompany({ commit }, companyInfo) {
+      return AuthService.createCompany(companyInfo).then(
+        response => {
+          return Promise.resolve(response.data);
+        },
+        error => {
           return Promise.reject(error);
         }
       );

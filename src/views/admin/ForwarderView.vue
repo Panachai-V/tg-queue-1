@@ -278,7 +278,7 @@
     </div>
   </div>
   <!-- Popup Account View -->
-  <div class="popup-container" :class="{ 'active': isActivePopupAccountView }">
+  <div class="popup-container" :class="{ 'active': isActivePopupAccountView }" v-if="getFreightForwardersCurrentUser">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupAccountView = !isActivePopupAccountView"></div>
       <div class="popup-box">
@@ -312,32 +312,32 @@
             <div class="grids">
               <div class="grid md-20 sm-30">
                 <FormGroup
-                  label="คำนำหน้า" type="plain" :value="datasetUser.detail.prefix" 
+                  label="คำนำหน้า" type="plain" :value="getFreightForwardersCurrentUser.prefix.text" 
                 />
               </div>
               <div class="grid md-40 sm-35">
                 <FormGroup
-                  label="ชื่อ" type="plain" :value="datasetUser.detail.firstname" 
+                  label="ชื่อ" type="plain" :value="getFreightForwardersCurrentUser.firstname.text" 
                 />
               </div>
               <div class="grid md-40 sm-35">
                 <FormGroup
-                  label="นามสกุล" type="plain" :value="datasetUser.detail.lastname" 
+                  label="นามสกุล" type="plain" :value="getFreightForwardersCurrentUser.lastname.text" 
                 />
               </div>
               <div class="grid sm-50">
                 <FormGroup
-                  label="เบอร์โทรศัพท์" type="plain" :value="datasetUser.detail.phone" 
+                  label="เบอร์โทรศัพท์" type="plain" :value="getFreightForwardersCurrentUser.phone.text" 
                 />
               </div>
               <div class="grid sm-50">
                 <FormGroup
-                  label="รูปโปรไฟล์" type="plain" :value="datasetUser.avatar" 
+                  label="รูปโปรไฟล์" type="plain" :value="getFreightForwardersCurrentUser.avatar.text.slice(23, 43)" 
                 />
               </div>
               <div class="grid sm-50">
                 <FormGroup
-                  label="สถานะ" type="plain" :value="datasetUser.status? 'เปิดใช้งาน': 'ปิดใช้งาน'" 
+                  label="สถานะ" type="plain" :value="getFreightForwardersCurrentUser.status.value ? 'เปิดใช้งาน': 'ปิดใช้งาน'" 
                 />
               </div>
             </div>
@@ -347,12 +347,12 @@
             <div class="grids">
               <div class="grid sm-50">
                 <FormGroup
-                  label="ชื่อผู้ใช้" type="plain" :value="datasetUser.username" 
+                  label="ชื่อผู้ใช้" type="plain" :value="getFreightForwardersCurrentUser.username.text" 
                 />
               </div>
               <div class="grid sm-50">
                 <FormGroup
-                  label="อีเมล" type="plain" :value="datasetUser.email" 
+                  label="อีเมล" type="plain" :value="getFreightForwardersCurrentUser.email.text" 
                 />
               </div>
             </div>
@@ -362,7 +362,7 @@
     </div>
   </div>
   <!-- Popup Account Edit -->
-  <div class="popup-container" :class="{ 'active': isActivePopupAccountEdit }">
+  <div class="popup-container" :class="{ 'active': isActivePopupAccountEdit }" v-if="getFreightForwardersEditUser">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupAccountEdit = !isActivePopupAccountEdit"></div>
       <form action="/admin/forwarder-view" method="GET" class="w-full">
@@ -405,7 +405,7 @@
                 <div class="grid md-20 sm-30">
                   <FormGroup
                     label="คำนำหน้า *" type="select" :required="true" 
-                    :value="datasetUser.detail.prefix" 
+                    :value="getFreightForwardersEditUser.prefix.text" 
                     :options="[ 
                       { value: 'นาย', text: 'นาย' }, 
                       { value: 'นาง', text: 'นาง' }, 
@@ -416,31 +416,31 @@
                 <div class="grid md-40 sm-35">
                   <FormGroup
                     label="ชื่อ *" type="text" :required="true" 
-                    :value="datasetUser.detail.firstname" 
+                    :value="getFreightForwardersEditUser.firstname.text" 
                   />
                 </div>
                 <div class="grid md-40 sm-35">
                   <FormGroup
                     label="นามสกุล *" type="text" :required="true" 
-                    :value="datasetUser.detail.lastname" 
+                    :value="getFreightForwardersEditUser.lastname.text" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="เบอร์โทรศัพท์ *" type="text" :required="true" 
-                    :value="datasetUser.detail.phone" 
+                    :value="getFreightForwardersEditUser.phone.text" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="รูปโปรไฟล์" type="file-image" name="avatar" 
-                    :value="datasetUser.avatar" 
+                    :value="getFreightForwardersEditUser.avatar" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="สถานะ *" type="select" 
-                    :value="datasetUser.status" 
+                    :value="getFreightForwardersEditUser.status.value" 
                     :options="[ 
                       { value: 1, text: 'เปิดใช้งาน' }, 
                       { value: 0, text: 'ปิดใช้งาน' }
@@ -455,23 +455,28 @@
                 <div class="grid sm-50">
                   <FormGroup
                     label="ชื่อผู้ใช้ *" type="text" :required="true" 
-                    :value="datasetUser.username" 
+                    :value="getFreightForwardersEditUser.username.text" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="อีเมล *" type="email" :required="true" 
-                    :value="datasetUser.email" 
+                    :value="getFreightForwardersEditUser.email.text" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="รหัสผ่าน" type="password" 
+                    :value="getFreightForwardersEditUser.password"                    
+                    @input="getFreightForwardersEditUser.password = $event" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="ยืนยันรหัสผ่าน" type="password" 
+                    :value="getFreightForwardersEditUser.confpassword"                    
+                    @input="getFreightForwardersEditUser.confpassword = $event" 
+                    :errorText="getFreightForwardersEditUser.password === getFreightForwardersEditUser.confpassword ? text_notification: 'รหัสผ่านไม่ตรงกัน'" 
                   />
                 </div>
               </div>
@@ -601,7 +606,9 @@ export default {
       getLoadingStatus: 'admin/getLoadingStatus',
       getForwardersDetail: 'admin/getForwardersDetail',
       getforwardersFF: 'admin/getforwardersFF',
-      getforwardersDriver: 'admin/getforwardersDriver'
+      getforwardersDriver: 'admin/getforwardersDriver',
+      getFreightForwardersCurrentUser: 'admin/getFreightForwardersCurrentUser',
+      getFreightForwardersEditUser: 'admin/getFreightForwardersEditUser'
     })
   },
   created() {
@@ -646,15 +653,18 @@ export default {
   },
   methods: {
     ...mapActions({
-      freightForwardersDetail: 'admin/freightForwardersDetail'
+      freightForwardersDetail: 'admin/freightForwardersDetail',
+      freightForwardersSelectUser: 'admin/freightForwardersSelectUser'
     }),
-    openAccountView(id) {
+    openAccountView(condition) {
+      this.freightForwardersSelectUser(condition)
       this.isActivePopupAccountView = !this.isActivePopupAccountView;
     },
-    openAccountEdit(id) {
+    openAccountEdit(condition) {
+      this.freightForwardersSelectUser(condition)
       this.isActivePopupAccountEdit = !this.isActivePopupAccountEdit;
     },
-    openAccountDelete(id) {
+    openAccountDelete(condition) {
       this.isActivePopupAccountDelete = !this.isActivePopupAccountDelete;
     },
   }

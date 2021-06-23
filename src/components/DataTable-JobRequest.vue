@@ -39,7 +39,7 @@
       <div v-if="search.length > 0" class="option option-search">
         <div class="form-group">
           <div class="prepend xs">
-            <input type="text" class="xs" placeholder="ค้นหารายการ"
+            <input type="text" class="xs" :placeholder="'ค้นหา ' + placeholderSearchName"
               @input="(event)=>doSearch(event.target.value)" 
             />
             <div class="icon">
@@ -335,7 +335,7 @@ export default {
     allowAddText: { type: String, default: '' },
     addOptions: { type: Object, default: {} },
     allowDownload: { type: Boolean, default: false },
-    downloadUrl: { type: String, default: '' },
+    downloadUrl: { type: String, default: '' }
   },
   data() {
     return {
@@ -356,7 +356,8 @@ export default {
       editingIndex: null,
       editData: {},
 
-      selfFilterFromEachRole: new FilterStatus(false, false, 10, 1, 1, 1, null, 1, 1, 1)
+      selfFilterFromEachRole: new FilterStatus(false, false, 10, 1, 1, 1, null, 1, 1, 1),
+      placeholderSearchName: (([...this.orders][0].text).split('('))[0]
     }
   },
   methods: {
@@ -364,10 +365,10 @@ export default {
       fetchJobRequest_FF: 'freight_forwarder/fetchJobRequest',
       fetchJobRequest_driver: 'driver/fetchJobRequest',
       fetchJobRequest_Tg: 'tgAdmin/fetchJobRequest',
-      fetchJobRequest_Admin: 'freight_forwarder/fetchJobRequest'
+      fetchJobRequest_Admin: 'admin/fetchAllJob'
     }),
     changePage(val) {
-      console.log('page change')
+      // console.log('page change')
       this.clearEditing();
       this.selfPage += val;
       this.selfPage = Math.max(1, this.selfPage);
@@ -393,7 +394,7 @@ export default {
         let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex + 1).toString(), this.selfSearch)
         this.fetchJobRequest_Tg(temp_condition);
       } else if (this.isDriver()){
-        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex+4).toString())
+        let temp_condition = new ConditionSelectViewJob(this.selfPage, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex+4).toString(), this.selfSearch)
         this.fetchJobRequest_driver(temp_condition);
       } else if (this.isAdmin()) {
         let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
@@ -402,7 +403,7 @@ export default {
 
     },
     toggleGroup(index) {
-      console.log('toggleGroup')
+      // console.log('toggleGroup')
 
       var that = this;
       that.clearEditing();
@@ -418,7 +419,7 @@ export default {
       that.doSearch(that.selfSearch);
     },
     doSearch(val) {
-      console.log('selfSearch before :', this.selfSearch)
+      // console.log('selfSearch before :', this.selfSearch)
       this.clearEditing();
       // Search
       this.selfSearch = val;
@@ -431,20 +432,25 @@ export default {
         tempCondition[1] = "descending"
       }
       
-      if (this.isFreightForwarder()){
-        let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
-        this.fetchJobRequest_FF(temp_condition);
-      } else if (this.isTGAdmin()){
-        let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex + 1).toString(), this.selfSearch)
-        this.fetchJobRequest_Admin(temp_condition);
-      } else if (this.isAdmin()) {
-        let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
-        this.fetchJobRequest_Admin(temp_condition);
+      if (tempCondition[0].length > 0) {
+        if (this.isFreightForwarder()){
+          let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
+          this.fetchJobRequest_FF(temp_condition);
+        } else if (this.isTGAdmin()){
+          let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex + 1).toString(), this.selfSearch)
+          this.fetchJobRequest_Tg(temp_condition);
+        } else if (this.isDriver()){
+          let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex+4).toString(), this.selfSearch)
+          this.fetchJobRequest_driver(temp_condition);
+        } else if (this.isAdmin()) {
+          let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
+          this.fetchJobRequest_Admin(temp_condition);
+        }
       }
 
-      console.log('selfSearch after :', this.selfSearch)
+      // console.log('selfSearch after :', this.selfSearch)
 
-      console.log('datatable job doSearch')
+      // console.log('datatable job doSearch')
         
       if(val){
         var search = this.search;
@@ -480,10 +486,17 @@ export default {
       return true;
     },
     doOrder(val) {
-      console.log('doOrder')
+      // console.log('doOrder')
 
       this.clearEditing();
       this.selfOrder = val;
+
+      if (val) {
+        var assumeTest = this.orders.find(el => el.key == this.selfOrder)
+        // console.log('assumeTest :', assumeTest)
+        this.placeholderSearchName = assumeTest.text.split('(')[0]
+      }
+
       if(val.indexOf('-desc') > -1){
         val = val.replace('-desc', '');
         this.selfFilteredRows.sort(function(a, b){
@@ -522,7 +535,7 @@ export default {
     },
 
     toggleAdding() {
-      console.log('toggleAdding')
+      // console.log('toggleAdding')
 
       var that = this;
       that.clearEditing();
@@ -536,14 +549,14 @@ export default {
     },
 
     clearEditing() {
-      console.log('clearEditing')
+      // console.log('clearEditing')
 
       this.editing = false;
       this.editingIndex = null;
       this.editData = {};
     },
     toggleEditing(index, id, row) {
-      console.log('toggleEditing')
+      // console.log('toggleEditing')
 
       var that = this;
       that.adding = false;
@@ -636,7 +649,7 @@ export default {
     },
     getDriverFilter() {
       if (this.isDriver()) {
-        console.log('getFilterStatus_driver: ', this.getFilterStatus_driver)
+        // console.log('getFilterStatus_driver: ', this.getFilterStatus_driver)
         this.selfFilterFromEachRole = this.getFilterStatus_driver
         this.selfPage = this.getFilterStatus_driver.page
         this.selfMaxPage = this.getFilterStatus_driver.totalPages
@@ -711,7 +724,7 @@ export default {
       }
     },
     getAdminFilter() {
-      if (this.isAdmin() || this.isTGAdmin()) {
+      if (this.isAdmin()) {
         this.selfFilterFromEachRole = this.getFilterStatus_admin
         this.selfPage = this.getFilterStatus_admin.page
         this.selfMaxPage = this.getFilterStatus_admin.totalPages
@@ -735,7 +748,7 @@ export default {
           this.selfFilteredRows = this.getJobRequest5_admin
         }
       }
-    },
+    }
   },
   created() {
     this.toggleGroup(-1);
@@ -743,12 +756,10 @@ export default {
       this.doOrder(this.orders[0].key);
     }
     this.getDriverFilter()
-    this.getFreightForwarderFilter()
-    this.getTgAdminFilter()
-    console.log('Data-table jobRequest created')
+    // console.log('Data-table jobRequest created')
   },
   updated() {
-    console.log('data table updated')
+    // console.log('data table updated')
     this.getFreightForwarderFilter()
     this.getDriverFilter()
     this.getTgAdminFilter()

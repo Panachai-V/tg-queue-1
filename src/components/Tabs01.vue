@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     onClick(index) {
+      console.log('Action on Tab01')
 
       // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
       if ( this.getUser.role == 'freight-forwarder'){
@@ -47,7 +48,7 @@ export default {
 
       if ( this.getUser.role == 'driver'){
         console.log('this.activeIndex :', this.activeIndex)
-        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex+4).toString())
+        let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.activeIndex+4).toString(), "")
         this.fetchJobRequest_driver(temp_condition);
         console.log('tabs01')
       }

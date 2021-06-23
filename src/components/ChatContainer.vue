@@ -53,8 +53,12 @@ import moment from 'moment';
 import FormGroup from './FormGroup';
 import Button from './Button';
 import {mapGetters, mapActions} from "vuex"
+import authHeader from '../services/auth-header';
 
-var socket = io.connect(process.env.VUE_APP_SERVERURL);
+var socket = io.connect(process.env.VUE_APP_SERVERURL ,{
+  withCredentials: false,
+  transports : ['websocket']
+});
 
 // socket.on('recive-message', (data) => {
 //       console.log(data);
@@ -69,6 +73,7 @@ export default {
   ],
   props: {
     chat: { type: Array, default: [] },
+    roomid: { type: String, default: '' },
     withInput: { type: Boolean, default: true }
   },
   data() {
@@ -84,11 +89,12 @@ export default {
     console.log(this.getUser)
   },
   created() {
+    console.log('this.$route.params.id :', this.roomid)
      window.onbeforeunload = () => {
                 socket.emit('leave', this.username);
             }
     socket.emit('join', {
-      job_id: '60c4a753346ad76c7277ec4d',
+      job_id: this.roomid,
       user_id: this.getUser.id,
     });
   },
@@ -130,9 +136,9 @@ export default {
       e.preventDefault();
       var that = this;
       socket.emit('send-message', { 
-        user_id: that.getUser.id,
+        user_id: this.getUser.id,
         message: that.message,
-        job_id: '60c4a753346ad76c7277ec4d',
+        job_id: this.roomid,
         createAt : Date.now()
       });
 

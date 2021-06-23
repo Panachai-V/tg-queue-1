@@ -32,6 +32,16 @@ class AuthService {
       phone: regisuser.phone
     });
   }
+  
+  createCompany(companyInfo) {
+    return axios.post('auth/checktaxid', {
+      taxid: regisuser.taxid,
+      province: regisuser.province,
+      postal: regisuser.postal,
+      address: regisuser.address,
+      name: regisuser.name
+    });
+  }
 }
 
 export default new AuthService();

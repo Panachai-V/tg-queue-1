@@ -3,11 +3,10 @@
   <Sidenav :user="user" :activeIndex="sidenavActiveIndex" />
 
   <section class="section-full pull-right">
-    <div class="container">
-
+    <div class="container" v-if="!getLoadingStatus">
       <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
-          <a :href="'/admin/job-requests/'+jobRequest.status" class="btn color-gray h-color-01">
+          <a :href="'/admin/job-requests'" class="btn color-gray h-color-01">
             <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
             ย้อนกลับ
           </a>
@@ -15,28 +14,29 @@
         <div class="header-wrapper">
           <div class="text-container pr-2">
             <span class="h3 mr-3">View Job Request</span> 
-            <span v-if="jobRequest.status==1" class="ss-tag ss-tag-danger">รอการ Matching</span>
-            <span v-else-if="jobRequest.status==2" class="ss-tag ss-tag-info">รอคิวการรับ</span>
-            <span v-else-if="jobRequest.status==3" class="ss-tag ss-tag-danger">รอยืนยันคิว</span>
-            <span v-else-if="jobRequest.status==4" class="ss-tag ss-tag-warning">กำลังดำเนินการ</span>
-            <span v-else-if="jobRequest.status==5" class="ss-tag ss-tag-success">ดำเนินการเสร็จสิ้น</span>
+            <span v-if="getDetailJob.status==0" class="ss-tag ss-tag-danger">รอการ Matching</span>
+            <span v-if="getDetailJob.status==1" class="ss-tag ss-tag-info">รอการชำระเงิน</span>
+            <span v-else-if="getDetailJob.status==2" class="ss-tag ss-tag-info">รอคิวการรับ</span>
+            <span v-else-if="getDetailJob.status==3" class="ss-tag ss-tag-danger">รอยืนยันคิว</span>
+            <span v-else-if="getDetailJob.status==4" class="ss-tag ss-tag-warning">กำลังดำเนินการ</span>
+            <span v-else-if="getDetailJob.status==5" class="ss-tag ss-tag-success">ดำเนินการเสร็จสิ้น</span>
           </div>
           <div class="btns hide-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/admin/job-requests/'+jobRequest.status" 
+              text="ย้อนกลับ" :href="'/admin/job-requests'" 
               classer="btn-color-08"
             />
           </div>
           <div class="btns show-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/admin/job-requests/'+jobRequest.status" 
+              text="ย้อนกลับ" :href="'/admin/job-requests'" 
               classer="btn-color-08 btn-sm" 
             />
           </div>
         </div>
       </div>
       
-      <div v-if="jobRequest.status > 4">
+      <div v-if="getDetailJob.status > 4">
         <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
           <p class="fw-400">ความพึงพอใจ</p>
         </div>
@@ -54,15 +54,15 @@
                     { value: 2, text: '2 - ไม่พอใจ' },
                     { value: 1, text: '1 - ไม่พอใจมาก' }
                   ]" 
-                  :value="jobRequest.rating" 
-                  @input="jobRequest.rating = $event" 
+                  :value="getDetailJob.rating" 
+                  @input="getDetailJob.rating = $event" 
                 />
               </div>
               <div class="grid md-2-3 sm-100 mt-4">
                 <FormGroup 
                   type="textarea" label="คำแนะนำ" placeholder="คำแนะนำ" :rows="1" 
-                  :value="jobRequest.comment" 
-                  @input="jobRequest.comment = $event" 
+                  :value="getDetailJob.comment" 
+                  @input="getDetailJob.comment = $event" 
                 />
               </div>
             </div>
@@ -75,10 +75,10 @@
           </form>
           <div v-else class="grids">
             <div class="grid md-1-3 sm-50 xs-50">
-              <FormGroup  type="plain" label="ระดับความพอใจ" :value="jobRequest.rating" />
+              <FormGroup  type="plain" label="ระดับความพอใจ" :value="getDetailJob.rating" />
             </div>
             <div class="grid md-2-3 sm-100">
-              <FormGroup  type="plain" label="คำแนะนำ" :value="jobRequest.comment" />
+              <FormGroup  type="plain" label="คำแนะนำ" :value="getDetailJob.comment" />
             </div>
           </div>
         </div>
@@ -174,11 +174,11 @@
             <div class="grid xl-20 lg-25 sm-50">
               <FormGroup
                 type="plain" label="ยืนยันเวลารับสินค้า" 
-                :value="jobRequest.confPickupTimeHours && jobRequest.confPickupTimeMinutes
-                  ? jobRequest.confPickupTimeHours+'.'+jobRequest.confPickupTimeMinutes+' น.': ''"
+                :value="getDetailJob.confPickupTimeHours && getDetailJob.confPickupTimeMinutes
+                  ? getDetailJob.confPickupTimeHours+'.'+getDetailJob.confPickupTimeMinutes+' น.': ''"
               />
             </div>
-            <div v-if="jobRequest.status < 5" class="grid sm-100">
+            <div v-if="getDetailJob.status < 5" class="grid sm-100">
               <div class="btns d-flex mt-0">
                 <Button 
                   v-if="stepActiveIndex > 2" text="ย้อนกลับ" href="javascript:" 
@@ -205,7 +205,7 @@
         </div>
       </div>
       
-      <div v-if="jobRequest.status > 1">
+      <div v-if="getDetailJob.status > 1">
         <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
           <p class="fw-400">คิวการรับสินค้า</p>
         </div>
@@ -215,42 +215,42 @@
               <div class="grids">
                 <div class="grid sm-50 xs-50">
                   <FormGroup
-                    type="plain" label="วันที่เที่ยวบิน" :value="formatDate(jobRequest.date, 'DD MMM YYYY')"
+                    type="plain" label="วันที่เที่ยวบิน" :value="formatDate(getDetailJob.flightDate, 'DD MMM YYYY')"
                   />
                 </div>
                 <div class="grid sm-50 xs-50">
                   <FormGroup
-                    type="plain" label="จำนวนสินค้า" :value="formatNumber(jobRequest.numberOfPieces, 0)"
+                    type="plain" label="จำนวนสินค้า" :value="formatNumber(getDetailJob.numberOfPieces, 0)"
                   />
                 </div>
                 <div class="grid sm-50 xs-50">
                   <FormGroup
-                    type="plain" label="หมายเลขช่องจอด" :value="jobRequest.dockNumber"
+                    type="plain" label="หมายเลขช่องจอด" :value="getDetailJob.dockNumber"
                   />
                 </div>
                 <div class="grid sm-50 xs-50">
                   <FormGroup
                     type="plain" label="เวลารับสินค้า" 
-                    :value="jobRequest.pickupTimeHours && jobRequest.pickupTimeMinutes
-                      ? jobRequest.pickupTimeHours+'.'+jobRequest.pickupTimeMinutes+' น.': ''"
+                    :value="getDetailJob.pickupTimeHours && getDetailJob.pickupTimeMinutes
+                      ? getDetailJob.pickupTimeHours+'.'+getDetailJob.pickupTimeMinutes+' น.': ''"
                   />
                 </div>
               </div>
             </div>
-            <div v-if="jobRequest.qrCode" class="grid md-1-3 sm-50 xs-50">
-              <img class="img-qr" :src="jobRequest.qrCode" alt="QR Code" />
+            <div v-if="getDetailJob.qrCode" class="grid md-1-3 sm-50 xs-50">
+              <img class="img-qr" :src="getDetailJob.qrCode" alt="QR Code" />
             </div>
           </div>
         </div>
       </div>
       
-      <div v-if="jobRequest.status > 2">
+      <div v-if="getDetailJob.status > 2">
         <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
           <p class="fw-400">ข้อมูลการสนทนา</p>
         </div>
         <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
           <div class="mt-6">
-            <ChatContainer :chat="chat" :withInput="jobRequest.status <= 4" />
+            <ChatContainer :chat="chat" :withInput="getDetailJob.status <= 4" />
           </div>
         </div>
       </div>
@@ -262,35 +262,35 @@
         <div class="grids">
           <div class="grid xl-1-3 lg-40 md-50 sm-80">
             <FormGroup 
-              type="plain" label="เลขที่ Airway Bill" :value="jobRequest.awbNumber" 
+              type="plain" label="เลขที่ Airway Bill" :value="getDetailJob.awbNumber" 
             />
           </div>
           <div class="grid xl-1-3 lg-40 md-50 sm-80">
             <FormGroup 
-              type="plain" label="เลขที่ House Airway Bil" :value="jobRequest.hwbSerialNumber" 
-            />
-          </div>
-          <div class="sep"></div>
-          <div class="grid xl-1-3 lg-40 md-50 sm-80">
-            <FormGroup 
-              type="plain" label="รหัสเที่ยวบิน" :value="jobRequest.flightNumber" 
-            />
-          </div>
-          <div class="grid xl-1-3 lg-40 md-50 sm-80">
-            <FormGroup 
-              type="plain" label="เลขที่งาน" :value="jobRequest.jobNumber" 
+              type="plain" label="เลขที่ House Airway Bil" :value="getDetailJob.hwbSerialNumber" 
             />
           </div>
           <div class="sep"></div>
           <div class="grid xl-1-3 lg-40 md-50 sm-80">
             <FormGroup 
-              type="plain" label="เลขที่ใบขนสินค้า" :value="jobRequest.customsEntryNumber" 
+              type="plain" label="รหัสเที่ยวบิน" :value="getDetailJob.flightNumber" 
+            />
+          </div>
+          <div class="grid xl-1-3 lg-40 md-50 sm-80">
+            <FormGroup 
+              type="plain" label="เลขที่งาน" :value="getDetailJob.jobNumber" 
+            />
+          </div>
+          <div class="sep"></div>
+          <div class="grid xl-1-3 lg-40 md-50 sm-80">
+            <FormGroup 
+              type="plain" label="เลขที่ใบขนสินค้า" :value="getDetailJob.customsEntryNumber" 
             />
           </div>
           <div class="grid xl-1-3 lg-40 md-50 sm-80">
             <FormGroup 
               type="plain" label="วันที่ได้รับเลขที่ใบสินค้า" 
-              :value="formatDate(jobRequest.customsEntryNumberDate)" 
+              :value="formatDate(getDetailJob.customsEntryNumberDate, 'DD MMM YYYY')" 
             />
           </div>
         </div>
@@ -308,6 +308,7 @@ import Step01 from '../../components/Step01';
 import ChatContainer from '../../components/ChatContainer';
 import FormGroupTime from '../../components/FormGroupTime';
 import FormGroupTrucks from '../../components/FormGroupTrucks';
+import {mapGetters, mapActions, mapState} from "vuex"
 
 export default {
   name: 'AdminJobRequestViewPage',
@@ -362,7 +363,7 @@ export default {
         comment: ''
       },
 
-      jobRequestCommentValid: false,
+      jobRequestCommentValid: true,
       jobRequestConfirmValid: false,
 
       stepActiveIndex: 1,
@@ -394,6 +395,9 @@ export default {
       ]
     }
   },
+  created() {
+    this.fetchJobDetail(this.$route.params.id);    
+  },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     if(this.jobRequest.status > 1){
@@ -419,8 +423,18 @@ export default {
     if(this.jobRequest.status > 4){
       this.stepActiveIndex = 6;
     }
+    console.log('detail job: ', this.getDetailJob)
+  },
+  computed: {
+    ...mapGetters({
+      getLoadingStatus: 'admin/getLoadingStatus',
+      getDetailJob: 'admin/getDetailJob'
+    })
   },
   methods: {
+    ...mapActions({
+      fetchJobDetail: 'admin/fetchJobDetail'
+    }),
     formatNumber(value, digits=2) {
       let val = (value/1).toFixed(digits);
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

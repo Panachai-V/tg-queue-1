@@ -238,7 +238,7 @@
         </div>
         <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
           <div class="mt-6">
-            <ChatContainer :chat="chat" :withInput="getDetailJob.status <= 3" />
+            <ChatContainer :chat="chat" :withInput="getDetailJob.status <= 4"  :roomid="$route.params.jobID"/>
           </div>
         </div>
       </div>
