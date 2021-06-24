@@ -21,28 +21,37 @@
             <span v-else-if="getDetailJob.status==4" class="ss-tag ss-tag-warning">กำลังดำเนินการ</span>
             <span v-else-if="getDetailJob.status==5" class="ss-tag ss-tag-warning">ดำเนินการเสร็จสิ้น</span>
           </div>
-          <div class="btns hide-mobile">          
-            <Button 
-              v-if="getDetailJob.status == 4"
-              type="submit" text="ได้รับสินค้าแล้ว" 
-              classer="btn-color-01" :prepend="true" icon="check-white.svg" 
-            />
+          <div class="btns hide-mobile">
             <Button 
               text="ย้อนกลับ" :href="'/forwarder/job-requests/'+(getDetailJob.status+1)" 
               classer="btn-color-08 ml-2"
             />
           </div>
-          <div class="btns show-mobile">         
-            <Button 
-              v-if="getDetailJob.status == 4"
-              type="submit" text="ได้รับสินค้าแล้ว" 
-              classer="btn-color-01 btn-sm" :prepend="true" icon="check-white.svg" 
-            />
+          <div class="btns show-mobile">
             <Button 
               text="ย้อนกลับ" :href="'/forwarder/job-requests/'+(getDetailJob.status+1)" 
               classer="btn-color-08 btn-sm ml-1" 
             />
           </div>
+        </div>
+      </div>
+      <div v-if="getDetailJob.status == 4">
+        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+          <p class="fw-400">ยืนยันการรับสินค้า</p>
+        </div>
+        <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
+          <form :action="'/forwarder/job-request-view/' + getDetailJob._id" method="GET">
+            <div class="grids">
+              <div class="grid sm-100">
+                <div class="btns mt-0">
+                  <Button 
+                    type="submit" text="ได้รับสินค้าแล้ว" 
+                    classer="btn-color-01" :append="true" icon="check-white.svg" @click="receivedPackage()"
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
       
@@ -51,7 +60,8 @@
           <p class="fw-400">ความพึงพอใจ</p>
         </div>
         <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
-          <form v-if="!jobRequestCommentValid" action="/" method="GET" @submit.prevent="onSubmitComment">
+          <form v-if="!getDetailJob.rating" action="/" method="GET" @submit.prevent="onSubmitComment">
+            {{getJobRating}}
             <div class="grids">
               <div class="grid md-1-3 sm-50 xs-50 mt-4">
                 <FormGroup 
@@ -64,22 +74,22 @@
                     { value: 2, text: '2 - ไม่พอใจ' },
                     { value: 1, text: '1 - ไม่พอใจมาก' }
                   ]" 
-                  :value="getDetailJob.rating" 
-                  @input="getDetailJob.rating = $event" 
+                  :value="getJobRating.rating" 
+                  @input="getJobRating.rating = $event" 
                 />
               </div>
               <div class="grid md-2-3 sm-100 mt-4">
                 <FormGroup 
                   type="textarea" label="คำแนะนำ" placeholder="คำแนะนำ" :rows="1" 
-                  :value="getDetailJob.comment" 
-                  @input="getDetailJob.comment = $event" 
+                  :value="getJobRating.comment" 
+                  @input="getJobRating.comment = $event" 
                 />
               </div>
             </div>
             <div class="btns w-auto mt-4">
               <Button 
                 type="submit" text="ส่งข้อความ" 
-                classer="btn-color-01" :append="true" icon="send-white.svg" 
+                classer="btn-color-01" :append="true" icon="send-white.svg" @click="comment()"
               />
             </div>
           </form>
@@ -97,10 +107,9 @@
       <div v-if="getDetailJob.status == 3">
         <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
           <p class="fw-400">ยืนยันการรับสินค้า</p>
-          {{getSelectDriver}}
         </div>
         <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
-          <form v-if="!jobRequestConfirmValid" action="/" method="GET" @submit.prevent="onSubmitConfirm">
+          <form v-if="!jobRequestConfirmValid" :action="'/forwarder/job-request-view/' + $route.params.jobID" method="GET">
             <div class="grids">
               <div class="grid xl-30 lg-1-3 sm-50">
                 <FormGroup 
@@ -138,7 +147,7 @@
                 <div class="btns mt-0">
                   <Button 
                     type="submit" text="ยืนยันการรับสินค้า" 
-                    classer="btn-color-01" :append="true" icon="check-white.svg" 
+                    classer="btn-color-01" :append="true" icon="check-white.svg" @click="driverSelect()"
                   />
                 </div>
               </div>
@@ -294,9 +303,9 @@
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Step01 from '../../components/Step01';
-import ChatContainer from '../../components/ChatContainer';
+import ChatContainer from '../../components/ChatContainer-ver1';
 import FormGroupTime from '../../components/FormGroupTime';
-import FormGroupTrucks from '../../components/FormGroupTrucks';
+import FormGroupTrucks from '../../components/FormGroupTrucksOneTruck';
 import {mapGetters, mapActions, mapState} from "vuex"
 
 export default {
@@ -394,7 +403,6 @@ export default {
   },
   created() {
     this.fetchJobDetail(this.$route.params.jobID);
-    this.driverOverview()
   },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
@@ -428,7 +436,8 @@ export default {
       getDriverList: 'ff_driver/getDriverList',
       getLoadingStatus: 'freight_forwarder/getLoadingStatus',
       getDetailJob: 'freight_forwarder/getDetailJob',
-      getSelectDriver: 'freight_forwarder/getSelectDriver'
+      getSelectDriver: 'freight_forwarder/getSelectDriver',
+      getJobRating: 'freight_forwarder/getJobRating'
     })
   },
   methods: {
@@ -449,7 +458,10 @@ export default {
     },
     ...mapActions({
       fetchJobDetail: 'freight_forwarder/fetchJobDetail',
-      driverOverview: 'ff_driver/overview'
+      driverOverview: 'ff_driver/overview',
+      driverSelect: 'freight_forwarder/driverSelect',
+      receivedPackage: 'freight_forwarder/receivedPackage',
+      comment: 'freight_forwarder/comment'
     }),
     
   }

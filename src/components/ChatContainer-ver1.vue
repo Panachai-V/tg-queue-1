@@ -45,6 +45,7 @@
         </div>
       </div>
     </form>
+    {{getMessageHistory}}
   </div>
 </template>
 
@@ -75,10 +76,16 @@ export default {
   },
   mounted() {
     this.scrollToEnd();
-    console.log(this.getUser)
-  },
-  beforeCreate() {
-    
+    // this.getSocketID.on('recive-message', (data) => {
+    //   console.log(data);
+    //   this.chat.push({
+    //     self: false,
+    //     message: data.message,
+    //     avatar: data.avatar,
+    //     createdAt: data.createdAt
+    //   })
+    // });
+    this.receiveMessage();
   },
   created() {
     console.log('this.$route.params.id :', this.roomid)
@@ -87,13 +94,11 @@ export default {
     }
     
     this.InitialInfo({
-      roomid: 'asd',
-      userid: 'asd',
-      job_id: '123'
-    })
-  },
-  mounted() {
+      roomid: this.roomid,
+      userid: this.getUser.id,
+    });
 
+    this.joinChatRoom();
   },
   watch: {
     
@@ -105,7 +110,9 @@ export default {
       getUserCompany: 'auth/getUserCompany',
       getSelfUserCompany: 'auth/getSelfUserCompany',
       getLoginStatus: 'auth/getLoginStatus',
-      getLoadingStatus: 'auth/getLoadingStatus'
+      getLoadingStatus: 'auth/getLoadingStatus',
+      getMessageHistory: 'socketIO/getMessageHistory',
+      getSocketID: 'socketIO/getSocketID'
     })
   },
   updated() {
@@ -120,9 +127,17 @@ export default {
     },
     onSubmit(e) {
       e.preventDefault();
+
+      var that = this;
+
+      that.sendMessage(that.message);
+
+      that.message = '';
     },
     ...mapActions({
-      joinChatRoom: 'socketIO/joinChatRoom'
+      joinChatRoom: 'socketIO/joinChatRoom',
+      receiveMessage: 'socketIO/receiveMessage',
+      sendMessage: 'socketIO/sendMessage'
     }),
     ...mapMutations({
       InitialInfo: 'socketIO/InitialInfo'

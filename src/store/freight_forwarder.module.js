@@ -19,6 +19,11 @@ export const freight_forwarder = {
           confPickupTimeMinutes: null,
           numberOfPieces: null
         },
+      jobRating: {
+        driver_id: null,
+        rating: null,
+        comment: null
+      },
       loading: false,
       filterStatus: temp_filterstatus
     },
@@ -210,16 +215,54 @@ export const freight_forwarder = {
             )
             
         },
-        fetchJobDetail({ state , commit }, id) {            
+        fetchJobDetail({ state , commit, dispatch }, id) {            
             commit('change_status_loading', true)
             CompanyService.ff_jobDetail(id).then(
                 company => {
+                    if (company.data.status == 3) {
+                        dispatch('ff_driver/overview', null, {root:true});
+                    }
                     commit('update_jobDetail', company.data)
+                    commit('update_jobRatingDriver', company.data.driver[0]._id)
                     commit('change_status_loading', false);
-                    // console.log('job detail fetched',company.data)
+                    console.log('job detail fetched',company.data)
                 }
             );
-        }
+        },
+        driverSelect({ state }) {
+            CompanyService.ff_jobDriverSelect(state.detailJob._id, state.selectDriver).then(
+                respond => {
+                    return Promise.resolve(respond);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+            );
+        },
+        receivedPackage({ state }) {
+            CompanyService.ff_jobReceived(state.detailJob._id).then(
+                respond => {
+                    return Promise.resolve(respond);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+            );
+        },
+        comment({ state , commit }) {
+            CompanyService.ff_jobComment(state.detailJob._id, state.jobRating).then(
+                respond => {
+                    commit('fetchRating', {
+                        rating: state.jobRating.rating,
+                        comment: state.jobRating.comment
+                    })
+                    return Promise.resolve(respond);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+            );
+        },        
     },
     mutations: {
         update_overview(state, data_detail){
@@ -254,6 +297,9 @@ export const freight_forwarder = {
         update_jobDetail(state, input) {
             state.detailJob = input
         },
+        update_jobRatingDriver(state, input) {
+            state.jobRating.driver_id = input
+        },        
         change_filterStatus(state, input) {
             state.filterStatus = input
         },
@@ -264,6 +310,10 @@ export const freight_forwarder = {
             state.overview.job_detail_3 = []
             state.overview.job_detail_4 = []
             state.overview.job_detail_5 = []
+        },
+        fetchRating(state, input) {
+            state.detailJob.rating = input.rating
+            state.detailJob.comment = input.comment
         }
     },
     getters: {
@@ -293,6 +343,9 @@ export const freight_forwarder = {
         },
         getDetailJob(state) {
             return state.detailJob
+        },
+        getJobRating(state) {
+            return state.jobRating
         },
         getSelectDriver(state) {
             return state.selectDriver

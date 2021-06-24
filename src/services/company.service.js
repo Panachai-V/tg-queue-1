@@ -17,6 +17,18 @@ class CompanyService {
         return axios.get(`ff/jrq/${jobID}`, { headers: authHeader() })
     }
 
+    ff_jobDriverSelect(jobID, selectDriver) {
+        return axios.post(`ff/jrq/${jobID}`, selectDriver, { headers: authHeader() })
+    }
+
+    ff_jobReceived(jobID) {
+        return axios.get(`public/${jobID}/received`, { headers: authHeader() })
+    }
+
+    ff_jobComment(jobID, comment) {
+        return axios.post(`public/${jobID}/comment`, comment, { headers: authHeader() })
+    }
+
     driverOverview() {
         return axios.get('ff/tdv/overview', { headers: authHeader() })
     }
