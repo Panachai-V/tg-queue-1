@@ -12,6 +12,13 @@ export const freight_forwarder = {
       message: 'Hello World!',
       overview: temp_overview,
       detailJob: null,
+      selectDriver: {
+          driver: null,
+          truckNumber: null,
+          confPickupTimeHours: null,
+          confPickupTimeMinutes: null,
+          numberOfPieces: null
+        },
       loading: false,
       filterStatus: temp_filterstatus
     },
@@ -286,6 +293,9 @@ export const freight_forwarder = {
         },
         getDetailJob(state) {
             return state.detailJob
+        },
+        getSelectDriver(state) {
+            return state.selectDriver
         },
         getFilterStatus(state) {
             return state.filterStatus
