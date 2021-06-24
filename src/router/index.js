@@ -149,7 +149,7 @@ const routes = [
 
   // Admin - Job Requests
   {
-    path: '/admin/job-requests/:tab?',
+    path: '/admin/job-requests',
     name: 'AdminJobRequestsPage',
     component: () => import('../views/admin/JobRequests.vue'),
     beforeEnter: requireAuth
@@ -161,7 +161,7 @@ const routes = [
     beforeEnter: requireAuth
   },
   {
-    path: '/admin/job-request-view/:status?',
+    path: '/admin/job-request-view/:id',
     name: 'AdminJobRequestViewPage',
     component: () => import('../views/admin/JobRequestView.vue'),
     beforeEnter: requireAuth

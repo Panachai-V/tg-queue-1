@@ -22,7 +22,7 @@
             :tabs="[ 'กำลังดำเนินการ', 'ดำเนินการเสร็จสิ้น' ]" 
           />
         </div>
-        <div class="tab-contents" v-if="getLoadingStatus == false" data-aos="fade-up" data-aos-delay="150">
+        <div class="tab-contents" data-aos="fade-up" data-aos-delay="150">
           
           <div class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable 
@@ -44,17 +44,17 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
             />
           </div>
           
-          <div class="tab-content" v-if="getLoadingStatus == false" :class="{ 'active': tabActiveIndex == 1 }">
+          <div class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
             <DataTable 
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest5" 
@@ -74,10 +74,10 @@
                 'dockNumber', 'pickupTime'
               ]" 
               :orders="[
-                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
-                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'dockNumber-desc', text: 'หมายเลขช่องจอด (ใหม่สุด)' },
                 { key: 'dockNumber-asc', text: 'หมายเลขช่องจอด (เก่าสุด)' },
+                { key: 'date-desc', text: 'วันที่เที่ยวบิน (ใหม่สุด)' },
+                { key: 'date-asc', text: 'วันที่เที่ยวบิน (เก่าสุด)' },
                 { key: 'pickupTime-desc', text: 'เวลารับสินค้า (ใหม่สุด)' },
                 { key: 'pickupTime-asc', text: 'เวลารับสินค้า (เก่าสุด)' }
               ]" 
@@ -194,7 +194,7 @@ export default {
     }
     
     // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
-    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex + 4).toString())
+    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex + 4).toString(), "")
     this.fetchJobRequest(temp_condition);
     console.log('over: ',this.getOverview)
     console.log('getJobRequest4: ', this.getJobRequest4)

@@ -25,7 +25,7 @@ export const freight_forwarder = {
                 return ;
               },
               error => {
-                console.log('fetchOverview error')
+                // console.log('fetchOverview error')
                 commit('change_status_loading', false)
                 return ;
               }
@@ -38,16 +38,11 @@ export const freight_forwarder = {
                 companys => {
                     // console.log('companys.data.docs :', companys.data.docs[0])
                     // console.log('status data :', companys.data.docs[0].status)
-                    //console.log('companys.data :', companys.data)  
+                    // console.log('companys.data :', companys.data)  
 
                     var temp_array = []
-
-                    state.overview.job_detail_0 = []
-                    state.overview.job_detail_1 = []
-                    state.overview.job_detail_2 = []
-                    state.overview.job_detail_3 = []
-                    state.overview.job_detail_4 = []
-                    state.overview.job_detail_5 = []
+                    
+                    commit("clear_job_requests");
 
                     for(let i = 0; i < companys.data.docs.length; i++){
                         //console.log('companys.data.docs :', companys.data.docs[i])
@@ -89,6 +84,11 @@ export const freight_forwarder = {
                                 r[e]["text"] = temp_data['flightNumber']
                             }
 
+                            if (e== "flightDate") {
+                                r[e] = {}
+                                r[e]["text"] = temp_data['flightDate']
+                            }
+
                             if (e == "hwbSerialNumber"){
                                 r[e] = {}
                                 r[e]["text"] = temp_data['hwbSerialNumber']
@@ -113,6 +113,11 @@ export const freight_forwarder = {
                                 r[e]["text"] = temp_status.text
                                 r[e]["type"] = temp_status.type
                                 r[e]["value"] = temp_status.value
+                            }
+
+                            if (e == "customsEntryNumberDate") {
+                                r[e] = {}
+                                r[e]["text"] = moment(String(temp_data['customsEntryNumberDate'])).format('DD MMM YYYY')
                             }
 
                             if (e == "date") {
@@ -155,24 +160,25 @@ export const freight_forwarder = {
 
                         temp_array.push(result)
                     }
-                    
-                    if ( companys.data.docs[0].status == 0 ){
-                        commit('update_job_request_0', temp_array);
-
-                    } else if (companys.data.docs[0].status == 1 ) {
-                        commit('update_job_request_1', temp_array);
-                        
-                    } else if ( companys.data.docs[0].status == 2 ) {
-                        commit('update_job_request_2', temp_array);
-                        
-                    } else if ( companys.data.docs[0].status == 3 ) {
-                        commit('update_job_request_3', temp_array);
-                        
-                    } else if ( companys.data.docs[0].status == 4 ) {
-                        commit('update_job_request_4', temp_array); 
-                        
-                    } else if ( companys.data.docs[0].status == 5 ) {
-                        commit('update_job_request_5', temp_array);
+                    if (companys.data.docs.length != 0) {
+                        if ( companys.data.docs[0].status == 0 ){
+                            commit('update_job_request_0', temp_array);
+    
+                        } else if (companys.data.docs[0].status == 1 ) {
+                            commit('update_job_request_1', temp_array);
+                            
+                        } else if ( companys.data.docs[0].status == 2 ) {
+                            commit('update_job_request_2', temp_array);
+                            
+                        } else if ( companys.data.docs[0].status == 3 ) {
+                            commit('update_job_request_3', temp_array);
+                            
+                        } else if ( companys.data.docs[0].status == 4 ) {
+                            commit('update_job_request_4', temp_array); 
+                            
+                        } else if ( companys.data.docs[0].status == 5 ) {
+                            commit('update_job_request_5', temp_array);
+                        }
                     }
 
                     // console.log('change_status_loading :', false)
@@ -203,7 +209,7 @@ export const freight_forwarder = {
                 company => {
                     commit('update_jobDetail', company.data)
                     commit('change_status_loading', false);
-                    console.log('job detail fetched',company.data)
+                    // console.log('job detail fetched',company.data)
                 }
             );
         }
@@ -243,6 +249,14 @@ export const freight_forwarder = {
         },
         change_filterStatus(state, input) {
             state.filterStatus = input
+        },
+        clear_job_requests(state) {
+            state.overview.job_detail_0 = []
+            state.overview.job_detail_1 = []
+            state.overview.job_detail_2 = []
+            state.overview.job_detail_3 = []
+            state.overview.job_detail_4 = []
+            state.overview.job_detail_5 = []
         }
     },
     getters: {

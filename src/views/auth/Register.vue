@@ -248,6 +248,7 @@ import FormGroup from '../../components/FormGroup';
 import Button from '../../components/Button';
 import axios from 'axios';
 import RegisUser from '../../models/regis-user';
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'AuthRegisterPage',
@@ -295,6 +296,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      register: 'auth/register',
+      createCompany: 'auth/createCompany'
+    }),
     roleOptions() {
       if (this.thisexist == 1) {
         return [
@@ -371,12 +376,30 @@ export default {
           this.dataset.lastname,
           this.dataset.phone
         )
-
-        if (this.dataset.username && this.dataset.email && this.dataset.password && this.dataset.confPassword) {
-          this.$store.dispatch('auth/register', regisUser).then(
+        
+        if (this.thisexist == 0) {
+          this.createCompany({
+            taxid: this.datasetCompany.taxId,
+            province: this.datasetCompany.province,
+            postal: this.datasetCompany.zipcode,
+            address: this.datasetCompany.address,
+            name: this.datasetCompany.name
+          }).then(
             () => {
-              console.log('signed up')
-              //this.$router.push('/auth/signin');
+              console.log('companycreated')
+            },error => {
+              this.message =
+                (error.response && error.response.data) ||
+                error.message ||
+                error.toString();
+              this.successful = false;
+            }
+          );
+        }
+        if (this.dataset.username && this.dataset.email && this.dataset.password && this.dataset.confPassword) {
+          this.register(regisUser).then(
+            () => {
+              this.$router.push('/auth/signin');
             },
             error => {
               this.message =
@@ -384,6 +407,7 @@ export default {
                 error.message ||
                 error.toString();
               this.successful = false;
+              console.log(error)
             }
           );
         }

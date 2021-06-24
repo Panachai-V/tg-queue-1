@@ -5,7 +5,7 @@ import Overview from '../models/company-info';
 class CompanyService {
     ff_jobRequest(condition) {
         // console.log('getting count each job...')
-        console.log('search filter :', condition)
+        // console.log('search filter :', condition)
         return axios.get(`ff/jrq/?page=${condition.page}&limit=${condition.limit}&sort_by=${condition.sort_by}&order=${condition.order}&status=${condition.status}&search=${condition.search}`, { headers: authHeader() })
     }
 
@@ -49,12 +49,20 @@ class CompanyService {
 
     tgadmin_jobRequest(condition) {
         // console.log('getting count each job...')
-        console.log('search filter :', condition)
-        return axios.get(`tgadmin/all/?page=${condition.page}&limit=${condition.limit}&sort_by=${condition.sort_by}&order=${condition.order}&status=${condition.status}`, { headers: authHeader() })
+        // console.log('search filter :', condition)
+        return axios.get(`tgadmin/all/?page=${condition.page}&limit=${condition.limit}&sort_by=${condition.sort_by}&order=${condition.order}&status=${condition.status}&search=${condition.search}`, { headers: authHeader() })
     }
 
     tgadmin_jobDetail(jobID) {
         return axios.get(`tgadmin/${jobID}`, { headers: authHeader() })
+    }
+
+    tgadmin_confirmPayment(jobID) {
+        return axios.get(`tgadmin/${jobID}/confirm_payment`, { headers: authHeader() })
+    }
+
+    tgadmin_pickup(jobID,detailPickup) {
+        return axios.post(`tgadmin/${jobID}/pickup`, detailPickup, { headers: authHeader() })
     }
 }
 

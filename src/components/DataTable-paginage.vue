@@ -1,8 +1,4 @@
 <template>
-  <div v-if="getLoadingStatus == false">
-      {{getFilterStatus}}
-  </div>
-
   <!-- Table Options -->
   <div v-if="withOptions" class="table-options">
     <div v-if="orders.length || Object.keys(groups).length" class="options hide-mobile">
@@ -82,7 +78,7 @@
   </div>
 
   <!-- Table -->
-  <form action="/" method="GET" @submit="onSubmit">
+  <form action="/" method="GET" @submit="onSubmit" v-if="getLoadingStatus == false">
     <div class="table-wrapper">
       <table class="table-section">
         <thead>
@@ -92,9 +88,9 @@
             </th>
           </tr>
         </thead>
-        <tbody v-if="selfRows.length">
+        <tbody v-if="getData.length">
 
-          <tr v-for="(row, index) in selfRows" :key="index">
+          <tr v-for="(row, index) in getData" :key="index">
 
             <!-- Row Data -->
             <template v-if="index != editingIndex">
@@ -314,7 +310,6 @@
       </table>
     </div>
   </form>
-
 </template>
 
 <script>
@@ -336,7 +331,7 @@ export default {
     addOptions: { type: Object, default: {} },
     allowDownload: { type: Boolean, default: false },
     downloadUrl: { type: String, default: '' },
-    store: { type: String, default: '' },
+    store: { type: String, default: '' }
   },
   data() {
     return {
@@ -344,7 +339,7 @@ export default {
       selfPage: this.page,
       selfMaxPage: Math.ceil(this.rows.length / this.pp),
       selfFilteredRows: [...this.rows],
-      selfRows: [...this.rows].slice(0, this.page * this.pp),
+      selfRows: this.rows,
       selfSearch: '',
       selfOrder: '',
       selfGroups: Object.assign({}, this.groups),
@@ -363,11 +358,16 @@ export default {
       forwardersOverview: 'admin/forwardersOverview',
       storeChangePage: 'admin/changePage',
       changeOrder: 'admin/changeOrder',
+      changeSearch: 'admin/changeSearch',
+      changeStatus: 'admin/changeStatus'
     }),
     changePage(val) {
-      this.clearEditing();
+      console.log('table change page', val)
+      //this.clearEditing();
       this.storeChangePage(val)
       this.forwardersOverview()
+      console.log('table change page filter', {...this.getFilterStatus})
+      console.log('store: ',this.store)
 
       /*this.getFilterStatus.page += val;
       this.getFilterStatus.page = Math.max(1, this.getFilterStatus.page);
@@ -378,7 +378,6 @@ export default {
     },
     toggleGroup(index) {
       var that = this;
-      that.clearEditing();
       if(Object.keys(that.selfGroups).length){
         if(index > -1){
           that.selfGroups.options[index].checked = !that.selfGroups.options[index].checked;
@@ -388,48 +387,26 @@ export default {
           if(d.checked) that.selfGroupArray.push(d.value);
         });
       }
-      that.doSearch(that.selfSearch);
+      if (this.selfGroups.options[0].checked && this.selfGroups.options[1].checked) {
+        this.changeStatus('all')
+      } else if (this.selfGroups.options[0].checked && !this.selfGroups.options[1].checked) {
+        this.changeStatus('true')
+      } else if (!this.selfGroups.options[0].checked && this.selfGroups.options[1].checked) {
+        this.changeStatus('false')
+      } else {
+        this.changeStatus('none')
+      }
+      this.forwardersOverview()
     },
     doSearch(val) {
+      console.log('table doSearch: ',val)
       this.clearEditing();
-
-      // Search
-      this.selfSearch = val;
-      if(val){
-        var search = this.search;
-        this.selfFilteredRows = this.rows.filter(function(item){
-          var valid = false;
-          for(var s of search){
-            if(item[s] && item[s].text.indexOf(val) > -1){
-              valid = true;
-              break;
-            }
-          }
-          return valid;
-        });
-      }else{
-        this.selfFilteredRows = [...this.rows];
-      }
-
-      // Groups
-      if(Object.keys(this.groups).length){
-        var that = this;
-        var groupFilter = that.groups.filter;
-        that.selfFilteredRows = that.selfFilteredRows.filter(function(item){
-          return that.selfGroupArray.indexOf(item[groupFilter].value) > -1;
-        });
-      }
-
-      this.getFilterStatus.page = 1;
-      this.getFilterStatus.totalPages = Math.ceil(this.selfFilteredRows.length / this.pp);
-      this.selfRows = this.selfFilteredRows.slice(
-        (this.getFilterStatus.page - 1) * this.pp, this.getFilterStatus.page * this.pp
-      );
-      //this.doOrder(this.selfOrder);
+      this.changeSearch(val);
+      this.forwardersOverview()
       return true;
     },
     doOrder(val) {
-      console.log('order: ', val)
+      console.log('do order: ', val)
       this.clearEditing();
       if(val.indexOf('-descending') > -1){
         val = val.replace('-descending', '');
@@ -442,6 +419,7 @@ export default {
     },
 
     highlight(key, text) {
+      console.log('table highlight')
       if(key != 'options' && this.search.indexOf(key) > -1 && this.selfSearch){
         return text.replace(
           new RegExp(this.selfSearch, 'ig'), 
@@ -453,6 +431,7 @@ export default {
     },
 
     toggleAdding() {
+      console.log('table toggleAdding')
       var that = this;
       that.clearEditing();
       that.adding = !this.adding;
@@ -465,11 +444,13 @@ export default {
     },
 
     clearEditing() {
+      console.log('table clearEditing')
       this.editing = false;
       this.editingIndex = null;
       this.editData = {};
     },
     toggleEditing(index, id, row) {
+      console.log('table toggleEditing')
       var that = this;
       that.adding = false;
       that.editing = !that.editing;
@@ -484,10 +465,12 @@ export default {
           }
         });
       }
+      
       this.forwardersOverview()
     },
 
     onSubmit(e) {
+      console.log('table onSubmit')
       e.preventDefault();
       if(this.adding){
         var data = Object.assign({}, this.addData);
@@ -502,6 +485,7 @@ export default {
     },
 
     addCounter(step, event){
+      console.log('table addCounter')
       var counter = this.$refs.counter;
       var btn = event.target.parentNode;
       var parent = btn.parentNode;
@@ -517,6 +501,7 @@ export default {
       counter.value = result;
     },
     removeCounter(step, event){
+      console.log('table removeCounter')
       var counter = this.$refs.counter;
       var btn = event.target.parentNode;
       var parent = btn.parentNode;
@@ -530,7 +515,7 @@ export default {
         btn.classList.add('disabled');
       }
       counter.value = result;
-    },
+    }
   },
   created() {
     this.toggleGroup(-1);
@@ -539,14 +524,15 @@ export default {
     }*/
   },
   mounted() {
-    console.log('filter: ',this.getFilterStatus)
+    console.log('mounted: ',this.getFilterStatus)
   },
   computed: {
     ...mapGetters({
       getUser: 'auth/getUser',
       getFilterStatus: 'admin/getFilterStatus',
       getLoadingStatus: 'admin/getLoadingStatus',
-      getCondition: 'admin/getCondition'
+      getCondition: 'admin/getCondition',
+      getData: 'admin/getForwarders'
     })
   },
   emits: [ 

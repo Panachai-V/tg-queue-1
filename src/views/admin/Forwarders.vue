@@ -30,7 +30,7 @@
             </div>
           </div>
         </div>
-        <div data-aos="fade-up" data-aos-delay="150" v-if="getLoadingStatus == false">
+        <div data-aos="fade-up" data-aos-delay="150">
           <DataTable 
             :rows="getForwarders" 
             :columns="[
@@ -98,7 +98,7 @@ export default {
         }
       },
       rows1: [],
-      store: 'admin'
+      store: 'admin-forwarders'
     }
   },
   computed: {
