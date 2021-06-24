@@ -668,7 +668,7 @@ export default {
         } else if (this.tabActiveIndex + 4 == 4) {
           this.selfRows = this.getJobRequest4_driver
           this.selfFilteredRows = this.getJobRequest4_driver
-        } else if (this.tabActiveIndex == 5) {
+        } else if (this.tabActiveIndex + 4 == 5) {
           this.selfRows = this.getJobRequest5_driver
           this.selfFilteredRows = this.getJobRequest5_driver
         }

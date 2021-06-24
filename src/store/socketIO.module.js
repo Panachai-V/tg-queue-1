@@ -3,8 +3,8 @@ import SocketIO from '../services/socketIO.service';
 export const socketIO = {
     namespaced: true,
     state: {
-        roomid: '',
-        userid: '',
+        roomid: null,
+        userid: null,
         avatar: '',
         loadingStatus: false,
         message: '',
@@ -16,7 +16,7 @@ export const socketIO = {
             await commit('chageLoadingStatus', true)
             await state.socket.emit('join', {
                 job_id: state.roomid,
-                user_id: state.getUser.id,
+                user_id: state.userid,
             });
             await commit('chageLoadingStatus', false)
         },
@@ -26,16 +26,30 @@ export const socketIO = {
             await commit('chageLoadingStatus', false)
         },
         async receiveMessage ({ commit, state }) {
-            await commit('chageLoadingStatus', true)
-            await socket.on('recive-message', (data) => {
-                console.log(data);
-                  this.chat.push({
+            await state.socket.on('recive-message', (data) => {
+                state.messageHistory.push({
                     self: false,
                     message: data.message,
                     avatar: data.avatar,
                     createdAt: data.createdAt
-                  })
+                })
+            });
+        },
+        async sendMessage ({ commit, state }, message ) {
+            await commit('chageLoadingStatus', true)
+            await state.socket.emit('send-message', { 
+                user_id: state.userid,                
+                job_id: state.roomid,
+                message: message,
+                createAt : Date.now()
               });
+
+            await state.messageHistory.push({
+                self: true,
+                message: message,
+                avatar: state.avatar,
+                createdAt: Date.now()
+            })
             await commit('chageLoadingStatus', false)
         }
     },
@@ -44,7 +58,7 @@ export const socketIO = {
             console.log(input)
             state.roomid = input.roomid
             state.userid = input.userid
-            state.avatar = input.avatar
+            // state.avatar = input.avatar
         },
         chageLoadingStatus(state, input) {
             state.loadingStatus = input
@@ -53,6 +67,9 @@ export const socketIO = {
     getters: {
         getSocketID(state) {
             return state.socket
+        },
+        getMessageHistory(state) {
+            return state.messageHistory
         }
     }
 }
