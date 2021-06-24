@@ -293,7 +293,7 @@
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Step01 from '../../components/Step01';
-import ChatContainer from '../../components/ChatContainer';
+import ChatContainer from '../../components/ChatContainer-ver1';
 import FormGroupTime from '../../components/FormGroupTime';
 import FormGroupTrucks from '../../components/FormGroupTrucks';
 import {mapGetters, mapActions, mapState} from "vuex"

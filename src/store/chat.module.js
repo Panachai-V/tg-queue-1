@@ -3,7 +3,12 @@ import ChatService from '../services/chat.service';
 export const chat = {
     namespaced: true,
     state: {
+        roomid: '',
+        userid: '',
+        avatar: '',
         loadingStatus: false,
+        message: '',
+        messageHistory: [],
         socket: null,
     },
     actions: {
