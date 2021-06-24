@@ -29,7 +29,7 @@
           </div>
           <div class="btns show-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/tgadmin/job-requests/'+getDetailJob.status" 
+              text="ย้อนกลับ" :href="'/tgadmin/job-requests/'+getDetailJob.status"
               classer="btn-color-08 btn-sm" 
             />
           </div>

@@ -97,6 +97,7 @@
       <div v-if="getDetailJob.status == 3">
         <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
           <p class="fw-400">ยืนยันการรับสินค้า</p>
+          {{getSelectDriver}}
         </div>
         <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
           <form v-if="!jobRequestConfirmValid" action="/" method="GET" @submit.prevent="onSubmitConfirm">
@@ -104,7 +105,7 @@
               <div class="grid xl-30 lg-1-3 sm-50">
                 <FormGroup 
                   type="select" label="ผู้ขับรถ *" placeholder="เลือกผู้ขับรถ" :required="true" 
-                  :value="getDetailJob.driver" @input="getDetailJob.driver = $event" 
+                  :value="getSelectDriver.driver" @input="getSelectDriver.driver = $event" 
                   :options="getDriverList"
                 />
               </div>
@@ -112,14 +113,14 @@
                 <FormGroupTrucks
                   :required="true" :value="[
                   { 
-                    number: getDetailJob.truckNumber, 
-                    numberOfPieces: getDetailJob.numberOfPieces 
+                    number: getSelectDriver.truckNumber, 
+                    numberOfPieces: getSelectDriver.numberOfPieces 
                   }
                 ]" 
                   @input="[
                   { 
-                    number: getDetailJob.truckNumber, 
-                    numberOfPieces: getDetailJob.numberOfPieces 
+                    number: getSelectDriver.truckNumber, 
+                    numberOfPieces: getSelectDriver.numberOfPieces 
                   }
                 ] = $event" 
                 />
@@ -127,10 +128,10 @@
               <div class="grid xl-20 lg-25 sm-50">
                 <FormGroupTime
                   label="ยืนยันเวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
-                  :value0="getDetailJob.confPickupTimeHours" 
-                  @input0="getDetailJob.confPickupTimeHours = $event" 
-                  :value1="getDetailJob.confPickupTimeMinutes" 
-                  @input1="getDetailJob.confPickupTimeMinutes = $event" 
+                  :value0="getSelectDriver.confPickupTimeHours" 
+                  @input0="getSelectDriver.confPickupTimeHours = $event" 
+                  :value1="getSelectDriver.confPickupTimeMinutes" 
+                  @input1="getSelectDriver.confPickupTimeMinutes = $event" 
                 />
               </div>
               <div class="grid sm-100">
@@ -426,7 +427,8 @@ export default {
     ...mapGetters({
       getDriverList: 'ff_driver/getDriverList',
       getLoadingStatus: 'freight_forwarder/getLoadingStatus',
-      getDetailJob: 'freight_forwarder/getDetailJob'
+      getDetailJob: 'freight_forwarder/getDetailJob',
+      getSelectDriver: 'freight_forwarder/getSelectDriver'
     })
   },
   methods: {
