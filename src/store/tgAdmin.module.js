@@ -11,6 +11,11 @@ export const tgAdmin = {
     state: {
         overview: temp_overview,
         detailJob: null,
+        detailPickup: {
+            dockNumber: null,
+            pickupTimeHours: null,
+            pickupTimeMinutes: null
+        },
         loading: false,
         filterStatus: temp_filterstatus
     },
@@ -216,6 +221,28 @@ export const tgAdmin = {
                     console.log('job detail fetched',data)
                 }
             );
+        },
+        confirmPayment({ commit , state }) {
+            CompanyService.tgadmin_confirmPayment(state.detailJob._id).then(
+                respond => {
+                    return Promise.resolve(respond);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+            );
+        },
+        pickup({ commit , state }) {
+            if (state.detailJob._id && state.detailPickup.dockNumber && state.detailPickup.pickupTimeHours && state.detailPickup.pickupTimeMinutes) {
+                CompanyService.tgadmin_pickup(state.detailJob._id, state.detailPickup).then(
+                    respond => {
+                        return Promise.resolve(respond);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    }
+                );
+            }            
         }
     },
     mutations: {
@@ -290,6 +317,9 @@ export const tgAdmin = {
       },
       getDetailJob(state) {
           return state.detailJob
+      },
+      getDetailPickup(state) {
+          return state.detailPickup
       },
       getFilterStatus(state) {
           return state.filterStatus

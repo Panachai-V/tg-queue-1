@@ -53,17 +53,6 @@ import moment from 'moment';
 import FormGroup from './FormGroup';
 import Button from './Button';
 import {mapGetters, mapActions, mapMutations} from "vuex"
-import authHeader from '../services/auth-header';
-
-var socket = io.connect(process.env.VUE_APP_SERVERURL ,{
-  withCredentials: false,
-  transports : ['websocket']
-});
-
-// socket.on('recive-message', (data) => {
-//       console.log(data);
-//       // chat.push(data.message)
-//     });
 
 export default {
   name: 'ChatContainer',
@@ -88,26 +77,23 @@ export default {
     this.scrollToEnd();
     console.log(this.getUser)
   },
+  beforeCreate() {
+    
+  },
   created() {
     console.log('this.$route.params.id :', this.roomid)
-     window.onbeforeunload = () => {
-                socket.emit('leave', this.username);
-            }
-    socket.emit('join', {
-      job_id: this.roomid,
-      user_id: this.getUser.id,
-    });
+    window.onbeforeunload = () => {
+                
+    }
+    
+    this.InitialInfo({
+      roomid: 'asd',
+      userid: 'asd',
+      job_id: '123'
+    })
   },
   mounted() {
-    socket.on('recive-message', (data) => {
-      console.log(data);
-        this.chat.push({
-          self: false,
-          message: data.message,
-          avatar: data.avatar,
-          createdAt: data.createdAt
-        })
-    });
+
   },
   watch: {
     
@@ -134,40 +120,13 @@ export default {
     },
     onSubmit(e) {
       e.preventDefault();
-      var that = this;
-      socket.emit('send-message', { 
-        user_id: this.getUser.id,
-        message: that.message,
-        job_id: this.roomid,
-        createAt : Date.now()
-      });
-
-      if(that.withInput){
-        that.selfChat.push({
-          self: true,
-          message: that.message,
-          avatar: null,
-          createdAt: new Date()
-        });
-        that.message = '';
-        setTimeout(() => {
-          that.scrollToEnd();
-        }, 100);
-      }
     },
     ...mapActions({
-      connectToIO: 'chat/connectToIO'
+      joinChatRoom: 'socketIO/joinChatRoom'
     }),
     ...mapMutations({
-
+      InitialInfo: 'socketIO/InitialInfo'
     })
-    
-    /*,
-    msg() {
-      socket.on('recive-message',  (data) => 
-        console.log(data)
-      )
-    }*/
   }
 }
 </script>

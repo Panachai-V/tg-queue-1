@@ -56,6 +56,14 @@ class CompanyService {
     tgadmin_jobDetail(jobID) {
         return axios.get(`tgadmin/${jobID}`, { headers: authHeader() })
     }
+
+    tgadmin_confirmPayment(jobID) {
+        return axios.get(`tgadmin/${jobID}/confirm_payment`, { headers: authHeader() })
+    }
+
+    tgadmin_pickup(jobID,detailPickup) {
+        return axios.post(`tgadmin/${jobID}/pickup`, detailPickup, { headers: authHeader() })
+    }
 }
 
 export default new CompanyService();

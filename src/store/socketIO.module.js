@@ -1,6 +1,6 @@
-import ChatService from '../services/chat.service';
+import SocketIO from '../services/socketIO.service';
 
-export const chat = {
+export const socketIO = {
     namespaced: true,
     state: {
         roomid: '',
@@ -9,27 +9,14 @@ export const chat = {
         loadingStatus: false,
         message: '',
         messageHistory: [],
-        socket: null,
+        socket: SocketIO.initializer(),
     },
     actions: {
-        async connectToIO ({ commit }) {
-            await commit('chageLoadingStatus', true)
-            await ChatService.initializer().then(
-                socketID => {
-                    commit('InitialSocket', socketID)
-                    return Promise.resolve();
-                },
-                error => {
-                    return Promise.reject(error);
-                }
-            );
-            await commit('chageLoadingStatus', false)
-        },
         async joinChatRoom ({ commit, state }) {
             await commit('chageLoadingStatus', true)
             await state.socket.emit('join', {
-                job_id: this.roomid,
-                user_id: this.getUser.id,
+                job_id: state.roomid,
+                user_id: state.getUser.id,
             });
             await commit('chageLoadingStatus', false)
         },
@@ -53,10 +40,13 @@ export const chat = {
         }
     },
     mutations: {
-        InitialSocket({state}, input) {
-            state.socket = input
+        InitialInfo(state, input) {
+            console.log(input)
+            state.roomid = input.roomid
+            state.userid = input.userid
+            state.avatar = input.avatar
         },
-        chageLoadingStatus({state}, input) {
+        chageLoadingStatus(state, input) {
             state.loadingStatus = input
         },
     },

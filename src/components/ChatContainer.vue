@@ -156,7 +156,7 @@ export default {
       }
     },
     ...mapActions({
-      connectToIO: 'chat/connectToIO'
+      
     }),
     ...mapMutations({
 

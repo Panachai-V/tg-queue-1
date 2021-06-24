@@ -15,7 +15,7 @@
         <div class="header-wrapper">
           <div class="text-container pr-2">
             <span class="h3 mr-3">View Job Request</span> 
-            <span v-if="getDetailJob.status==1" class="ss-tag ss-tag-danger">รอการ Matching</span>
+            <span v-if="getDetailJob.status==1" class="ss-tag ss-tag-info">รอการชำระเงิน</span>
             <span v-else-if="getDetailJob.status==2" class="ss-tag ss-tag-info">รอคิวการรับ</span>
             <span v-else-if="getDetailJob.status==3" class="ss-tag ss-tag-danger">รอยืนยันคิว</span>
             <span v-else-if="getDetailJob.status==4" class="ss-tag ss-tag-warning">กำลังดำเนินการ</span>
@@ -57,9 +57,44 @@
           <p class="fw-400">จัดคิวการรับสินค้า</p>
         </div>
         <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
-          <form action="/tgadmin/job-request-view/3" method="GET">
+          <form :action="'/tgadmin/job-request-view/' + $route.params.id" method="GET">
             <div class="grids">
               <div class="grid xl-30 lg-1-3 sm-50">
+                <FormGroup 
+                  type="text" label="หมายเลขช่องจอด *" placeholder="โปรดระบุ" :required="true" 
+                  :value="getDetailPickup.dockNumber" @input="getDetailPickup.dockNumber = $event" 
+                />
+              </div>
+              <div class="grid xl-20 lg-25 sm-50">
+                <FormGroupTime
+                  label="เวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
+                  :value0="getDetailPickup.pickupTimeHours" 
+                  @input0="getDetailPickup.pickupTimeHours = $event" 
+                  :value1="getDetailPickup.pickupTimeMinutes" 
+                  @input1="getDetailPickup.pickupTimeMinutes = $event" 
+                />
+              </div>
+              <div class="grid sm-100">
+                <div class="btns mt-0">
+                  <Button 
+                    type="submit" text="จัดคิวการรับสินค้า" 
+                    classer="btn-color-01" :append="true" icon="check-white.svg" @click="pickup()"
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div v-if="getDetailJob.status == 1">
+        <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
+          <p class="fw-400">ยืนยันการชำระเงิน</p>
+        </div>
+        <div class="section-px pt-2 pb-6" data-aos="fade-up" data-aos-delay="150">
+          <form :action="'/tgadmin/job-request-view/' + $route.params.id" method="GET">
+            <div class="grids">
+              <!-- <div class="grid xl-30 lg-1-3 sm-50">
                 <FormGroup 
                   type="text" label="หมายเลขช่องจอด *" placeholder="โปรดระบุ" :required="true" 
                   :value="getDetailJob.dockNumber" @input="getDetailJob.dockNumber = $event" 
@@ -73,12 +108,12 @@
                   :value1="getDetailJob.pickupTimeMinutes" 
                   @input1="getDetailJob.pickupTimeMinutes = $event" 
                 />
-              </div>
+              </div> -->
               <div class="grid sm-100">
                 <div class="btns mt-0">
                   <Button 
-                    type="submit" text="จัดคิวการรับสินค้า" 
-                    classer="btn-color-01" :append="true" icon="check-white.svg" 
+                    type="submit" text="ยืนยันการชำระเงิน" 
+                    classer="btn-color-01" :append="true" icon="check-white.svg" @click="confirmPayment()"
                   />
                 </div>
               </div>
@@ -339,7 +374,8 @@ export default {
     ...mapGetters({
       getUser: 'auth/getUser',
       getLoadingStatus: 'tgAdmin/getLoadingStatus',
-      getDetailJob: 'tgAdmin/getDetailJob'
+      getDetailJob: 'tgAdmin/getDetailJob',
+      getDetailPickup: 'tgAdmin/getDetailPickup'
     })
   },
   created() {
@@ -382,7 +418,9 @@ export default {
       return moment(String(value)).format(format);
     },
     ...mapActions({
-      fetchJobDetail: 'tgAdmin/fetchJobDetail'
+      fetchJobDetail: 'tgAdmin/fetchJobDetail',
+      confirmPayment: 'tgAdmin/confirmPayment',
+      pickup: 'tgAdmin/pickup'
     }),
   }
 }
