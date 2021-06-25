@@ -40,7 +40,7 @@ const routes = [
     component: () => import('../views/auth/Register.vue')
   },
   {
-    path: '/auth/forget-password',
+    path: '/auth/forget-password/:token?',
     name: 'AuthForget',
     component: () => import('../views/auth/Forget.vue')
   },

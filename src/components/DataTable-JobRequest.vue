@@ -434,16 +434,16 @@ export default {
       
       if (tempCondition[0].length > 0) {
         if (this.isFreightForwarder()){
-          let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
+          let temp_condition = new ConditionSelectViewJob(1, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
           this.fetchJobRequest_FF(temp_condition);
         } else if (this.isTGAdmin()){
-          let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex + 1).toString(), this.selfSearch)
+          let temp_condition = new ConditionSelectViewJob(1, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex + 1).toString(), this.selfSearch)
           this.fetchJobRequest_Tg(temp_condition);
         } else if (this.isDriver()){
-          let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex+4).toString(), this.selfSearch)
+          let temp_condition = new ConditionSelectViewJob(1, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex+4).toString(), this.selfSearch)
           this.fetchJobRequest_driver(temp_condition);
         } else if (this.isAdmin()) {
-          let temp_condition = new ConditionSelectViewJob((this.selfPage).toString(), '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
+          let temp_condition = new ConditionSelectViewJob(1, '10', tempCondition[0], tempCondition[1], (this.tabActiveIndex).toString(), this.selfSearch)
           this.fetchJobRequest_Admin(temp_condition);
         }
       }

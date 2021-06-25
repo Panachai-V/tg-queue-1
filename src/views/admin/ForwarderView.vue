@@ -15,9 +15,6 @@
         <div class="header-wrapper">
           <div class="text-container">
             <h6 class="h3">View Freight Forwarder</h6>
-            <div  v-if="!getLoadingStatus">
-              {{getForwardersDetail}}
-            </div>
           </div>
           <div class="btns hide-mobile">
             <Button 
@@ -390,7 +387,7 @@
   <div class="popup-container" :class="{ 'active': isActivePopupAccountEdit }" v-if="getFreightForwardersEditUser">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupAccountEdit = !isActivePopupAccountEdit"></div>
-      <form :action="'/admin/forwarder-view/'+ getForwardersDetail._id" method="GET" class="w-full" @submit.prevent="onSubmitAccEdit">
+      <form :action="'/admin/forwarder-view/'+ getForwardersDetail._id" method="GET" class="w-full" @submit="onSubmitAccEdit">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
@@ -431,6 +428,7 @@
                   <FormGroup
                     label="คำนำหน้า *" type="select" :required="true" 
                     :value="getFreightForwardersEditUser.prefix" 
+                    @input="getFreightForwardersEditUser.prefix = $event" 
                     :options="[ 
                       { value: 'นาย', text: 'นาย' }, 
                       { value: 'นาง', text: 'นาง' }, 
@@ -442,18 +440,21 @@
                   <FormGroup
                     label="ชื่อ *" type="text" :required="true" 
                     :value="getFreightForwardersEditUser.firstname" 
+                    @input="getFreightForwardersEditUser.firstname = $event" 
                   />
                 </div>
                 <div class="grid md-40 sm-35">
                   <FormGroup
                     label="นามสกุล *" type="text" :required="true" 
                     :value="getFreightForwardersEditUser.lastname" 
+                    @input="getFreightForwardersEditUser.lastname = $event"
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="เบอร์โทรศัพท์ *" type="text" :required="true" 
                     :value="getFreightForwardersEditUser.phone" 
+                    @input="getFreightForwardersEditUser.phone = $event"
                   />
                 </div>
                 <div class="grid sm-50">
@@ -466,6 +467,7 @@
                   <FormGroup
                     label="สถานะ *" type="select" 
                     :value="getFreightForwardersEditUser.status" 
+                    @input="getFreightForwardersEditUser.status = $event" 
                     :options="[ 
                       { value: true, text: 'เปิดใช้งาน' }, 
                       { value: false, text: 'ปิดใช้งาน' }
@@ -481,12 +483,14 @@
                   <FormGroup
                     label="ชื่อผู้ใช้ *" type="text" :required="true" 
                     :value="getFreightForwardersEditUser.username" 
+                    @input="getFreightForwardersEditUser.username = $event"
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="อีเมล *" type="email" :required="true" 
                     :value="getFreightForwardersEditUser.email" 
+                    @input="getFreightForwardersEditUser.email = $event"
                   />
                 </div>
                 <div class="grid sm-50">
@@ -515,7 +519,7 @@
   <div class="popup-container" :class="{ 'active': isActivePopupAccountDelete }">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupAccountDelete = !isActivePopupAccountDelete"></div>
-      <form action="/admin/forwarder-view" method="GET" class="w-full">
+      <form :action="'/admin/forwarder-view/'+ getForwardersDetail._id" method="GET" class="w-full" @submit="onSubmitDelete">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
@@ -683,6 +687,7 @@ export default {
       freightForwardersSelectUser: 'admin/freightForwardersSelectUser',
       createUser: 'admin/createUser',      
       editUser:  'admin/editUser',
+      deleteUser:  'admin/deleteUser',
     }),
     openAccountView(condition) {
       this.freightForwardersSelectUser(condition)
@@ -693,6 +698,7 @@ export default {
       this.isActivePopupAccountEdit = !this.isActivePopupAccountEdit;
     },
     openAccountDelete(condition) {
+      this.freightForwardersSelectUser(condition)
       this.isActivePopupAccountDelete = !this.isActivePopupAccountDelete;
     },
     onFileSelected(event) {
@@ -720,6 +726,16 @@ export default {
             }
       );
     },
+    onSubmitDelete() {
+      this.deleteUser().then(
+            response => {
+              console.log("user deleted")
+            },
+            error => {
+              console.log("error: ",error.response.data.message)
+            }
+      );
+    }
   }
 }
 </script>

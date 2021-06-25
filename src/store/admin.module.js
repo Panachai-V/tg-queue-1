@@ -378,9 +378,33 @@ export const admin = {
         })
       },
       editUser({ state }) {
-        console.log('store editUser: ',state.forwardersDetail._id, state.forwardersEditUser)
-        return new Promise((resolve, reject) => {
-          AdminService.userEdit(state.forwardersDetail._id, state.forwardersEditUser).then(
+        var formData = new FormData();
+        formData.append("new_username", state.forwardersEditUser.username);
+        formData.append("old_username", state.forwardersCurrentUser.username.text);
+        formData.append("password", state.forwardersEditUser.password);
+        formData.append("firstname", state.forwardersEditUser.firstname);
+        formData.append("lastname", state.forwardersEditUser.lastname);
+        formData.append("prefix", state.forwardersEditUser.prefix);
+        formData.append("new_email", state.forwardersEditUser.email);
+        formData.append("old_email", state.forwardersCurrentUser.email.text);
+        formData.append("phone", state.forwardersEditUser.phone);
+        formData.append("status", state.forwardersEditUser.status);
+        formData.append("avatar", state.forwardersEditUser.avatar);
+        console.log('edituser: ',formData.get('prefix'))
+        return new Promise((resolve, reject) => {        
+          AdminService.userEdit(state.forwardersDetail._id, state.forwardersEditUser._id, formData).then(
+            response => {
+              resolve(response)
+            },
+            error => {
+              reject(error)
+            }
+          )
+        })
+      },
+      deleteUser({ commit , state }) {
+        return new Promise((resolve, reject) => {        
+          AdminService.userDelete(state.forwardersDetail._id, state.forwardersCurrentUser._id).then(
             response => {
               resolve(response)
             },

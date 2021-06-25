@@ -48,9 +48,12 @@ class AuthService {
     return ;
   }
 
-  forgetPWDSendTokenToEmail(email) {
-    axios.get(`auth/forgot/${email}`)
-    return ;
+  requestTokenForResetPWD(email) {
+    return axios.get(`auth/forgot/${email}`);
+  }
+
+  verifyTokenForResetPWD(token) {
+    return axios.get(`auth/reset/${token}`);
   }
 }
 

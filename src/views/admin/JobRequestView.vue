@@ -250,7 +250,7 @@
         </div>
         <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
           <div class="mt-6">
-            <ChatContainer :chat="chat" :withInput="getDetailJob.status <= 4" />
+            <ChatContainer :chat="chat" :withInput="getDetailJob.status <= 4" :roomid="$route.params.id"/>
           </div>
         </div>
       </div>
@@ -305,7 +305,7 @@ import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Sidenav from '../../components/Sidenav';
 import Step01 from '../../components/Step01';
-import ChatContainer from '../../components/ChatContainer';
+import ChatContainer from '../../components/ChatContainer-ver1';
 import FormGroupTime from '../../components/FormGroupTime';
 import FormGroupTrucks from '../../components/FormGroupTrucks';
 import {mapGetters, mapActions, mapState} from "vuex"

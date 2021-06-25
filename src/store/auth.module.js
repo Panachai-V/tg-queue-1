@@ -7,8 +7,8 @@ const userDetail = JSON.parse(localStorage.getItem('userDetail'));
 const userCompany = null
 const selfUserCompany = null
 const initialState = user
-  ? { status: { loggedIn: true }, user, userDetail, userCompany, selfUserCompany, loading: false}
-  : { status: { loggedIn: false }, user: null, userDetail: null , userCompany: null, selfUserCompany: null, loading: false};
+  ? { status: { loggedIn: true }, user, userDetail, userCompany, selfUserCompany, loading: false, verifyToken: false}
+  : { status: { loggedIn: false }, user: null, userDetail: null , userCompany: null, selfUserCompany: null, loading: false, verifyToken: false};
 
 export const auth = {
   namespaced: true,
@@ -133,8 +133,30 @@ export const auth = {
     async verifyTokenRegister ({ commit }, token ) {
       await AuthService.verifyEmailRegister(token)
     },
-    async sendtokenToEmail ({ commit}, email) {
-      await AuthService.forgetPWDSendTokenToEmail(email)
+    async requestTokenForResetPWD ({ commit }, email ) {
+      return new Promise((resolve, reject) => {        
+        AuthService.requestTokenForResetPWD(email).then(
+          response => {
+            resolve(response)
+          },
+          error => {
+            reject(error.response.status)
+          }
+        )
+      })
+    },
+    async verifyTokenForResetPWD ({ commit }, token ) {
+      return new Promise((resolve, reject) => {        
+        AuthService.verifyTokenForResetPWD(token).then(
+          response => {
+            commit('changStautsVerifyToken', true);
+            resolve(response)
+          },
+          error => {
+            reject(error.response.status)
+          }
+        )
+      })
     }
   },
   mutations: {
@@ -167,6 +189,9 @@ export const auth = {
     },
     updateLoadingStatus(state, loadingStatus) {
       state.loading = loadingStatus
+    },
+    changStautsVerifyToken(state, input) {
+      state.verifyToken = input
     }
   },
   getters: {
@@ -199,6 +224,9 @@ export const auth = {
     },
     getLoadingStatus(state) {
       return state.loading
+    },
+    getStatusVerifyToken(state) {
+      return state.verifyToken
     }
   }
 };

@@ -21,7 +21,8 @@
           <div class="text-wrapper p sm fw-300" v-html="ch.message"></div>
           <p class="mt-1 p sm fw-400 op-70">
             <span class="text-sm">
-              {{formatDate(ch.createdAt, 'DD/MM/YYYY HH:MM:SS')}}
+              {{formatDate((ch.createdAt), 'DD/MM/YYYY hh:mm:ss')}}
+              <!-- (tempDate.toString().substr(0, 10)) -->
             </span>
           </p>
         </div>

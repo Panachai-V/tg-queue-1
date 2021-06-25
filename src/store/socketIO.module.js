@@ -54,21 +54,26 @@ export const socketIO = {
                 })
             });
         },
-        async sendMessage ({ commit, state }, message ) {
+        async sendMessage ({ dispatch, commit, state }, message ) {
             await commit('chageLoadingStatus', true)
+            let tempDate = Date.now()
             await state.socket.emit('send-message', { 
                 user_id: state.userid,                
                 job_id: state.roomid,
                 message: message,
-                createAt : Date.now()
+                createAt : tempDate
               });
 
+            console.log(tempDate.toString().substr(0, 10))
             await state.messageHistory.push({
                 self: true,
                 message: message,
                 avatar: state.avatar,
-                createdAt: Date.now()
+                createdAt: tempDate
             })
+
+            console.log(Date.now())
+
             await commit('chageLoadingStatus', false)
         }
     },

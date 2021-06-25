@@ -38,10 +38,13 @@ class AdminService {
         return axios.post(`admin/company/${id}/create_user`, forwardersCreateUser, { headers: authHeader() })
     }  
 
-    userEdit(id, forwardersEditUser) {
-        console.log('service edit user: ',id, forwardersEditUser)
-        return axios.post(`admin/company/${id}/${forwardersEditUser._id}/edit`, forwardersEditUser, { headers: authHeader() })
+    userEdit(id, user_id, forwardersEditUser) {
+        return axios.post(`admin/company/${id}/${user_id}/edit`, forwardersEditUser, { headers: authHeader() })
     }  
+
+    userDelete(id, userId) {
+        return axios.post(`admin/company/${id}/delete_user`, {user_id: userId}, { headers: authHeader() })
+    }
 }
 
 export default new AdminService();
