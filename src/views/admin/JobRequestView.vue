@@ -6,7 +6,7 @@
     <div class="container" v-if="!getLoadingStatus">
       <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
-          <a :href="'/admin/job-requests'" class="btn color-gray h-color-01">
+          <a :href="'/admin/job-requests/' + getDetailJob.status" class="btn color-gray h-color-01">
             <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
             ย้อนกลับ
           </a>
@@ -23,13 +23,13 @@
           </div>
           <div class="btns hide-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/admin/job-requests'" 
+              text="ย้อนกลับ" :href="'/admin/job-requests/' + getDetailJob.status" 
               classer="btn-color-08"
             />
           </div>
           <div class="btns show-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/admin/job-requests'" 
+              text="ย้อนกลับ" :href="'/admin/job-requests/' + getDetailJob.status" 
               classer="btn-color-08 btn-sm" 
             />
           </div>

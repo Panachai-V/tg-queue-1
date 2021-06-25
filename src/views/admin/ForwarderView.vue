@@ -15,6 +15,9 @@
         <div class="header-wrapper">
           <div class="text-container">
             <h6 class="h3">View Freight Forwarder</h6>
+            <div  v-if="!getLoadingStatus">
+              {{getForwardersDetail}}
+            </div>
           </div>
           <div class="btns hide-mobile">
             <Button 
@@ -75,7 +78,7 @@
           <p class="fw-400">บัญชีผู้ใช้งาน</p>
           <Button 
             text="เพิ่ม" href="javascript:" classer="btn-color-01 btn-sm" 
-            @click="isActivePopupAccountAdd = !isActivePopupAccountAdd"  
+            @click="isActivePopupAccountAdd = !isActivePopupAccountAdd , getForwardersCreateUser.roles = 'freight-forwarder' "  
           />
         </d>
       </div>
@@ -121,7 +124,7 @@
           <p class="fw-400">พนักงานขับรถ</p>
           <Button 
             text="เพิ่ม" href="javascript:" classer="btn-color-01 btn-sm" 
-            @click="isActivePopupAccountAdd = !isActivePopupAccountAdd"  
+            @click="isActivePopupAccountAdd = !isActivePopupAccountAdd , getForwardersCreateUser.roles = 'driver' "  
           />
         </d>
       </div>
@@ -169,7 +172,7 @@
   <div class="popup-container" :class="{ 'active': isActivePopupAccountAdd }">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupAccountAdd = !isActivePopupAccountAdd"></div>
-      <form action="/admin/forwarder-view" method="GET" class="w-full">
+      <form :action="'/admin/forwarder-view/'+getForwardersDetail._id" method="GET" class="w-full" @submit="accountAdd">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
@@ -204,11 +207,14 @@
             </div>
           </div>
           <div class="body-wrapper">
+            {{getForwardersCreateUser}}
             <div class="body">
               <div class="grids">
                 <div class="grid md-20 sm-30">
                   <FormGroup
-                    label="คำนำหน้า *" type="select" :required="true" 
+                    label="คำนำหน้า *" type="select" :required="true"
+                    :value="getForwardersCreateUser.prefix" 
+                    @input="getForwardersCreateUser.prefix = $event" 
                     :options="[ 
                       { value: 'นาย', text: 'นาย' }, 
                       { value: 'นาง', text: 'นาง' }, 
@@ -218,17 +224,24 @@
                 </div>
                 <div class="grid md-40 sm-35">
                   <FormGroup
-                    label="ชื่อ *" type="text" :required="true" 
+                    label="ชื่อ *" type="text" :required="true"
+                    :value="getForwardersCreateUser.firstname" 
+                    @input="getForwardersCreateUser.firstname = $event" 
                   />
                 </div>
                 <div class="grid md-40 sm-35">
                   <FormGroup
                     label="นามสกุล *" type="text" :required="true" 
+                    :value="getForwardersCreateUser.lastname" 
+                    @input="getForwardersCreateUser.lastname = $event"
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="เบอร์โทรศัพท์ *" type="text" :required="true" 
+                    :maxlength="10" 
+                    :value="getForwardersCreateUser.phone" 
+                    @input="getForwardersCreateUser.phone = $event"
                   />
                 </div>
                 <div class="grid sm-50">
@@ -239,6 +252,8 @@
                 <div class="grid sm-50">
                   <FormGroup
                     label="สถานะ *" type="select" 
+                    :value="getForwardersCreateUser.status" 
+                    @input="getForwardersCreateUser.status = $event"
                     :options="[ 
                       { value: 1, text: 'เปิดใช้งาน' }, 
                       { value: 0, text: 'ปิดใช้งาน' }
@@ -253,21 +268,31 @@
                 <div class="grid sm-50">
                   <FormGroup
                     label="ชื่อผู้ใช้ *" type="text" :required="true" 
+                    :value="getForwardersCreateUser.username" 
+                    @input="getForwardersCreateUser.username = $event"
+                    :disabled="true" :readonly="true"
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="อีเมล *" type="email" :required="true" 
+                    :value="getForwardersCreateUser.email" 
+                    @input="getForwardersCreateUser.email = $event"
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="รหัสผ่าน *" type="password" :required="true" 
+                    :value="getForwardersCreateUser.password" 
+                    @input="getForwardersCreateUser.password = $event"
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="ยืนยันรหัสผ่าน *" type="password" :required="true" 
+                    :value="getForwardersCreateUser.confpassword" 
+                    @input="getForwardersCreateUser.confpassword = $event"                    
+                    :errorText="getForwardersCreateUser.password == getForwardersCreateUser.confpassword ? text_notification: 'รหัสผ่านไม่ตรงกัน'" 
                   />
                 </div>
               </div>
@@ -365,7 +390,7 @@
   <div class="popup-container" :class="{ 'active': isActivePopupAccountEdit }" v-if="getFreightForwardersEditUser">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupAccountEdit = !isActivePopupAccountEdit"></div>
-      <form action="/admin/forwarder-view" method="GET" class="w-full">
+      <form :action="'/admin/forwarder-view/'+ getForwardersDetail._id" method="GET" class="w-full" @submit.prevent="onSubmitAccEdit">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
@@ -405,7 +430,7 @@
                 <div class="grid md-20 sm-30">
                   <FormGroup
                     label="คำนำหน้า *" type="select" :required="true" 
-                    :value="getFreightForwardersEditUser.prefix.text" 
+                    :value="getFreightForwardersEditUser.prefix" 
                     :options="[ 
                       { value: 'นาย', text: 'นาย' }, 
                       { value: 'นาง', text: 'นาง' }, 
@@ -416,34 +441,34 @@
                 <div class="grid md-40 sm-35">
                   <FormGroup
                     label="ชื่อ *" type="text" :required="true" 
-                    :value="getFreightForwardersEditUser.firstname.text" 
+                    :value="getFreightForwardersEditUser.firstname" 
                   />
                 </div>
                 <div class="grid md-40 sm-35">
                   <FormGroup
                     label="นามสกุล *" type="text" :required="true" 
-                    :value="getFreightForwardersEditUser.lastname.text" 
+                    :value="getFreightForwardersEditUser.lastname" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="เบอร์โทรศัพท์ *" type="text" :required="true" 
-                    :value="getFreightForwardersEditUser.phone.text" 
+                    :value="getFreightForwardersEditUser.phone" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
-                    label="รูปโปรไฟล์" type="file-image" name="avatar" 
-                    :value="getFreightForwardersEditUser.avatar" 
+                    label="รูปโปรไฟล์" type="file-image"
+                    @change="onFileSelected"
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="สถานะ *" type="select" 
-                    :value="getFreightForwardersEditUser.status.value" 
+                    :value="getFreightForwardersEditUser.status" 
                     :options="[ 
-                      { value: 1, text: 'เปิดใช้งาน' }, 
-                      { value: 0, text: 'ปิดใช้งาน' }
+                      { value: true, text: 'เปิดใช้งาน' }, 
+                      { value: false, text: 'ปิดใช้งาน' }
                     ]"
                   />
                 </div>
@@ -455,13 +480,13 @@
                 <div class="grid sm-50">
                   <FormGroup
                     label="ชื่อผู้ใช้ *" type="text" :required="true" 
-                    :value="getFreightForwardersEditUser.username.text" 
+                    :value="getFreightForwardersEditUser.username" 
                   />
                 </div>
                 <div class="grid sm-50">
                   <FormGroup
                     label="อีเมล *" type="email" :required="true" 
-                    :value="getFreightForwardersEditUser.email.text" 
+                    :value="getFreightForwardersEditUser.email" 
                   />
                 </div>
                 <div class="grid sm-50">
@@ -608,7 +633,8 @@ export default {
       getforwardersFF: 'admin/getforwardersFF',
       getforwardersDriver: 'admin/getforwardersDriver',
       getFreightForwardersCurrentUser: 'admin/getFreightForwardersCurrentUser',
-      getFreightForwardersEditUser: 'admin/getFreightForwardersEditUser'
+      getFreightForwardersEditUser: 'admin/getFreightForwardersEditUser',
+      getForwardersCreateUser: 'admin/getForwardersCreateUser'
     })
   },
   created() {
@@ -654,7 +680,9 @@ export default {
   methods: {
     ...mapActions({
       freightForwardersDetail: 'admin/freightForwardersDetail',
-      freightForwardersSelectUser: 'admin/freightForwardersSelectUser'
+      freightForwardersSelectUser: 'admin/freightForwardersSelectUser',
+      createUser: 'admin/createUser',      
+      editUser:  'admin/editUser',
     }),
     openAccountView(condition) {
       this.freightForwardersSelectUser(condition)
@@ -666,6 +694,31 @@ export default {
     },
     openAccountDelete(condition) {
       this.isActivePopupAccountDelete = !this.isActivePopupAccountDelete;
+    },
+    onFileSelected(event) {
+      this.getFreightForwardersEditUser.avatar = event.target.files[0]
+    },  
+    accountAdd() {
+      console.log('creating user')      
+      this.createUser().then(
+            response => {
+              console.log("user created")
+            },
+            error => {
+              console.log("error: ",error.response.data.message)
+            }
+      );
+    },
+    onSubmitAccEdit() {
+      console.log('editing user')      
+      this.editUser().then(
+            response => {
+              console.log("user edited")
+            },
+            error => {
+              console.log("error: ",error.response.data.message)
+            }
+      );
     },
   }
 }

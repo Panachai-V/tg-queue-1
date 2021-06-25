@@ -130,6 +130,12 @@ export const auth = {
       );      
       await dispatch('getCompany')
     },
+    async verifyTokenRegister ({ commit }, token ) {
+      await AuthService.verifyEmailRegister(token)
+    },
+    async sendtokenToEmail ({ commit}, email) {
+      await AuthService.forgetPWDSendTokenToEmail(email)
+    }
   },
   mutations: {
     loginSuccess(state, user) {

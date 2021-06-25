@@ -47,16 +47,16 @@
           </div>
         </div>
       </div>
-      <div class="option hide-mobile" v-if="getLoadingStatus == false">
+      <div class="option hide-mobile">
         แสดง 
-        {{getFilterStatus.pagingCounter}} – 
+        {{Math.min(getFilterStatus.pagingCounter, getFilterStatus.totalDocs)}} – 
         {{Math.min(getFilterStatus.totalDocs, getFilterStatus.pagingCounter + getFilterStatus.limit)}} จากทั้งหมด 
         {{getFilterStatus.totalDocs}} 
         รายการ
       </div>
-      <div class="option pr-2 show-mobile mobile-right" v-if="getLoadingStatus == false">
+      <div class="option pr-2 show-mobile mobile-right">
         แสดงทั้งหมด
-        {{getFilterStatus.pagingCounter}} – 
+        {{Math.min(getFilterStatus.pagingCounter, getFilterStatus.totalDocs)}} – 
         {{Math.min(getFilterStatus.totalDocs, getFilterStatus.pagingCounter + getFilterStatus.limit)}}
         รายการ
       </div>

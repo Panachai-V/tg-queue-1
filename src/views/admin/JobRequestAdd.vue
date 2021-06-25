@@ -4,7 +4,7 @@
 
   <section class="section-full pull-right">
     <div class="container">
-      <form action="/admin/job-requests" method="GET" @submit="onSubmit">
+      <form action="/admin/job-requests" method="GET" @submit="createJob">
 
         <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
           <div class="btns mt-0">
@@ -33,19 +33,20 @@
           <p class="fw-400">ข้อมูลสินค้า</p>
         </div>
         <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+          {{getDetailCreateJob}}
           <div class="grids">
             <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
                 type="text" label="เลขที่ Airway Bill *" placeholder="โปรดระบุ" 
                 :required="true" :maxlength="12" 
-                :value="jobRequest.awbNumber" @input="jobRequest.awbNumber = $event" 
+                :value="getDetailCreateJob.awbNumber" @input="getDetailCreateJob.awbNumber = $event" 
               />
             </div>
             <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
                 type="text" label="เลขที่ House Airway Bill *" placeholder="โปรดระบุ" 
                 :required="true" :maxlength="12" 
-                :value="jobRequest.hwbSerialNumber" @input="jobRequest.hwbSerialNumber = $event" 
+                :value="getDetailCreateJob.hwbSerialNumber" @input="getDetailCreateJob.hwbSerialNumber = $event" 
               />
             </div>
             <div class="sep"></div>
@@ -53,14 +54,14 @@
               <FormGroup 
                 type="text" label="รหัสเที่ยวบิน *" placeholder="โปรดระบุ" 
                 :required="true" :maxlength="6" 
-                :value="jobRequest.flightNumber" @input="jobRequest.flightNumber = $event" 
+                :value="getDetailCreateJob.flightNumber" @input="getDetailCreateJob.flightNumber = $event" 
               />
             </div>
             <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
                 type="text" label="เลขที่งาน *" placeholder="โปรดระบุ" 
                 :required="true" :maxlength="14" 
-                :value="jobRequest.jobNumber" @input="jobRequest.jobNumber = $event" 
+                :value="getDetailCreateJob.jobNumber" @input="getDetailCreateJob.jobNumber = $event" 
               />
             </div>
             <div class="sep"></div>
@@ -68,16 +69,24 @@
               <FormGroup 
                 type="text" label="เลขที่ใบขนสินค้า *" placeholder="โปรดระบุ" 
                 :required="true" :maxlength="14" 
-                :value="jobRequest.customsEntryNumber" @input="jobRequest.customsEntryNumber = $event" 
+                :value="getDetailCreateJob.customsEntryNumber" @input="getDetailCreateJob.customsEntryNumber = $event" 
               />
             </div>
             <div class="grid xl-1-3 lg-40 md-50 sm-80">
               <FormGroup 
                 type="datepicker" label="วันที่ได้รับเลขที่ใบสินค้า *" placeholder="YYYYMMDD" 
                 :required="true" :minlength="8" :maxlength="8" 
-                :value="jobRequest.customsEntryNumberDate" @input="jobRequest.customsEntryNumberDate = $event" 
+                :value="getDetailCreateJob.customsEntryNumberDate" @input="getDetailCreateJob.customsEntryNumberDate = $event" 
                 wrapperClass="append" :append="true" icon="calendar.svg" 
                 dateFormat="YYYYMMDD"
+              />
+            </div>
+            <div class="sep"></div>
+            <div class="grid xl-1-3 lg-40 md-50 sm-80">
+              <FormGroup 
+                type="text" label="เลขประจำตัวผู้เสียภาษี *" placeholder="โปรดระบุ" 
+                :required="true" :minlength="13" :maxlength="13"
+                :value="getDetailCreateJob.taxid" @input="getDetailCreateJob.taxid = $event" 
               />
             </div>
           </div>
@@ -91,6 +100,7 @@
 <script>
 import Topnav from '../../components/Topnav';
 import Sidenav from '../../components/Sidenav';
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'AdminJobRequestAddPage',
@@ -140,10 +150,18 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      getDetailCreateJob: 'admin/getDetailCreateJob'
+    })
+  },
   mounted() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
   },
   methods: {
+    ...mapActions({
+      createJob: 'admin/createJob'
+    }),
     onSubmit(e) {
       var that = this;
       var isValid = true;

@@ -14,15 +14,34 @@ export const socketIO = {
     actions: {
         async joinChatRoom ({ commit, state }) {
             await commit('chageLoadingStatus', true)
+
             await state.socket.emit('join', {
                 job_id: state.roomid,
                 user_id: state.userid,
             });
+            
+            await SocketIO.messageHistory(state.roomid).then( oldMessage => {
+                let lengthOldMessagee = (oldMessage.data).length
+                let profileAvatar = (oldMessage.data)[lengthOldMessagee - 1]
+                oldMessage.data.pop()
+                var newArr = oldMessage.data.map(function(item){
+
+                    let avatarindex = profileAvatar.find(element => element.name == item.avatar)
+                    return {
+                        self: item.self, 
+                        message: item.message,
+                        avatar: avatarindex['value'],
+                        createdAt: item.createdAt,
+                    };
+                });
+                state.messageHistory = [...newArr]
+            })
+
             await commit('chageLoadingStatus', false)
         },
         async leaveChatRoom ({ commit, state }) {
             await commit('chageLoadingStatus', true)
-            await state.socket.emit('leave', this.username)
+            await state.socket.emit('leave', state.userid)
             await commit('chageLoadingStatus', false)
         },
         async receiveMessage ({ commit, state }) {
@@ -55,10 +74,9 @@ export const socketIO = {
     },
     mutations: {
         InitialInfo(state, input) {
-            console.log(input)
             state.roomid = input.roomid
             state.userid = input.userid
-            // state.avatar = input.avatar
+            state.avatar = input.avatar
         },
         chageLoadingStatus(state, input) {
             state.loadingStatus = input

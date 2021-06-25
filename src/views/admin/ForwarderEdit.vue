@@ -4,7 +4,7 @@
 
   <section class="section-full pull-right">
     <div class="container">
-      <form action="/admin/forwarders" method="GET" @submit="onSubmit">
+      <form action="/admin/forwarders" method="GET" @submit="onSubmit()">
 
         <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
           <div class="btns mt-0">
@@ -46,14 +46,14 @@
         <div class="stripe section-px border-bottom bcolor-fgray" data-aos="fade-up" data-aos-delay="150">
           <p class="fw-400">ข้อมูลบริษัท</p>
         </div>
-        <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+        <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150" v-if="!getLoadingStatus">
           <div class="grids">
             <div class="grid xl-60 lg-70 sm-100">
               <FormGroup 
                 type="text" label="ชื่อบรืษัท *" :required="true" 
                 :maxlength="56" placeholder="โปรดระบุ" 
-                :value="datasetCompany.name" 
-                @input="datasetCompany.name = $event" 
+                :value="getforwardersEditDetail.company_name" 
+                @input="getforwardersEditDetail.company_name = $event" 
               />
             </div>
             <div class="sep"></div>
@@ -61,28 +61,25 @@
               <FormGroup 
                 type="textarea" label="ที่อยู่บริษัท *" :required="true" 
                 :rows="3" :maxlength="128" placeholder="โปรดระบุ" 
-                :value="datasetCompany.address" 
-                @input="datasetCompany.address = $event" 
+                :value="getforwardersEditDetail.address" 
+                @input="getforwardersEditDetail.address = $event" 
               />
             </div>
             <div class="sep"></div>
             <div class="grid xl-30 lg-35">
               <FormGroup 
                 type="select" label="จังหวัด *" :required="true" placeholder="โปรดเลือก" 
-                :value="datasetCompany.province" 
-                @input="datasetCompany.province = $event" 
-                :options="[
-                  { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
-                  { value: 'สมุทรปราการ', text: 'สมุทรปราการ' }
-                ]"
+                :value="getforwardersEditDetail.province" 
+                @input="getforwardersEditDetail.province = $event" 
+                :options="getProvince"
               />
             </div>
             <div class="grid xl-30 lg-35">
               <FormGroup 
                 type="text" label="รหัสไปรษณีย์ *" :required="true" 
                 placeholder="โปรดระบุ" :minlength="5" :maxlength="5" 
-                :value="datasetCompany.zipcode" 
-                @input="datasetCompany.zipcode = $event" 
+                :value="getforwardersEditDetail.postal" 
+                @input="getforwardersEditDetail.postal = $event" 
               />
             </div>
             <div class="sep"></div>
@@ -90,18 +87,19 @@
               <FormGroup 
                 type="text" label="เลขประจำตัวผู้เสียภาษี *" :required="true" 
                 placeholder="โปรดระบุ" :minlength="13" :maxlength="13" 
-                :value="datasetCompany.taxId" 
-                @input="datasetCompany.taxId = $event" 
+                :value="getforwardersEditDetail.tax_id" 
+                @input="getforwardersEditDetail.tax_id = $event" 
+                :disabled="true" :readonly="true"
               />
             </div>
             <div class="grid xl-30 lg-35">
               <FormGroup 
                 type="select" label="สถานะ *" placeholder="โปรดเลือก" 
-                :value="datasetCompany.status" 
-                @input="datasetCompany.status = $event" 
+                :value="getforwardersEditDetail.status" 
+                @input="getforwardersEditDetail.status = $event" 
                 :options="[
-                  { value: 1, text: 'เปิดใช้งาน' },
-                  { value: 0, text: 'ปิดใช้งาน' }
+                  { value: true, text: 'เปิดใช้งาน' },
+                  { value: false, text: 'ปิดใช้งาน' }
                 ]" 
               />
             </div>
@@ -116,7 +114,7 @@
   <div class="popup-container" :class="{ 'active': isActivePopupDelete }">
     <div class="wrapper">
       <div class="close-filter" @click="isActivePopupDelete = !isActivePopupDelete"></div>
-      <form action="/admin/forwarders" method="GET" class="w-full">
+      <form action="/admin/forwarders" method="GET" class="w-full" @submit="freightForwardersDelete">
         <div class="popup-box">
           <div class="header">
             <div class="btns mt-0">
@@ -165,6 +163,7 @@
 <script>
 import Topnav from '../../components/Topnav';
 import Sidenav from '../../components/Sidenav';
+import {mapGetters, mapActions, mapState} from "vuex";
 
 export default {
   name: 'AdminForwarderEditPage',
@@ -202,9 +201,37 @@ export default {
       isActivePopupDelete: false
     }
   },
+  computed: {
+    ...mapGetters({
+      getLoadingStatus: 'admin/getLoadingStatus',
+      getForwardersDetail: 'admin/getForwardersDetail',
+      getforwardersEditDetail: 'admin/getforwardersEditDetail',
+      getProvince: 'master/getProvince'
+    })
+  },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     document.getElementById('color_style').href = '/assets/css/color-admin.css';
+    this.freightForwardersDetail(this.$route.params.tax_id)
+    this.actionProvince()    
+  },
+  methods: {
+    ...mapActions({
+      freightForwardersDetail: 'admin/freightForwardersDetail',
+      freightForwardersEdit: 'admin/freightForwardersEdit',
+      freightForwardersDelete: 'admin/freightForwardersDelete',
+      actionProvince: 'master/province'
+    }),
+    onSubmit() {      
+      this.freightForwardersEdit().then(
+            response => {
+              console.log("freightForwarders edited")
+            },
+            error => {
+              console.log("error: ",error.response.data.message)
+            }
+      );
+    }
   }
 }
 </script>

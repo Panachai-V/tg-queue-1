@@ -4,7 +4,7 @@
 
   <section class="section-full pull-right">
     <div class="container">
-      <form action="/admin/forwarders" method="GET" @submit="onSubmit">
+      <form action="/admin/forwarders" method="GET" @submit="freightForwardersCreate">
 
         <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
           <div class="btns mt-0">
@@ -20,14 +20,14 @@
             <div class="btns hide-mobile">
               <Button 
                 type="submit" text="เพิ่ม" 
-                classer="btn-color-01" :prepend="true" icon="plus-white.svg" 
+                classer="btn-color-01" :prepend="true" icon="plus-white.svg"
               />
               <Button 
                 text="ย้อนกลับ" href="/admin/forwarders" classer="btn-color-08 ml-2"
               />
             </div>
             <div class="btns show-mobile">
-              <Button type="submit" text="เพิ่ม" classer="btn-color-01 btn-sm" />
+              <Button type="submit" text="เพิ่ม" classer="btn-color-01 btn-sm" @click="freightForwardersCreate()" />
               <Button 
                 text="ย้อนกลับ" href="/admin/forwarders" classer="btn-color-08 btn-sm ml-1"
               />
@@ -39,13 +39,14 @@
           <p class="fw-400">ข้อมูลบริษัท</p>
         </div>
         <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
+          {{getForwardersCreateDetail}}
           <div class="grids">
             <div class="grid xl-60 lg-70 sm-100">
               <FormGroup 
                 type="text" label="ชื่อบรืษัท *" :required="true" 
                 :maxlength="56" placeholder="โปรดระบุ" 
-                :value="datasetCompany.name" 
-                @input="datasetCompany.name = $event" 
+                :value="getForwardersCreateDetail.name" 
+                @input="getForwardersCreateDetail.name = $event" 
               />
             </div>
             <div class="sep"></div>
@@ -53,28 +54,25 @@
               <FormGroup 
                 type="textarea" label="ที่อยู่บริษัท *" :required="true" 
                 :rows="3" :maxlength="128" placeholder="โปรดระบุ" 
-                :value="datasetCompany.address" 
-                @input="datasetCompany.address = $event" 
+                :value="getForwardersCreateDetail.address" 
+                @input="getForwardersCreateDetail.address = $event" 
               />
             </div>
             <div class="sep"></div>
             <div class="grid xl-30 lg-35">
               <FormGroup 
                 type="select" label="จังหวัด *" :required="true" placeholder="โปรดเลือก" 
-                :value="datasetCompany.province" 
-                @input="datasetCompany.province = $event" 
-                :options="[
-                  { value: 'กรุงเทพมหานคร', text: 'กรุงเทพมหานคร' },
-                  { value: 'สมุทรปราการ', text: 'สมุทรปราการ' }
-                ]"
+                :value="getForwardersCreateDetail.province" 
+                @input="getForwardersCreateDetail.province = $event" 
+                :options="getProvince"
               />
             </div>
             <div class="grid xl-30 lg-35">
               <FormGroup 
                 type="text" label="รหัสไปรษณีย์ *" :required="true" 
                 placeholder="โปรดระบุ" :minlength="5" :maxlength="5" 
-                :value="datasetCompany.zipcode" 
-                @input="datasetCompany.zipcode = $event" 
+                :value="getForwardersCreateDetail.postal" 
+                @input="getForwardersCreateDetail.postal = $event" 
               />
             </div>
             <div class="sep"></div>
@@ -82,18 +80,18 @@
               <FormGroup 
                 type="text" label="เลขประจำตัวผู้เสียภาษี *" :required="true" 
                 placeholder="โปรดระบุ" :minlength="13" :maxlength="13" 
-                :value="datasetCompany.taxId" 
-                @input="datasetCompany.taxId = $event" 
+                :value="getForwardersCreateDetail.taxid" 
+                @input="getForwardersCreateDetail.taxid = $event" 
               />
             </div>
             <div class="grid xl-30 lg-35">
               <FormGroup 
                 type="select" label="สถานะ *" placeholder="โปรดเลือก" 
-                :value="datasetCompany.status" 
-                @input="datasetCompany.status = $event" 
+                :value="getForwardersCreateDetail.status" 
+                @input="getForwardersCreateDetail.status = $event" 
                 :options="[
-                  { value: 1, text: 'เปิดใช้งาน' },
-                  { value: 0, text: 'ปิดใช้งาน' }
+                  { value: true, text: 'เปิดใช้งาน' },
+                  { value: false, text: 'ปิดใช้งาน' }
                 ]" 
               />
             </div>
@@ -108,6 +106,7 @@
 <script>
 import Topnav from '../../components/Topnav';
 import Sidenav from '../../components/Sidenav';
+import {mapGetters, mapActions} from "vuex"
 
 export default {
   name: 'AdminForwarderAddPage',
@@ -131,7 +130,6 @@ export default {
           phone: '0811123456'
         }
       },
-
       datasetCompany: {
         id: null,
         name: '',
@@ -143,9 +141,22 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      getProvince: 'master/getProvince',
+      getForwardersCreateDetail: 'admin/getForwardersCreateDetail'
+    })    
+  },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     document.getElementById('color_style').href = '/assets/css/color-admin.css';
+    this.actionProvince()
+  },
+  methods: {
+    ...mapActions({
+      actionProvince: 'master/province',
+      freightForwardersCreate: 'admin/freightForwardersCreate'
+    })
   }
 }
 </script>

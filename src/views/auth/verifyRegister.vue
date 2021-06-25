@@ -8,26 +8,13 @@
       </div>
       <div class="content-container">
         <div class="auth-container" data-aos="fade-up" data-aos-delay="150">
-          <h6 class="h4 fw-400 color-sgray">
-            TG Smart Backhaul
+          <h6 class="h5 fw-400 color-sgray">
+            Your account was successfully register
           </h6>
-          <p class="h2 fw-500 color-p">
-            ลืมรหัสผ่าน
+          <p class="h5 fw-100 color-p">
+            บัญชีผู้ใช้ของคุณลงทะเบียนเสร็จสมบูรณ์
           </p>
           <form @submit="handleSubmit">
-            <div class="grids">
-              <div class="grid sm-100">
-                <FormGroup 
-                  label="E-mail" wrapperClass="prepend" icon="user.svg" 
-                  :value="dataset.email" @input="dataset.email = $event" 
-                  :errorText="isValidated && !dataset.email? 'กรุณาระบุ': ''" 
-                  :classer="isValidated && !dataset.email? 'error': ''" 
-                />
-              </div>
-            </div>
-            <div class="btns">
-              <Button text="ยืนยัน" type="submit" classer="btn-color-01 w-full" />
-            </div>
             <div class="btns d-flex jc-space-between">
               <a class="h6 fw-400 color-gray h-color-01" href="/auth/signin">
                 เข้าสู่ระบบ
@@ -43,16 +30,21 @@
 
 import FormGroup from '../../components/FormGroup';
 import Button from '../../components/Button';
+import verify from '../../services/auth.service'
 import {mapGetters, mapActions, mapState} from "vuex"
 
 export default {
-  name: 'AuthForget',
+  name: 'VerifyRegisterToken',
   components: {
     FormGroup,
     Button
   },
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
+
+    console.log('toket :', this.$route.params.token)
+
+    this.verifyTokenRegister(this.$route.params.token)
   },
   data() {
     return {
@@ -63,24 +55,8 @@ export default {
     }
   },
   methods: {
-    onSubmit(e) {
-      var that = this;
-      that.isValidated = true;
-      
-      var isValid = true;
-      ['username', 'password'].forEach(function(k){
-        if(!that.dataset[k]){
-          isValid = false;
-        }
-      });
-      if(!isValid){
-        e.preventDefault();
-      }else{
-        that.isValidated = false;
-      }
-    },
     ...mapActions({
-      sendtokenToEmail: 'auth/sendtokenToEmail'
+      verifyTokenRegister: 'auth/verifyTokenRegister'
     })
   }
 }

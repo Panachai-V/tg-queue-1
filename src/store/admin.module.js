@@ -16,12 +16,55 @@ export const admin = {
       filterStatus: temp_filterstatus,
       overview: temp_overview,
       detailJob: null,
+      detailCreateJob: {
+        taxid: null,
+        awbNumber: null,
+        hwbSerialNumber: null,
+        flightNumber: null,
+        jobNumber: null,
+        customsEntryNumber: null,
+        customsEntryNumberDate: null
+      },
       forwarders: [],
       forwardersDetail: null,
+      forwardersEditDetail: null,
+      forwardersCreateDetail: {
+        taxid: null,
+        province: null,
+        postal: null,
+        address: null,
+        name: null,
+        status: null
+      },
       forwardersFF: [],
       forwardersDriver: [],
       forwardersCurrentUser: null,
-      forwardersEditUser: null,
+      forwardersEditUser: {
+        _id: null,
+        username: null,
+        password: null,
+        confpassword: null,
+        email: null,
+        prefix: null,
+        firstname: null,
+        lastname: null,
+        phone: null,
+        status: null,
+        avatar: null,
+      },
+      forwardersCreateUser: {
+        avatar: null,
+        username: null,
+        email: null,
+        password: null,
+        confpassword: null,
+        firstname: null,
+        lastname: null,
+        prefix: null,
+        status: null,
+        phone: null,
+        roles: null
+      },
       condition: temp2_condition
     },
     actions: {
@@ -71,6 +114,41 @@ export const admin = {
           }          
         )
         await commit('change_status_loading', false);
+      },
+      freightForwardersEdit({ state }) {
+        return new Promise((resolve, reject) => {
+          AdminService.freightForwardersEdit(state.forwardersDetail.detail_id, state.forwardersEditDetail).then(
+            response => {
+              resolve(response)
+            },
+            error => {
+              reject(error)
+            }
+          )
+        })
+      },
+      freightForwardersCreate({ commit , state }) {
+        if (!(Object.values(state.forwardersCreateDetail).indexOf(null) > -1)) {
+          AdminService.freightForwardersCreate(state.forwardersCreateDetail).then(
+            response => {
+            return Promise.resolve(response.data);
+          },
+          error => {
+            return Promise.reject(error);
+          })
+        }
+      },
+      freightForwardersDelete({ state }) {
+        return new Promise((resolve, reject) => {
+          AdminService.freightForwardersDelete(state.forwardersDetail._id).then(
+            response => {
+              resolve(response)
+            },
+            error => {
+              reject(error)
+            }
+          )
+        })
       },
       freightForwardersSelectUser({ commit }, condition) {
         commit('fetchFreightForwardersCurrentUser', condition);
@@ -277,6 +355,41 @@ export const admin = {
               }
           );
       },
+      createJob({ state }) {
+        AdminService.jobCreate(state.detailCreateJob).then(
+          response => {
+            return Promise.resolve(response.data);
+          },
+          error => {
+            return Promise.reject(error);
+          }
+        );
+      },
+      createUser({ state }) {
+        return new Promise((resolve, reject) => {
+          AdminService.userCreate(state.forwardersDetail._id, state.forwardersCreateUser).then(
+            response => {
+              resolve(response)
+            },
+            error => {
+              reject(error)
+            }
+          )
+        })
+      },
+      editUser({ state }) {
+        console.log('store editUser: ',state.forwardersDetail._id, state.forwardersEditUser)
+        return new Promise((resolve, reject) => {
+          AdminService.userEdit(state.forwardersDetail._id, state.forwardersEditUser).then(
+            response => {
+              resolve(response)
+            },
+            error => {
+              reject(error)
+            }
+          )
+        })
+      },
       changePage({ commit }, page) {
         console.log('change to page: ', page)
         commit('fetchPage', page)
@@ -305,8 +418,11 @@ export const admin = {
           province: input.company_detail.company_detail[0].company_province,
           postal: input.company_detail.company_detail[0].company_postal,
           tax_id: input.company_detail.tax_id,
-          status: input.company_detail.status
+          status: input.company_detail.status,
+          _id: input.company_detail._id,
+          detail_id: input.company_detail.company_detail[0]._id
         }
+        state.forwardersEditDetail = {...state.forwardersDetail}
       },
       fetchFreightForwardersUser(state, input) {
         input.forEach((user) => {
@@ -378,13 +494,18 @@ export const admin = {
         state.forwardersCurrentUser = condition.role == 'driver' ? 
                                         state.forwardersDriver.find(user => user._id == condition.id) : 
                                         state.forwardersFF.find(user => user._id == condition.id)
-        state.forwardersEditUser = {...state.forwardersCurrentUser}
-        state.forwardersEditUser.avatar = null
+
+        state.forwardersEditUser._id = state.forwardersCurrentUser._id
+        state.forwardersEditUser.username = state.forwardersCurrentUser.username.text
         state.forwardersEditUser.password = ''
         state.forwardersEditUser.confpassword = ''
-        /*state.forwardersEditUser.avatar != null ? state.forwardersEditUser.avatar = null : state.forwardersEditUser['avatar'] = null
-        state.forwardersEditUser.password != '' ? state.forwardersEditUser.password = '' : state.forwardersEditUser['password'] = ''
-        state.forwardersEditUser.confpassword != '' ? state.forwardersEditUser.confpassword = '' : state.forwardersEditUser['confpassword'] = ''*/
+        state.forwardersEditUser.email = state.forwardersCurrentUser.email.text
+        state.forwardersEditUser.status = state.forwardersCurrentUser.status.value == 1 ? true : false
+        state.forwardersEditUser.avatar = null
+        state.forwardersEditUser.prefix = state.forwardersCurrentUser.prefix.text
+        state.forwardersEditUser.firstname = state.forwardersCurrentUser.firstname.text
+        state.forwardersEditUser.lastname = state.forwardersCurrentUser.lastname.text
+        state.forwardersEditUser.phone = state.forwardersCurrentUser.phone.text
       },
       fetchDashboardOverview(state, input) {
         state.overview.company_count = input.data.company_count
@@ -484,6 +605,12 @@ export const admin = {
       getForwardersDetail(state) {
         return state.forwardersDetail
       },
+      getforwardersEditDetail(state) {
+        return state.forwardersEditDetail
+      },
+      getForwardersCreateDetail(state) {
+        return state.forwardersCreateDetail
+      },
       getforwardersFF(state) {
         return state.forwardersFF
       },
@@ -495,6 +622,9 @@ export const admin = {
       },
       getFreightForwardersEditUser(state) {
         return state.forwardersEditUser
+      },
+      getForwardersCreateUser(state) {
+        return state.forwardersCreateUser
       },
       getJobRequest0(state) {
         return state.overview.job_detail_0
@@ -516,6 +646,9 @@ export const admin = {
       },
       getDetailJob(state) {
           return state.detailJob
+      },
+      getDetailCreateJob(state) {
+        return state.detailCreateJob
       },
     }
 }

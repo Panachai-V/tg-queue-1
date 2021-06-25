@@ -42,6 +42,16 @@ class AuthService {
       name: regisuser.name
     });
   }
+
+  verifyEmailRegister(token) {
+    axios.get(`auth/verify/${token}`)
+    return ;
+  }
+
+  forgetPWDSendTokenToEmail(email) {
+    axios.get(`auth/forgot/${email}`)
+    return ;
+  }
 }
 
 export default new AuthService();

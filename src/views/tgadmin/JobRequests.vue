@@ -24,7 +24,7 @@
         </div>
         <div class="tab-contents" data-aos="fade-up" data-aos-delay="150">
           
-          <div v-if="tabActiveIndex == 0" class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
+          <div v-if="tabActiveIndex == 0 && !getLoadingStatus" class="tab-content" :class="{ 'active': tabActiveIndex == 0 }">
             <DataTable
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest1"
@@ -53,7 +53,7 @@
             />
           </div>
 
-          <div v-if="tabActiveIndex == 1" class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
+          <div v-if="tabActiveIndex == 1 && !getLoadingStatus" class="tab-content" :class="{ 'active': tabActiveIndex == 1 }">
             <DataTable 
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest2" 
@@ -83,7 +83,7 @@
             />
           </div>
 
-         <div v-if="tabActiveIndex == 2" class="tab-content" :class="{ 'active': tabActiveIndex == 2 }">
+         <div v-if="tabActiveIndex == 2 && !getLoadingStatus" class="tab-content" :class="{ 'active': tabActiveIndex == 2 }">
             <DataTable 
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest3" 
@@ -113,7 +113,7 @@
             />
           </div>
 
-          <div v-if="tabActiveIndex == 3" class="tab-content" :class="{ 'active': tabActiveIndex == 3 }">
+          <div v-if="tabActiveIndex == 3 && !getLoadingStatus" class="tab-content" :class="{ 'active': tabActiveIndex == 3 }">
             <DataTable 
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest4" 
@@ -143,7 +143,7 @@
             />
           </div>
 
-          <div v-if="tabActiveIndex == 4" class="tab-content" :class="{ 'active': tabActiveIndex == 4 }">
+          <div v-if="tabActiveIndex == 4 && !getLoadingStatus" class="tab-content" :class="{ 'active': tabActiveIndex == 4 }">
             <DataTable 
               :tabActiveIndex="tabActiveIndex"
               :rows="getJobRequest5" 
@@ -214,7 +214,7 @@ export default {
         }
       },
 
-      tabActiveIndex: 0,
+      tabActiveIndex: this.$route.params.tab? Number(this.$route.params.tab): 0,
       rows2: [],
       rows3: [],
       rows4: [],
@@ -226,7 +226,7 @@ export default {
     document.getElementById('color_style').href = '/assets/css/color-company.css';
     console.log('tabActiveIndex :', this.tabActiveIndex)
     // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
-    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex + 1).toString(), "")
+    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex+1).toString(), "")
     this.fetchJobRequest(temp_condition);
   },
   methods: {

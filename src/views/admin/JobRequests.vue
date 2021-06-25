@@ -259,7 +259,7 @@ export default {
         }
       },
 
-      tabActiveIndex: this.$route.params.tab? Number(this.$route.params.tab)-1: 0,
+      tabActiveIndex: this.$route.params.tab? Number(this.$route.params.tab): 0,
       rows1: [],
       rows2: [],
       rows3: [],

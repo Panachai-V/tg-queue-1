@@ -1,3 +1,6 @@
+import axios from 'axios';
+import authHeader from './auth-header';
+
 class SocketIO {
     initializer() {
         let socket = io.connect(process.env.VUE_APP_SERVERURL ,{
@@ -6,6 +9,10 @@ class SocketIO {
         });
 
         return socket;
+    }
+
+    messageHistory(jobID) {
+        return axios.get(`chat/${jobID}`, { headers: authHeader() })
     }
 }
 
