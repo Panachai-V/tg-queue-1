@@ -40,9 +40,14 @@ const routes = [
     component: () => import('../views/auth/Register.vue')
   },
   {
-    path: '/auth/forget-password',
+    path: '/auth/forget-password/:token?',
     name: 'AuthForget',
     component: () => import('../views/auth/Forget.vue')
+  },
+  {
+    path: '/auth/verifyRegister/:token?',
+    name: 'VerifyRegisterToken',
+    component: () => import('../views/auth/verifyRegister.vue')
   },
 
 
@@ -149,7 +154,7 @@ const routes = [
 
   // Admin - Job Requests
   {
-    path: '/admin/job-requests',
+    path: '/admin/job-requests/:tab?',
     name: 'AdminJobRequestsPage',
     component: () => import('../views/admin/JobRequests.vue'),
     beforeEnter: requireAuth

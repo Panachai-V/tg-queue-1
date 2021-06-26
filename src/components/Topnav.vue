@@ -301,7 +301,7 @@
                   type="select" label="จังหวัด *" :required="true" placeholder="โปรดเลือก" 
                   :value="getSelfUserCompany.province" 
                   @input="getSelfUserCompany.province = $event" 
-                  :options="provinces"
+                  :options="getProvince"
                 />
               </div>
               <div class="grid sm-50">
@@ -381,14 +381,7 @@ export default {
           user_id: this.getUser.id,
         });
       }
-      
-    const response = axios.get('master-module/province').then(response => {
-      // console.log('province: ', response.data)
-      for(let i in response.data){
-        this.provinces.push({ value: response.data[i].PROVINCE_NAME, text: response.data[i].PROVINCE_NAME })
-      }
-    });
-    
+    this.actionProvince()    
   },
   mounted() {
     socket.on('receive-notify', (data) => {
@@ -415,6 +408,7 @@ export default {
       getLoginStatus: 'auth/getLoginStatus',
       getLoadingStatus: 'auth/getLoadingStatus',
       getAuthenticated: 'auth/isAuthenticated',
+      getProvince: 'master/getProvince'
     })
     
   },
@@ -511,6 +505,7 @@ export default {
       changePWD: 'auth/changePWD',
       getCompany: 'auth/getCompany',
       editCompany: 'auth/editCompany',
+      actionProvince: 'master/province'
     })
 
   }

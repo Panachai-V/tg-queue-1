@@ -214,7 +214,7 @@ export default {
         }
       },
 
-      tabActiveIndex: 0,
+      tabActiveIndex: this.$route.params.tab? Number(this.$route.params.tab): 0,
       rows2: [],
       rows3: [],
       rows4: [],
@@ -226,7 +226,7 @@ export default {
     document.getElementById('color_style').href = '/assets/css/color-company.css';
     console.log('tabActiveIndex :', this.tabActiveIndex)
     // เมื่อ click เลือก tab ของ job requests ใน freight-forwarder จะทำให้ข้อมูลทุกอย่างรีเป็นหน้า 1 ใน tab นั้นๆ
-    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex + 1).toString(), "")
+    let temp_condition = new ConditionSelectViewJob('1', '10', 'awbNumber', 'ascending', (this.tabActiveIndex+1).toString(), "")
     this.fetchJobRequest(temp_condition);
   },
   methods: {

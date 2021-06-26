@@ -2,12 +2,11 @@
   <Topnav :user="user" :activeIndex="topnavActiveIndex" />
 
   <section class="section-full">
-    {{getSelfDriver}}
     <div class="container" v-if="getLoadingStatus == false">
 
       <div class="section-header mb-4" data-aos="fade-up" data-aos-delay="0">
         <div class="btns mt-0">
-          <a :href="'/tgadmin/job-requests/'+getDetailJob.status" class="btn color-gray h-color-01">
+          <a :href="'/tgadmin/job-requests/'+(getDetailJob.status-1).toString()" class="btn color-gray h-color-01">
             <img class="icon-prepend xs" src="/assets/img/icon/chev-left.svg" alt="Image Icon" />
             ย้อนกลับ
           </a>
@@ -23,13 +22,13 @@
           </div>
           <div class="btns hide-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/tgadmin/job-requests/'+getDetailJob.status" 
+              text="ย้อนกลับ" :href="'/tgadmin/job-requests/'+(getDetailJob.status-1).toString()" 
               classer="btn-color-08"
             />
           </div>
           <div class="btns show-mobile">
             <Button 
-              text="ย้อนกลับ" :href="'/tgadmin/job-requests/'+getDetailJob.status"
+              text="ย้อนกลับ" :href="'/tgadmin/job-requests/'+(getDetailJob.status-1).toString()"
               classer="btn-color-08 btn-sm" 
             />
           </div>
@@ -224,7 +223,7 @@
         </div>
         <div class="section-px section-py-grid" data-aos="fade-up" data-aos-delay="150">
           <div class="mt-6">
-            <ChatContainer :chat="chat" :withInput="getDetailJob.status <= 4" />
+            <ChatContainer :chat="chat" :withInput="getDetailJob.status <= 4" :roomid="this.$route.params.id"/>
           </div>
         </div>
       </div>
@@ -280,7 +279,7 @@
 import moment from 'moment';
 import Topnav from '../../components/Topnav';
 import Step01 from '../../components/Step01';
-import ChatContainer from '../../components/ChatContainer';
+import ChatContainer from '../../components/ChatContainer-ver1';
 import FormGroupTime from '../../components/FormGroupTime';
 import FormGroupTrucks from '../../components/FormGroupTrucks';
 import {mapGetters, mapActions, mapState} from "vuex"

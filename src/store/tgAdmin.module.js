@@ -50,7 +50,7 @@ export const tgAdmin = {
                     commit('clear_job_requests')
 
                     for(let i = 0; i < companys.data.docs.length; i++){
-                        console.log('companys.data.docs :', companys.data.docs[i])
+                        // console.log('companys.data.docs :', companys.data.docs[i])
 
                         var temp_data = companys.data.docs[i]
                         var temp_status = new StatusCompany()
@@ -151,7 +151,7 @@ export const tgAdmin = {
                             return r;
                         }, {})
                         
-                        console.log('result :', result)
+                        // console.log('result :', result)
 
                         temp_array.push(result)
                     }
@@ -218,7 +218,7 @@ export const tgAdmin = {
                     }
                     commit('update_jobDetail', data)
                     commit('change_status_loading', false);
-                    console.log('job detail fetched',data)
+                    // console.log('job detail fetched',data)
                 }
             );
         },

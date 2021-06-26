@@ -61,7 +61,7 @@ class CompanyService {
 
     tgadmin_jobRequest(condition) {
         // console.log('getting count each job...')
-        // console.log('search filter :', condition)
+        console.log('search filter :', condition)
         return axios.get(`tgadmin/all/?page=${condition.page}&limit=${condition.limit}&sort_by=${condition.sort_by}&order=${condition.order}&status=${condition.status}&search=${condition.search}`, { headers: authHeader() })
     }
 

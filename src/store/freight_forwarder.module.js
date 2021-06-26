@@ -219,11 +219,14 @@ export const freight_forwarder = {
             commit('change_status_loading', true)
             CompanyService.ff_jobDetail(id).then(
                 company => {
+                    console.log('fetchJobDetail: ', company.data)
                     if (company.data.status == 3) {
                         dispatch('ff_driver/overview', null, {root:true});
                     }
+                    if (company.data.status == 5 && company.data.driver[0]) {
+                        commit('update_jobRatingDriver', company.data.driver[0]._id)
+                    }
                     commit('update_jobDetail', company.data)
-                    commit('update_jobRatingDriver', company.data.driver[0]._id)
                     commit('change_status_loading', false);
                     console.log('job detail fetched',company.data)
                 }

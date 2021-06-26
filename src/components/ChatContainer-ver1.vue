@@ -1,25 +1,28 @@
 <template>
   <div class="chat-container">
-    <div class="chat-content" ref="chatScroll">
+    <div class="chat-content" ref="chatScroll" >
 
       <div
-        v-for="(ch, index) in selfChat" :key="index" 
+        v-for="(ch, index) in getMessageHistory" :key="index" 
         class="chat" :class="ch.self? 'chat-self': 'chat-other'"
       >
         <div class="profile-container">
-          <div v-if="ch.avatar" class="img-bg">
-            <img class="img-bg" width="50" height="50" v-bind:src="'data:image/jpeg;base64,' + ch.avatar" />
+          <div v-if="ch.avatar" class="img-bg" >
+            <img class="img-bg" style="border-radius: 50%;" width="30" height="30" v-bind:src="'data:image/jpeg;base64,' + ch.avatar" />
           </div>
+          <!--
           <div 
             v-else class="profile" 
             style="background-image:url('/assets/img/misc/profile.jpg');"
           ></div>
+          -->
         </div>
         <div class="text-container">
           <div class="text-wrapper p sm fw-300" v-html="ch.message"></div>
           <p class="mt-1 p sm fw-400 op-70">
             <span class="text-sm">
-              {{formatDate(ch.createdAt, 'DD/MM/YYYY HH:MM:SS')}}
+              {{formatDate((ch.createdAt), 'DD/MM/YYYY hh:mm:ss')}}
+              <!-- (tempDate.toString().substr(0, 10)) -->
             </span>
           </p>
         </div>
@@ -45,7 +48,6 @@
         </div>
       </div>
     </form>
-    {{getMessageHistory}}
   </div>
 </template>
 
@@ -75,17 +77,8 @@ export default {
     }
   },
   mounted() {
-    this.scrollToEnd();
-    // this.getSocketID.on('recive-message', (data) => {
-    //   console.log(data);
-    //   this.chat.push({
-    //     self: false,
-    //     message: data.message,
-    //     avatar: data.avatar,
-    //     createdAt: data.createdAt
-    //   })
-    // });
     this.receiveMessage();
+    this.scrollToEnd();
   },
   created() {
     console.log('this.$route.params.id :', this.roomid)
@@ -96,6 +89,7 @@ export default {
     this.InitialInfo({
       roomid: this.roomid,
       userid: this.getUser.id,
+      avatar: this.getUser.avatar
     });
 
     this.joinChatRoom();
@@ -123,7 +117,7 @@ export default {
       return moment(String(value)).format(format);
     },
     scrollToEnd: function() {    	
-      this.$refs.chatScroll.scrollTop = this.$refs.chatScroll.scrollHeight;
+      this.$refs.chatScroll.scrollTop = this.$refs.chatScroll.scrollHeight;   
     },
     onSubmit(e) {
       e.preventDefault();
@@ -133,6 +127,10 @@ export default {
       that.sendMessage(that.message);
 
       that.message = '';
+
+      setTimeout(() => {
+        that.scrollToEnd();
+      }, 100);
     },
     ...mapActions({
       joinChatRoom: 'socketIO/joinChatRoom',
