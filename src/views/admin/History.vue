@@ -48,6 +48,7 @@
 import Topnav from '../../components/Topnav';
 import Sidenav from '../../components/Sidenav';
 import DataTable from '../../components/DataTable';
+import {mapGetters, mapActions, mapState} from "vuex"
 
 export default {
   name: 'AdminHistoryPage',
@@ -105,6 +106,12 @@ export default {
         });
       }
     }
+    this.overview()
+  },
+  methods: {
+    ...mapActions({
+      overview: 'log/overview'
+    }),
   }
 }
 </script>

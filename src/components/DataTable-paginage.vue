@@ -7,7 +7,7 @@
         <select class="xs no-border color-01" @input="(event)=>doOrder(event.target.value)">
           <option 
             v-for="(order, index) in orders" :key="order.key" :value="order.key" 
-            :selected="order.key == getCondition.sort_by + '-' + getCondition.order"
+            :selected="order.key == getCondition().sort_by + '-' + getCondition().order"
           >
             {{order.text}}
           </option>
@@ -49,22 +49,22 @@
       </div>
       <div class="option hide-mobile">
         แสดง 
-        {{Math.min(getFilterStatus.pagingCounter, getFilterStatus.totalDocs)}} – 
-        {{Math.min(getFilterStatus.totalDocs, getFilterStatus.pagingCounter + getFilterStatus.limit)}} จากทั้งหมด 
-        {{getFilterStatus.totalDocs}} 
+        {{Math.min(getFilterStatus().pagingCounter, getFilterStatus().totalDocs)}} – 
+        {{Math.min(getFilterStatus().totalDocs, getFilterStatus().pagingCounter + getFilterStatus().limit)}} จากทั้งหมด 
+        {{getFilterStatus().totalDocs}} 
         รายการ
       </div>
       <div class="option pr-2 show-mobile mobile-right">
         แสดงทั้งหมด
-        {{Math.min(getFilterStatus.pagingCounter, getFilterStatus.totalDocs)}} – 
-        {{Math.min(getFilterStatus.totalDocs, getFilterStatus.pagingCounter + getFilterStatus.limit)}}
+        {{Math.min(getFilterStatus().pagingCounter, getFilterStatus().totalDocs)}} – 
+        {{Math.min(getFilterStatus().totalDocs, getFilterStatus().pagingCounter + getFilterStatus().limit)}}
         รายการ
       </div>
       <div class="option pr-0">
-        <a href="javascript:" @click="changePage(getFilterStatus.prevPage)" class="btn-chev" :class="{ 'disabled': !getFilterStatus.hasPrevPage }">
+        <a href="javascript:" @click="changePage(getFilterStatus().prevPage)" class="btn-chev" :class="{ 'disabled': !getFilterStatus().hasPrevPage }">
           <img src="/assets/img/icon/caret-left.svg" alt="Image Icon" />
         </a>
-        <a href="javascript:" @click="changePage(getFilterStatus.nextPage)" class="btn-chev" :class="{ 'disabled': !getFilterStatus.hasNextPage }">
+        <a href="javascript:" @click="changePage(getFilterStatus().nextPage)" class="btn-chev" :class="{ 'disabled': !getFilterStatus().hasNextPage }">
           <img src="/assets/img/icon/caret-right.svg" alt="Image Icon" />
         </a>
       </div>
@@ -78,7 +78,7 @@
   </div>
 
   <!-- Table -->
-  <form action="/" method="GET" @submit="onSubmit" v-if="getLoadingStatus == false">
+  <form action="/" method="GET" @submit="onSubmit" v-if="getLoadingStatus() == false">
     <div class="table-wrapper">
       <table class="table-section">
         <thead>
@@ -88,9 +88,9 @@
             </th>
           </tr>
         </thead>
-        <tbody v-if="getData.length">
+        <tbody v-if="getData().length">
 
-          <tr v-for="(row, index) in getData" :key="index">
+          <tr v-for="(row, index) in getData()" :key="index">
 
             <!-- Row Data -->
             <template v-if="index != editingIndex">
@@ -350,23 +350,23 @@ export default {
 
       editing: false,
       editingIndex: null,
-      editData: {}
+      editData: {},
     }
   },
   methods: {
     ...mapActions({
-      forwardersOverview: 'admin/forwardersOverview',
-      storeChangePage: 'admin/changePage',
-      changeOrder: 'admin/changeOrder',
-      changeSearch: 'admin/changeSearch',
-      changeStatus: 'admin/changeStatus'
+      AdminforwardersOverview: 'admin/forwardersOverview',
+      AdminstoreChangePage: 'admin/changePage',
+      AdminchangeOrder: 'admin/changeOrder',
+      AdminchangeSearch: 'admin/changeSearch',
+      AdminchangeStatus: 'admin/changeStatus'
     }),
     changePage(val) {
       console.log('table change page', val)
       //this.clearEditing();
       this.storeChangePage(val)
-      this.forwardersOverview()
-      console.log('table change page filter', {...this.getFilterStatus})
+      this.overview()
+      console.log('table change page filter', {...this.getFilterStatus()})
       console.log('store: ',this.store)
 
       /*this.getFilterStatus.page += val;
@@ -396,13 +396,13 @@ export default {
       } else {
         this.changeStatus('none')
       }
-      this.forwardersOverview()
+      this.overview()
     },
     doSearch(val) {
       console.log('table doSearch: ',val)
       this.clearEditing();
       this.changeSearch(val);
-      this.forwardersOverview()
+      this.overview()
       return true;
     },
     doOrder(val) {
@@ -415,7 +415,7 @@ export default {
         val = val.replace('-ascending', '');
         this.changeOrder({sort_by: val, order: 'ascending'});
       }
-      this.forwardersOverview()      
+      this.overview()      
     },
 
     highlight(key, text) {
@@ -466,7 +466,7 @@ export default {
         });
       }
       
-      this.forwardersOverview()
+      this.overview()
     },
 
     onSubmit(e) {
@@ -515,6 +515,51 @@ export default {
         btn.classList.add('disabled');
       }
       counter.value = result;
+    },
+    getFilterStatus() {
+      if (this.store == 'admin-forwarders') {
+        return this.getAdminFilterStatus
+      }
+    },
+    getLoadingStatus() {
+      if (this.store == 'admin-forwarders') {
+        return this.getAdminLoadingStatus
+      }
+    },
+    getCondition() {
+      if (this.store == 'admin-forwarders') {
+        return this.getAdminCondition
+      }
+    },
+    getData() {
+      if (this.store == 'admin-forwarders') {
+        return this.getAdminData
+      }
+    },
+    overview() {
+      if (this.store == 'admin-forwarders') {
+        return this.AdminforwardersOverview()
+      }
+    },
+    storeChangePage(val) {
+      if (this.store == 'admin-forwarders') {
+        return this.AdminstoreChangePage(val)
+      }
+    },
+    changeOrder(order) {
+      if (this.store == 'admin-forwarders') {
+        return this.AdminchangeOrder(order)
+      }
+    },
+    changeSearch(val) {
+      if (this.store == 'admin-forwarders') {
+        return this.AdminchangeSearch(val)
+      }
+    },
+    changeStatus(val) {
+      if (this.store == 'admin-forwarders') {
+        return this.AdminchangeStatus(val)
+      }
     }
   },
   created() {
@@ -524,15 +569,15 @@ export default {
     }*/
   },
   mounted() {
-    console.log('mounted: ',this.getFilterStatus)
+    console.log('mounted: ',this.getFilterStatus())
   },
   computed: {
     ...mapGetters({
       getUser: 'auth/getUser',
-      getFilterStatus: 'admin/getFilterStatus',
-      getLoadingStatus: 'admin/getLoadingStatus',
-      getCondition: 'admin/getCondition',
-      getData: 'admin/getForwarders'
+      getAdminFilterStatus: 'admin/getFilterStatus',
+      getAdminLoadingStatus: 'admin/getLoadingStatus',
+      getAdminCondition: 'admin/getCondition',
+      getAdminData: 'admin/getForwarders'
     })
   },
   emits: [ 

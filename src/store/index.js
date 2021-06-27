@@ -9,6 +9,7 @@ import { driver } from './driver.module';
 import { ff_driver } from './ff_driver.module';
 import { tgAdmin } from './tgAdmin.module';
 import { admin } from './admin.module';
+import { log } from './log.module';
 import { socketIO } from './socketIO.module';
 
 const store = createStore({
@@ -21,6 +22,7 @@ const store = createStore({
     driver,
     tgAdmin,
     admin,
+    log,
     socketIO
   }
 })
