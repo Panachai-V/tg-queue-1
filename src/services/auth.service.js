@@ -20,6 +20,7 @@ class AuthService {
   }
 
   register(regisuser) {
+    console.log(regisuser)
     return axios.post('auth/signup/', {
       username: regisuser.username,
       password: regisuser.password,
@@ -35,11 +36,11 @@ class AuthService {
   
   createCompany(companyInfo) {
     return axios.post('auth/checktaxid', {
-      taxid: regisuser.taxid,
-      province: regisuser.province,
-      postal: regisuser.postal,
-      address: regisuser.address,
-      name: regisuser.name
+      taxid: companyInfo.taxid,
+      province: companyInfo.province,
+      postal: companyInfo.postal,
+      address: companyInfo.address,
+      name: companyInfo.name
     });
   }
 

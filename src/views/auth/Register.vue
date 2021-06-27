@@ -396,7 +396,9 @@ export default {
             }
           );
         }
+
         if (this.dataset.username && this.dataset.email && this.dataset.password && this.dataset.confPassword) {
+          console.log('Regis page', regisUser)
           this.register(regisUser).then(
             () => {
               this.$router.push('/auth/signin');

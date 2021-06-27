@@ -45,6 +45,10 @@ class AdminService {
     userDelete(id, userId) {
         return axios.post(`admin/company/${id}/delete_user`, {user_id: userId}, { headers: authHeader() })
     }
+
+    getLog(condition) {
+        return axios.get(`admin/log?page=${condition.page}&limit=${condition.limit}&sort_by=${condition.sort_by}&order=${condition.order}&status=${condition.status}&search=${condition.search}`, { headers: authHeader() })
+    }
 }
 
 export default new AdminService();
