@@ -79,39 +79,40 @@ export default {
   created() {
     AOS.init({ easing: 'ease-in-out-cubic', duration: 750, once: true, offset: 10 });
     document.getElementById('color_style').href = '/assets/css/color-admin.css';
-    for(var i=0; i<24; i++){
-      if(i%3 == 0){
-        this.rows1.push({
-          avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
-          username: { text: 'User000'+i },
-          type: { text: 'Freight Forwarder Admin' },
-          email: { text: 'forwarder@gmail.com' },
-          action: { text: 'SIGN IN' }
-        });
-      }else if(i%3 == 1){
-        this.rows1.push({
-          avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
-          username: { text: 'User000'+i },
-          type: { text: 'Driver' },
-          email: { text: 'driver@gmail.com' },
-          action: { text: 'SIGN OUT' }
-        });
-      }else{
-        this.rows1.push({
-          avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
-          username: { text: 'User000'+i },
-          type: { text: 'TG Admin' },
-          email: { text: 'tg-admin@gmail.com' },
-          action: { text: 'RESET PASSWORD' }
-        });
-      }
-    }
-    this.overview()
+    // for(var i=0; i<24; i++){
+    //   if(i%3 == 0){
+    //     this.rows1.push({
+    //       avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
+    //       username: { text: 'User000'+i },
+    //       type: { text: 'Freight Forwarder Admin' },
+    //       email: { text: 'forwarder@gmail.com' },
+    //       action: { text: 'SIGN IN' }
+    //     });
+    //   }else if(i%3 == 1){
+    //     this.rows1.push({
+    //       avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
+    //       username: { text: 'User000'+i },
+    //       type: { text: 'Driver' },
+    //       email: { text: 'driver@gmail.com' },
+    //       action: { text: 'SIGN OUT' }
+    //     });
+    //   }else{
+    //     this.rows1.push({
+    //       avatar: { type: 'avatar', text: '/assets/img/misc/profile.jpg' },
+    //       username: { text: 'User000'+i },
+    //       type: { text: 'TG Admin' },
+    //       email: { text: 'tg-admin@gmail.com' },
+    //       action: { text: 'RESET PASSWORD' }
+    //     });
+    //   }
+    // }
+    console.log('get over: ',this.getOverview)
   },
   methods: {
     ...mapActions({
-      overview: 'log/overview'
+      forwardersOverview: 'log/overview'
     }),
+    
   }
 }
 </script>

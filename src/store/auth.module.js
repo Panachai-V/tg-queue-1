@@ -22,11 +22,11 @@ export const auth = {
         },
         error => {
           commit('loginFailure');
-          return Promise.reject(error);
+          return Promise.reject(error.response.status);
         }
       );
     },
-    async login ({ dispatch, commit }, user) {
+    async login ({ dispatch, commit, state }, user) {
       commit('updateLoadingStatus', true)
       await dispatch('authen', user) // wait for `authen` to finish
       UserService.getUserDetail().then(
@@ -38,7 +38,7 @@ export const auth = {
           commit('loginFailure');
           return Promise.reject(error);
         }
-      )         
+      )    
     },
     logout({ commit }) {
       AuthService.logout();
@@ -150,8 +150,22 @@ export const auth = {
       return new Promise((resolve, reject) => {        
         AuthService.verifyTokenForResetPWD(token).then(
           response => {
+            console.log(response)
             commit('changStautsVerifyToken', true);
-            resolve(response)
+            resolve(response.status)
+          },
+          error => {
+            reject(error.response.status)
+          }
+        )
+      })
+    },
+    async saveChangedPassword ({ commit }, inputObject ) {
+      return new Promise((resolve, reject) => {
+        AuthService.saveChangedPassword(inputObject).then(
+          response => {
+            console.log(response)
+            resolve(response.status)
           },
           error => {
             reject(error.response.status)

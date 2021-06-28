@@ -134,13 +134,22 @@
                 ] = $event" 
                 />
               </div>
-              <div class="grid xl-20 lg-25 sm-50">
+              <div class="grid xl-20 lg-25 sm-30">
+                <!--
                 <FormGroupTime
                   label="ยืนยันเวลารับสินค้า *" placeholder="โปรดระบุ" :required="true" 
                   :value0="getSelectDriver.confPickupTimeHours" 
                   @input0="getSelectDriver.confPickupTimeHours = $event" 
                   :value1="getSelectDriver.confPickupTimeMinutes" 
-                  @input1="getSelectDriver.confPickupTimeMinutes = $event" 
+                  @input1="getSelectDriver.confPickupTimeMinutes = $event"
+                  :disabled="(condition)" 
+                />
+                --> 
+                <FormGroup 
+                  type="text" label="ยืนยันเวลารับสินค้า *"
+                  :maxlength="10" placeholder="โปรดระบุ" 
+                  :value="getDetailJob.pickupTimeHours + ' : ' + getDetailJob.pickupTimeMinutes" 
+                  :disabled="true"
                 />
               </div>
               <div class="grid sm-100">
@@ -174,6 +183,7 @@
                 type="plain" label="ยืนยันเวลารับสินค้า" 
                 :value="getDetailJob.confPickupTimeHours && getDetailJob.confPickupTimeMinutes
                   ? getDetailJob.confPickupTimeHours+'.'+getDetailJob.confPickupTimeMinutes+' น.': ''"
+                  
               />
             </div>
             <div v-if="getDetailJob.status < 4" class="grid sm-100">

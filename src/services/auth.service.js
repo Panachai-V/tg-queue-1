@@ -56,6 +56,13 @@ class AuthService {
   verifyTokenForResetPWD(token) {
     return axios.get(`auth/reset/${token}`);
   }
+
+  saveChangedPassword(newPasswordInfo) {
+    return axios.post(`auth/reset`, {
+      token: newPasswordInfo.token,
+      password: newPasswordInfo.password
+    });
+  }
 }
 
 export default new AuthService();

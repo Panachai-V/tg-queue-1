@@ -107,11 +107,11 @@ export default {
     }),
     handleSubmit(e) {
         e.preventDefault()
-        console.log(this.user);
+        // console.log(this.user);
         if (this.user.username && this.user.password) {
           this.login(this.user).then(
             () => {
-              console.log("logged in")
+              // console.log("logged in")
               if (this.getUser.role == "driver") {
                 this.$router.push('/driver/my-jobs');
               }

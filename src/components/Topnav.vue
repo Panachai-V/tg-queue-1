@@ -66,7 +66,7 @@
         <div class="option">
           <a href="#">
             <img src="/assets/img/icon/bell.svg" alt="Image Icon" />
-            <!-- <div v-if="alert" class="num">{{alert}}</div> -->
+            <div v-if="amountNotify" class="num">{{amountNotify}}</div>
           </a>
         </div>
         <div class="option">
@@ -360,7 +360,8 @@ export default {
       isActivePopupPassword: false,
       isActivePopupCompany: false,
       provinces: [],
-      worngpwd: false
+      worngpwd: false,
+      amountNotify: 0
     }
   },
   created() {
@@ -387,6 +388,7 @@ export default {
     socket.on('receive-notify', (data) => {
         console.log("user :"+ data.user_id);
         console.log("notify :"+ data.notification);
+        this.amountNotify = data.notification
         });
     socket.on('notify-detail', (data) => {
       console.log(data);
@@ -413,8 +415,6 @@ export default {
     
   },
   methods: {
-
-  
     isFreightForwarder() {
       if(this.getUser && this.getUser.role == 'freight-forwarder'){
         return true;

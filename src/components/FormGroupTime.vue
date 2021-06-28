@@ -8,7 +8,7 @@
         :name="name0" v-model="value0" 
         @input="(event)=>$emit('input0', event.target.value)" 
         @focusin="isFocused = true" @focusout="isFocused = false" 
-        :required="required? true: false" 
+        :required="required? true: false"
       >
         <option value="" selected disabled>ชั่วโมง</option>
         <option 

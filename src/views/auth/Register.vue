@@ -85,6 +85,7 @@
                     :disabled="thisexist == 1 ? '' : disabled"
                   />
                 </div>
+                <!--
                 <div class="grid sm-100">
                   <FormGroup 
                     type="text" label="เลขประจำตัวผู้เสียภาษี *" :required="true" 
@@ -94,7 +95,8 @@
                     :disabled="thisexist == 1 ? '' : disabled"
                   />
                 </div>
-                <div class="grids">
+                --> 
+                <div class="grids"> 
                   <div class="grid sm-50 xs-50">
                     <Button 
                       text="ย้อนกลับ" href="javascript:" classer="btn-color-11 w-full" 
